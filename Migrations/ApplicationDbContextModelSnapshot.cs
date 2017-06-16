@@ -1,0 +1,585 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using HAICOP.Data;
+using HAICOP.Models;
+
+namespace HAICOP.Migrations
+{
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .HasAnnotation("ProductVersion", "1.1.2");
+
+            modelBuilder.Entity("HAICOP.Models.Acheteur", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<string>("Lbl")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID")
+                        .IsUnique();
+
+                    b.ToTable("Acheteur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Agent", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CommissionID");
+
+                    b.Property<bool>("IsPresident");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("NameFr")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CommissionID");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Agent");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstLastName")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.AppsUser", b =>
+                {
+                    b.Property<int>("AgentID");
+
+                    b.Property<string>("UserID")
+                        .HasMaxLength(255);
+
+                    b.HasKey("AgentID", "UserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("AppsUser");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Commission", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<bool>("HavePresident");
+
+                    b.Property<string>("Lbl")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("LblFr")
+                        .HasMaxLength(250);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Commission");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Dessision", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Lbl")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<int>("MettingID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MettingID")
+                        .IsUnique();
+
+                    b.ToTable("Dessision");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Dossier", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DocDate");
+
+                    b.Property<int>("Financement");
+
+                    b.Property<string>("Foreign")
+                        .HasMaxLength(250);
+
+                    b.Property<int>("Month");
+
+                    b.Property<int>("Nature");
+
+                    b.Property<int>("Num");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<float>("TotalForeign");
+
+                    b.Property<float>("TotalLocal");
+
+                    b.Property<DateTime>("TraitDate");
+
+                    b.Property<int>("Type");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Dossier");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.ForeignInvestisseur", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ForeignInvestisseur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Fournisseur", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<string>("Lbl")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Fournisseur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.InvInDossier", b =>
+                {
+                    b.Property<int>("ForeignInvestisseurID");
+
+                    b.Property<int>("DossierID");
+
+                    b.HasKey("ForeignInvestisseurID", "DossierID");
+
+                    b.HasAlternateKey("DossierID", "ForeignInvestisseurID");
+
+                    b.ToTable("InvInDossier");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Lot", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("FournisseurID");
+
+                    b.Property<string>("Lbl")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<float>("Montant");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FournisseurID");
+
+                    b.ToTable("Lot");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Mail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(500);
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<DateTime>("RecepDate");
+
+                    b.Property<string>("Ref")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Mail");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Metting", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(500);
+
+                    b.Property<DateTime>("DocDate");
+
+                    b.Property<int>("DossierID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Metting");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(255);
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.ApplicationRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255);
+
+                    b.ToTable("ApplicationRole");
+
+                    b.HasDiscriminator().HasValue("ApplicationRole");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Acheteur", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithOne("Acheteur")
+                        .HasForeignKey("HAICOP.Models.Acheteur", "DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Agent", b =>
+                {
+                    b.HasOne("HAICOP.Models.Commission")
+                        .WithMany("Agents")
+                        .HasForeignKey("CommissionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.AppsUser", b =>
+                {
+                    b.HasOne("HAICOP.Models.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Commission", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany("Commissions")
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Dessision", b =>
+                {
+                    b.HasOne("HAICOP.Models.Metting", "Metting")
+                        .WithOne("Dessision")
+                        .HasForeignKey("HAICOP.Models.Dessision", "MettingID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Fournisseur", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany("Fournisseurs")
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.InvInDossier", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.ForeignInvestisseur", "ForeignInvestisseur")
+                        .WithMany()
+                        .HasForeignKey("ForeignInvestisseurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Lot", b =>
+                {
+                    b.HasOne("HAICOP.Models.Fournisseur", "Fournisseur")
+                        .WithMany("Lots")
+                        .HasForeignKey("FournisseurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Mail", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany("Mails")
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Metting", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany("Mettings")
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
+                        .WithMany("Claims")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("HAICOP.Models.ApplicationUser")
+                        .WithMany("Claims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("HAICOP.Models.ApplicationUser")
+                        .WithMany("Logins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.ApplicationUser")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+        }
+    }
+}
