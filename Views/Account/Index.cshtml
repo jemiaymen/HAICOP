@@ -1,8 +1,8 @@
-@model IEnumerable<HAICOP.Models.ApplicationRole>
+@model IEnumerable<RegisterViewModel>
 
 @{
     ViewData["Title"] = "القائمة الجملية";
-    ViewData["SubMenu"] = "التصرف في حقوق المستعملين";
+    ViewData["SubMenu"] = "التصرف في المستعملين";
 }
 
                     <div class="row">
@@ -12,18 +12,28 @@
                                     <h3 class="panel-title">@ViewData["Title"]</h3>
                                 </div>
                                 <div class="panel-body">
+                                <!--Table Wrapper Start-->
                                     <div class="ls-editable-table table-responsive ">
                                         <table class="table table-bordered table-striped ls-table" >
                                             <thead>
                                                 <tr>
                                                         <th>
-                                                            الإسم 
+                                                            الإسم واللقب
                                                         </th>
                                                         <th>
-                                                            توضيح عام 
+                                                            اسم المستخدم
+                                                        </th>
+                                                        <th>
+                                                            البريد الإلكتروني
+                                                        </th>
+                                                        <th>
+                                                            دور المستخدم
                                                         </th>
                                                         <th>
                                                             تحيين
+                                                        </th>
+                                                        <th>
+                                                           تغيير كلمة السر
                                                         </th>
                                                 </tr>
                                             </thead>
@@ -31,19 +41,29 @@
                                                 @foreach (var item in Model) {
                                                         <tr>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.Name)
+                                                                @Html.DisplayFor(modelItem => item.FirstLastName)
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.Description)
+                                                                @Html.DisplayFor(modelItem => item.UserName)
                                                             </td>
                                                             <td>
-                                                                 <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil"></i></a>
+                                                                @Html.DisplayFor(modelItem => item.Email)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.StringRoles[0]) 
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="Edit" asp-route-id="@item.UserId"><i class="fa fa-pencil"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="ResetPassword" asp-route-id="@item.UserId"><i class="fa fa-key"></i></a>
                                                             </td>
                                                         </tr>
                                                 }
                                             </tbody>
                                         </table>
                                     </div>
+                                <!--Table Wrapper Finish-->
                                 </div>
                             </div>
                         </div>
@@ -57,4 +77,3 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
 }
-

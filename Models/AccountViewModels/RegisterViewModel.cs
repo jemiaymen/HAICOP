@@ -9,9 +9,10 @@ namespace HAICOP.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "ليس ببريد إلكتروني")]
         [Display(Name = "البريد الإلكتروني")]
         public string Email { get; set; }
 
@@ -36,10 +37,18 @@ namespace HAICOP.Models.AccountViewModels
         [Compare("Password", ErrorMessage = "يجب أن تكون متطابقة مع كلمة السر")]
         public string ConfirmPassword { get; set; }
 
+        [StringLength(100, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "كلمة السر القديمة")]
+        public string OldPassword { get; set; }
+
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name ="دور المستخدم")]
         public string Role {get ; set;}
+
+
+        public  IList<string> StringRoles { get; set; }
 
 
         public List<ApplicationRole> Roles { get; set; }

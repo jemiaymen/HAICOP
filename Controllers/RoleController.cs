@@ -56,6 +56,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
         {
+            applicationRole.NormalizedName = applicationRole.Name.ToUpper();
             if (ModelState.IsValid)
             {
                 _context.Add(applicationRole);
@@ -92,11 +93,12 @@ namespace HAICOP.Controllers
             {
                 return NotFound();
             }
-
+            applicationRole.NormalizedName = applicationRole.Name.ToUpper();
             if (ModelState.IsValid)
             {
                 try
                 {
+                    
                     _context.Update(applicationRole);
                     await _context.SaveChangesAsync();
                 }

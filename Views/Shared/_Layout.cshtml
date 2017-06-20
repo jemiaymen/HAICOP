@@ -8,48 +8,33 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <!-- Viewport metatags -->
     <meta name="HandheldFriendly" content="true" />
     <meta name="MobileOptimized" content="320" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <!-- iOS webapp metatags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-    <!-- iOS webapp icons -->
     <link rel="apple-touch-icon-precomposed" href="/images/ios/fickle-logo-72.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/ios/fickle-logo-72.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/ios/fickle-logo-114.png" />
 
-    <!-- TODO: Add a favicon -->
     <link rel="shortcut icon" href="/images/ico/fab3860.ico?v=1">
 
     <title>@ViewData["Title"] - HAICOP</title>
 
-    <!--Page loading plugin Start -->
     <link rel="stylesheet" href="/css/rtl-css/plugins/pace-rtl.css">
     <script src="/js/pace.min.js"></script>
-    <!--Page loading plugin End   -->
-
-    <!-- Plugin Css Put Here -->
     <link href="/css/bootstrap-rtl.css" rel="stylesheet">
-
-    <!-- Plugin Css End -->
-    <!-- Custom styles Style -->
     <link href="/css/rtl-css/style-rtl.css" rel="stylesheet">
-    <!-- Custom styles Style End-->
-
-    <!-- Responsive Style For-->
     <link href="/css/rtl-css/responsive-rtl.css" rel="stylesheet">
-    <!-- Responsive Style For-->
 
-    <!-- Custom styles for this template -->
-    <!--AmaranJS Css Start-->
+
     <link href="~/css/rtl-css/plugins/amaranjs/jquery.amaran-rtl.css" rel="stylesheet">
     <link href="~/css/rtl-css/plugins/amaranjs/theme/all-themes-rtl.css" rel="stylesheet">
     <link href="~/css/rtl-css/plugins/amaranjs/theme/default-rtl.css" rel="stylesheet">
-    <!--AmaranJS Css End -->
+
+    @RenderSection("Styles", required: false)
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -57,7 +42,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="blue-color">
+<body class="deep-blue-color">
     <nav class="navigation">
         <div class="container-fluid">
             <div class="header-logo">
@@ -115,7 +100,27 @@
             </div>
         </section>
 
-        @await Html.PartialAsync("_RightWrapper")
+        <section id="right-wrapper">
+            <!--Right hidden  section close icon start-->
+            <div class="close-right-wrapper">
+                <a href="javascript:void(0)"><i class="fa fa-times"></i></a>
+            </div>
+            <!--Right hidden  section close icon end-->
+
+            <!--Tab navigation start-->
+            <ul class="nav nav-tabs" id="setting-tab">
+                <li><a href="#passwordTab" data-toggle="tab"><i class="fa fa-key"></i> كلمة السر</a></li>
+                <li><a href="#profileTab" data-toggle="tab"><i class="fa fa-user"></i> المعطيات الشخصية</a></li>
+            </ul>
+            <!--Tab navigation end -->
+
+            <!--Tab content start-->
+            <div class="tab-content">        
+                @await Html.PartialAsync("_Profile")
+                @await Html.PartialAsync("_Password")
+            </div>
+            <!--Tab content -->
+        </section>
 
         <div id="change-color">
             <div id="change-color-control">
@@ -142,73 +147,22 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/color.js"></script>
         <script src="~/js/multipleAccordion.js"></script>
-
-        <!--easing Library Script Start -->
-        <script src="~/js/lib/jquery.easing.js"></script>
-        <!--easing Library Script End -->
-
-        <!--Nano Scroll Script Start -->
-        <script src="~/js/jquery.nanoscroller.min.js"></script>
-        <!--Nano Scroll Script End -->
-
-        <!--switchery Script Start -->
-        <script src="~/js/switchery.min.js"></script>
-        <!--switchery Script End -->
-
-        <!--bootstrap switch Button Script Start-->
-        <script src="~/js/bootstrap-switch.js"></script>
-        <!--bootstrap switch Button Script End-->
-
-        <!--easypie Library Script Start -->
-        <script src="~/js/jquery.easypiechart.min.js"></script>
-        <!--easypie Library Script Start -->
-
-        <!--bootstrap-progressbar Library script Start-->
-        <script src="~/js/bootstrap-progressbar.min.js"></script>
-        <!--bootstrap-progressbar Library script End-->
-
         <script src="~/js/pages/layout.js"></script>
-
         <script src="~/js/jquery.amaran.js"></script>
-
         <script src="~/lib/Account/user.js"></script>
-        <!--Layout Script End -->
+        @RenderSection("Scripts", required: false)
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/color.js"></script>
         <script src="~/js/multipleAccordion.js"></script>
-
-        <!--easing Library Script Start -->
-        <script src="~/js/lib/jquery.easing.js"></script>
-        <!--easing Library Script End -->
-
-        <!--Nano Scroll Script Start -->
-        <script src="~/js/jquery.nanoscroller.min.js"></script>
-        <!--Nano Scroll Script End -->
-
-        <!--switchery Script Start -->
-        <script src="~/js/switchery.min.js"></script>
-        <!--switchery Script End -->
-
-        <!--bootstrap switch Button Script Start-->
-        <script src="~/js/bootstrap-switch.js"></script>
-        <!--bootstrap switch Button Script End-->
-
-        <!--easypie Library Script Start -->
-        <script src="~/js/jquery.easypiechart.min.js"></script>
-        <!--easypie Library Script Start -->
-
-        <!--bootstrap-progressbar Library script Start-->
-        <script src="~/js/bootstrap-progressbar.min.js"></script>
-        <!--bootstrap-progressbar Library script End-->
-
-
         <script src="~/js/pages/layout.js"></script>
-        <!--Layout Script End -->
+        <script src="~/js/jquery.amaran.js"></script>
+        <script src="~/lib/Account/user.js"></script>
+        @RenderSection("Scripts", required: false)
     </environment>
 
-    @RenderSection("Scripts", required: false)
+    
 </body>
 </html>

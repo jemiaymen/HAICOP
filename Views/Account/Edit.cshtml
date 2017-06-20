@@ -1,17 +1,17 @@
-﻿@model RegisterViewModel
+@model EditProfileViewModel
 @{
-    ViewData["Title"] = "اظافة مستعمل";
+    ViewData["Title"] = "تحيين مستعمل";
     ViewData["SubMenu"] = "التصرف في المستعملين";
 }
 
 
 <div class="panel panel-default">
     <div class="panel-heading">
-         <h3 class="panel-title">اظافة مستعمل</h3>
+         <h3 class="panel-title">تحيين مستعمل</h3>
     </div>
     <div class="panel-body">
-        <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-
+        <form asp-controller="Account" asp-action="Edit" method="post" class="form-horizontal">
+            <input asp-for="UserId" type="hidden"/>
             <div class="form-group">
                 <label asp-for="UserName" class="col-md-3 control-label"></label>
                 <div class="col-md-8">
@@ -26,8 +26,6 @@
                     <span asp-validation-for="FirstLastName" class="text-danger"></span>
                 </div>
             </div>
-
-
             <div class="form-group">
                 <label asp-for="Email" class="col-md-3 control-label"></label>
                 <div class="col-md-8">
@@ -36,30 +34,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="col-md-3 control-label"></label>
-                <div class="col-md-8">
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="col-md-3 control-label"></label>
-                <div class="col-md-8">
-                    <input asp-for="ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
                 <label asp-for="Role" class="col-md-3 control-label"></label>
                 <div class="col-md-8">
-                    @Html.DropDownList("Role",new SelectList(Model.Roles, "NormalizedName", "Name") , "", new {@class = "form-control"})
+                    @Html.DropDownList("Role",new SelectList(Model.Roles, "Name", "Name") , Model.StringRoles[0] , new {@class = "form-control"})
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-8">
-                    <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    <button type="submit" class="btn ls-light-green-btn">تحيين</button>
                 </div>
             </div>
         </form>                            
