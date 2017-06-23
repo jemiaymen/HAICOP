@@ -60,20 +60,48 @@ namespace HAICOP.Data
                 .HasMaxLength(255));
             builder.Entity<IdentityRoleClaim<string>>(entity => entity.Property(m => m.RoleId)
                 .HasMaxLength(255));
+            
+            builder.Entity<Agent>(entity => entity.Property(m => m.Name)
+                    .HasMaxLength(255));
 
             builder.Entity<Agent>()
                     .HasIndex(c => c.Name)
                     .IsUnique();
-            builder.Entity<Agent>(entity => entity.Property(m => m.Name)
-                    .HasMaxLength(255));
+            
 
             builder.Entity<AppsUser>(entity => entity.Property(m => m.UserID)
                 .HasMaxLength(255));    
+            
+            
+            builder.Entity<ForeignInvestisseur>(entity => entity.Property(m => m.Name)
+                    .HasMaxLength(255));
+            builder.Entity<ForeignInvestisseur>()
+                    .HasIndex(c => c.Name)
+                    .IsUnique();
+            builder.Entity<Acheteur>(entity => entity.Property(m => m.Lbl)
+                    .HasMaxLength(255));
+            builder.Entity<Acheteur>()
+                    .HasIndex(c => c.Lbl)
+                    .IsUnique();
+            builder.Entity<Fournisseur>(entity => entity.Property(m => m.Lbl)
+                    .HasMaxLength(255));
+            builder.Entity<Fournisseur>()
+                    .HasIndex(c => c.Lbl)
+                    .IsUnique();
+            
+            builder.Entity<AchInDossier>()
+                    .HasKey(c => new {c.AcheteurID , c.DossierID});
+            
+            builder.Entity<FourInDossier>()
+                    .HasKey(c => new {c.FournisseurID , c.DossierID});
+            
             builder.Entity<AppsUser>()
                     .HasKey(c => new {c.AgentID , c.UserID});
 
             builder.Entity<InvInDossier>()
                     .HasKey(c => new {c.ForeignInvestisseurID , c.DossierID});
+            
+
         }
 
 
@@ -82,7 +110,6 @@ namespace HAICOP.Data
         public DbSet<Dessision> Dessision {get ; set;}
         public DbSet<Fournisseur> Fournisseur {get ; set;}
         public DbSet<Acheteur> Acheteur {get ; set;}
-        public DbSet<Lot> Lot {get ; set;}
         public DbSet<Metting> Metting {get ; set;}
         public DbSet<Commission> Commission {get ; set;}
         public DbSet<Agent> Agent {get ; set;}
@@ -90,5 +117,7 @@ namespace HAICOP.Data
         public DbSet<ForeignInvestisseur> ForeignInvestisseur { get ; set; }
         public DbSet<InvInDossier> InvInDossier { get ; set; }
         public DbSet<HAICOP.Models.ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<AchInDossier> AchInDossier { get; set; }
+        public DbSet<FourInDossier> FourInDossier { get; set; }
     }
 }

@@ -1,0 +1,64 @@
+@model HAICOP.Models.Agent
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>Agent</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ID" />
+        <div class="form-group">
+            <label asp-for="CommissionID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="CommissionID" class="form-control" asp-items="ViewBag.CommissionID"></select>
+                <span asp-validation-for="CommissionID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="NameFr" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="NameFr" class="form-control" />
+                <span asp-validation-for="NameFr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsPresident" />
+                    <label asp-for="IsPresident"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+</body>
+</html>

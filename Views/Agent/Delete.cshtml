@@ -1,4 +1,4 @@
-@model HAICOP.Models.ForeignInvestisseur
+@model HAICOP.Models.Agent
 
 @{
     Layout = null;
@@ -15,7 +15,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>ForeignInvestisseur</h4>
+    <h4>Agent</h4>
     <hr />
     <dl class="dl-horizontal">
         <input type="hidden" asp-for="ID" />
@@ -24,6 +24,24 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NameFr)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NameFr)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPresident)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsPresident)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Commission)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Commission.Lbl)
         </dd>
     </dl>
     

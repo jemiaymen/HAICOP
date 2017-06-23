@@ -1,4 +1,4 @@
-@model IEnumerable<HAICOP.Models.ForeignInvestisseur>
+@model IEnumerable<HAICOP.Models.Agent>
 
 @{
     Layout = null;
@@ -21,6 +21,15 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NameFr)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPresident)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commission)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -29,6 +38,15 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameFr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPresident)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Commission.Lbl)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

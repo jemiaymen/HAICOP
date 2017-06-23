@@ -9,6 +9,19 @@ namespace HAICOP.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Acheteur",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Lbl = table.Column<string>(maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Acheteur", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -36,27 +49,18 @@ namespace HAICOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dossier",
+                name: "Commission",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    DocDate = table.Column<DateTime>(nullable: false),
-                    Financement = table.Column<int>(nullable: false),
-                    Foreign = table.Column<string>(maxLength: 250, nullable: true),
-                    Month = table.Column<int>(nullable: false),
-                    Nature = table.Column<int>(nullable: false),
-                    Num = table.Column<int>(nullable: false),
-                    Subject = table.Column<string>(maxLength: 500, nullable: false),
-                    TotalForeign = table.Column<float>(nullable: false),
-                    TotalLocal = table.Column<float>(nullable: false),
-                    TraitDate = table.Column<DateTime>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    Year = table.Column<int>(nullable: false)
+                    HavePresident = table.Column<bool>(nullable: false),
+                    Lbl = table.Column<string>(maxLength: 250, nullable: false),
+                    LblFr = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dossier", x => x.ID);
+                    table.PrimaryKey("PK_Commission", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,11 +69,24 @@ namespace HAICOP.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    Name = table.Column<string>(maxLength: 250, nullable: false)
+                    Name = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ForeignInvestisseur", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fournisseur",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Lbl = table.Column<string>(maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fournisseur", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,132 +162,54 @@ namespace HAICOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Acheteur",
+                name: "Agent",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    DossierID = table.Column<int>(nullable: false),
-                    Lbl = table.Column<string>(maxLength: 250, nullable: false)
+                    CommissionID = table.Column<int>(nullable: false),
+                    IsPresident = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
+                    NameFr = table.Column<string>(maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Acheteur", x => x.ID);
+                    table.PrimaryKey("PK_Agent", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Acheteur_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
+                        name: "FK_Agent_Commission_CommissionID",
+                        column: x => x.CommissionID,
+                        principalTable: "Commission",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Commission",
+                name: "Dossier",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    DossierID = table.Column<int>(nullable: false),
-                    HavePresident = table.Column<bool>(nullable: false),
-                    Lbl = table.Column<string>(maxLength: 250, nullable: false),
-                    LblFr = table.Column<string>(maxLength: 250, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Commission", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Commission_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Fournisseur",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    DossierID = table.Column<int>(nullable: false),
-                    Lbl = table.Column<string>(maxLength: 250, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fournisseur", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Fournisseur_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Mail",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    Desc = table.Column<string>(maxLength: 500, nullable: true),
-                    DossierID = table.Column<int>(nullable: false),
-                    RecepDate = table.Column<DateTime>(nullable: false),
-                    Ref = table.Column<string>(maxLength: 20, nullable: false),
-                    Type = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mail", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Mail_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Metting",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    Desc = table.Column<string>(maxLength: 500, nullable: true),
+                    CommissionID = table.Column<int>(nullable: false),
                     DocDate = table.Column<DateTime>(nullable: false),
-                    DossierID = table.Column<int>(nullable: false)
+                    Financement = table.Column<int>(nullable: false),
+                    Foreign = table.Column<string>(maxLength: 250, nullable: true),
+                    Month = table.Column<int>(nullable: false),
+                    Nature = table.Column<int>(nullable: false),
+                    Num = table.Column<int>(nullable: false),
+                    Subject = table.Column<string>(maxLength: 500, nullable: false),
+                    TotalForeign = table.Column<float>(nullable: false),
+                    TotalLocal = table.Column<float>(nullable: false),
+                    TraitDate = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    Year = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Metting", x => x.ID);
+                    table.PrimaryKey("PK_Dossier", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Metting_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InvInDossier",
-                columns: table => new
-                {
-                    ForeignInvestisseurID = table.Column<int>(nullable: false),
-                    DossierID = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InvInDossier", x => new { x.ForeignInvestisseurID, x.DossierID });
-                    table.UniqueConstraint("AK_InvInDossier_DossierID_ForeignInvestisseurID", x => new { x.DossierID, x.ForeignInvestisseurID });
-                    table.ForeignKey(
-                        name: "FK_InvInDossier_Dossier_DossierID",
-                        column: x => x.DossierID,
-                        principalTable: "Dossier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InvInDossier_ForeignInvestisseur_ForeignInvestisseurID",
-                        column: x => x.ForeignInvestisseurID,
-                        principalTable: "ForeignInvestisseur",
+                        name: "FK_Dossier_Commission_CommissionID",
+                        column: x => x.CommissionID,
+                        principalTable: "Commission",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -321,44 +260,145 @@ namespace HAICOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Agent",
+                name: "AppsUser",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    CommissionID = table.Column<int>(nullable: false),
-                    IsPresident = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 255, nullable: false),
-                    NameFr = table.Column<string>(maxLength: 250, nullable: false)
+                    AgentID = table.Column<int>(nullable: false),
+                    UserID = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Agent", x => x.ID);
+                    table.PrimaryKey("PK_AppsUser", x => new { x.AgentID, x.UserID });
                     table.ForeignKey(
-                        name: "FK_Agent_Commission_CommissionID",
-                        column: x => x.CommissionID,
-                        principalTable: "Commission",
+                        name: "FK_AppsUser_Agent_AgentID",
+                        column: x => x.AgentID,
+                        principalTable: "Agent",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppsUser_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AchInDossier",
+                columns: table => new
+                {
+                    AcheteurID = table.Column<int>(nullable: false),
+                    DossierID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AchInDossier", x => new { x.AcheteurID, x.DossierID });
+                    table.ForeignKey(
+                        name: "FK_AchInDossier_Acheteur_AcheteurID",
+                        column: x => x.AcheteurID,
+                        principalTable: "Acheteur",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AchInDossier_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Lot",
+                name: "FourInDossier",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     FournisseurID = table.Column<int>(nullable: false),
-                    Lbl = table.Column<string>(maxLength: 200, nullable: false),
+                    DossierID = table.Column<int>(nullable: false),
+                    Lbl = table.Column<string>(maxLength: 200, nullable: true),
                     Montant = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lot", x => x.ID);
+                    table.PrimaryKey("PK_FourInDossier", x => new { x.FournisseurID, x.DossierID });
+                    table.UniqueConstraint("AK_FourInDossier_DossierID_FournisseurID", x => new { x.DossierID, x.FournisseurID });
                     table.ForeignKey(
-                        name: "FK_Lot_Fournisseur_FournisseurID",
+                        name: "FK_FourInDossier_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FourInDossier_Fournisseur_FournisseurID",
                         column: x => x.FournisseurID,
                         principalTable: "Fournisseur",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvInDossier",
+                columns: table => new
+                {
+                    ForeignInvestisseurID = table.Column<int>(nullable: false),
+                    DossierID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvInDossier", x => new { x.ForeignInvestisseurID, x.DossierID });
+                    table.UniqueConstraint("AK_InvInDossier_DossierID_ForeignInvestisseurID", x => new { x.DossierID, x.ForeignInvestisseurID });
+                    table.ForeignKey(
+                        name: "FK_InvInDossier_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InvInDossier_ForeignInvestisseur_ForeignInvestisseurID",
+                        column: x => x.ForeignInvestisseurID,
+                        principalTable: "ForeignInvestisseur",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mail",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Desc = table.Column<string>(maxLength: 500, nullable: true),
+                    DossierID = table.Column<int>(nullable: false),
+                    RecepDate = table.Column<DateTime>(nullable: false),
+                    Ref = table.Column<string>(maxLength: 20, nullable: false),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mail", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Mail_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Metting",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Desc = table.Column<string>(maxLength: 500, nullable: true),
+                    DocDate = table.Column<DateTime>(nullable: false),
+                    DossierID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Metting", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Metting_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -383,35 +423,16 @@ namespace HAICOP.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AppsUser",
-                columns: table => new
-                {
-                    AgentID = table.Column<int>(nullable: false),
-                    UserID = table.Column<string>(maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppsUser", x => new { x.AgentID, x.UserID });
-                    table.ForeignKey(
-                        name: "FK_AppsUser_Agent_AgentID",
-                        column: x => x.AgentID,
-                        principalTable: "Agent",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AppsUser_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Acheteur_Lbl",
+                table: "Acheteur",
+                column: "Lbl",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Acheteur_DossierID",
-                table: "Acheteur",
-                column: "DossierID",
-                unique: true);
+                name: "IX_AchInDossier_DossierID",
+                table: "AchInDossier",
+                column: "DossierID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Agent_CommissionID",
@@ -441,25 +462,27 @@ namespace HAICOP.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Commission_DossierID",
-                table: "Commission",
-                column: "DossierID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Dessision_MettingID",
                 table: "Dessision",
                 column: "MettingID",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fournisseur_DossierID",
-                table: "Fournisseur",
-                column: "DossierID");
+                name: "IX_Dossier_CommissionID",
+                table: "Dossier",
+                column: "CommissionID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lot_FournisseurID",
-                table: "Lot",
-                column: "FournisseurID");
+                name: "IX_ForeignInvestisseur_Name",
+                table: "ForeignInvestisseur",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fournisseur_Lbl",
+                table: "Fournisseur",
+                column: "Lbl",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mail_DossierID",
@@ -501,7 +524,7 @@ namespace HAICOP.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Acheteur");
+                name: "AchInDossier");
 
             migrationBuilder.DropTable(
                 name: "AppsUser");
@@ -510,10 +533,10 @@ namespace HAICOP.Migrations
                 name: "Dessision");
 
             migrationBuilder.DropTable(
-                name: "InvInDossier");
+                name: "FourInDossier");
 
             migrationBuilder.DropTable(
-                name: "Lot");
+                name: "InvInDossier");
 
             migrationBuilder.DropTable(
                 name: "Mail");
@@ -534,16 +557,19 @@ namespace HAICOP.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Acheteur");
+
+            migrationBuilder.DropTable(
                 name: "Agent");
 
             migrationBuilder.DropTable(
                 name: "Metting");
 
             migrationBuilder.DropTable(
-                name: "ForeignInvestisseur");
+                name: "Fournisseur");
 
             migrationBuilder.DropTable(
-                name: "Fournisseur");
+                name: "ForeignInvestisseur");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -552,10 +578,10 @@ namespace HAICOP.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Commission");
+                name: "Dossier");
 
             migrationBuilder.DropTable(
-                name: "Dossier");
+                name: "Commission");
         }
     }
 }

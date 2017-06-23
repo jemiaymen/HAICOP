@@ -18,7 +18,7 @@ using HAICOP.Services;
 
 namespace HAICOP.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -116,7 +116,7 @@ namespace HAICOP.Controllers
                     var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index");
                 }
                 AddErrors(result);
             }

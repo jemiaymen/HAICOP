@@ -1,0 +1,53 @@
+@model HAICOP.Models.ForeignInvestisseur
+
+@{
+    ViewData["Title"] = "اظافة ممول أجنبي";
+    ViewData["SubMenu"] = "التصرف فالثوابت";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Invest" asp-action="Create"  method="post" >
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" asp-for="Name"> </label>
+                    <div class="col-md-9">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_AutoCompl"); 
+    }
+    <script>
+        $('#Name').autocomplete({
+            serviceUrl: '/api/sug/invest',
+            onSelect: function (suggestion) {
+                alert('You selected: ' + suggestion.id + ', ' + suggestion.value);
+            }
+        });
+    </script>
+}
+
+@section Styles{
+    @{ await Html.RenderPartialAsync("_AutoComplstyle") ;}
+}
+
+

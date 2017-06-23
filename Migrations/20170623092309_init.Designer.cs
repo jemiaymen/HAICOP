@@ -9,7 +9,7 @@ using HAICOP.Models;
 namespace HAICOP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170614120014_init")]
+    [Migration("20170623092309_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,18 +22,29 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DossierID");
-
                     b.Property<string>("Lbl")
                         .IsRequired()
-                        .HasMaxLength(250);
+                        .HasMaxLength(255);
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DossierID")
+                    b.HasIndex("Lbl")
                         .IsUnique();
 
                     b.ToTable("Acheteur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.AchInDossier", b =>
+                {
+                    b.Property<int>("AcheteurID");
+
+                    b.Property<int>("DossierID");
+
+                    b.HasKey("AcheteurID", "DossierID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("AchInDossier");
                 });
 
             modelBuilder.Entity("HAICOP.Models.Agent", b =>
@@ -137,8 +148,6 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DossierID");
-
                     b.Property<bool>("HavePresident");
 
                     b.Property<string>("Lbl")
@@ -149,8 +158,6 @@ namespace HAICOP.Migrations
                         .HasMaxLength(250);
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DossierID");
 
                     b.ToTable("Commission");
                 });
@@ -178,6 +185,8 @@ namespace HAICOP.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CommissionID");
 
                     b.Property<DateTime>("DocDate");
 
@@ -208,6 +217,8 @@ namespace HAICOP.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CommissionID");
+
                     b.ToTable("Dossier");
                 });
 
@@ -218,11 +229,32 @@ namespace HAICOP.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250);
+                        .HasMaxLength(255);
 
                     b.HasKey("ID");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("ForeignInvestisseur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.FourInDossier", b =>
+                {
+                    b.Property<int>("FournisseurID");
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<string>("Lbl")
+                        .HasMaxLength(200);
+
+                    b.Property<float>("Montant");
+
+                    b.HasKey("FournisseurID", "DossierID");
+
+                    b.HasAlternateKey("DossierID", "FournisseurID");
+
+                    b.ToTable("FourInDossier");
                 });
 
             modelBuilder.Entity("HAICOP.Models.Fournisseur", b =>
@@ -230,15 +262,14 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DossierID");
-
                     b.Property<string>("Lbl")
                         .IsRequired()
-                        .HasMaxLength(250);
+                        .HasMaxLength(255);
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DossierID");
+                    b.HasIndex("Lbl")
+                        .IsUnique();
 
                     b.ToTable("Fournisseur");
                 });
@@ -254,26 +285,6 @@ namespace HAICOP.Migrations
                     b.HasAlternateKey("DossierID", "ForeignInvestisseurID");
 
                     b.ToTable("InvInDossier");
-                });
-
-            modelBuilder.Entity("HAICOP.Models.Lot", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("FournisseurID");
-
-                    b.Property<string>("Lbl")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<float>("Montant");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FournisseurID");
-
-                    b.ToTable("Lot");
                 });
 
             modelBuilder.Entity("HAICOP.Models.Mail", b =>
@@ -455,17 +466,22 @@ namespace HAICOP.Migrations
                     b.HasDiscriminator().HasValue("ApplicationRole");
                 });
 
-            modelBuilder.Entity("HAICOP.Models.Acheteur", b =>
+            modelBuilder.Entity("HAICOP.Models.AchInDossier", b =>
                 {
+                    b.HasOne("HAICOP.Models.Acheteur", "Acheteur")
+                        .WithMany()
+                        .HasForeignKey("AcheteurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
-                        .WithOne("Acheteur")
-                        .HasForeignKey("HAICOP.Models.Acheteur", "DossierID")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HAICOP.Models.Agent", b =>
                 {
-                    b.HasOne("HAICOP.Models.Commission")
+                    b.HasOne("HAICOP.Models.Commission", "Commission")
                         .WithMany("Agents")
                         .HasForeignKey("CommissionID")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -484,14 +500,6 @@ namespace HAICOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HAICOP.Models.Commission", b =>
-                {
-                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
-                        .WithMany("Commissions")
-                        .HasForeignKey("DossierID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("HAICOP.Models.Dessision", b =>
                 {
                     b.HasOne("HAICOP.Models.Metting", "Metting")
@@ -500,11 +508,24 @@ namespace HAICOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HAICOP.Models.Fournisseur", b =>
+            modelBuilder.Entity("HAICOP.Models.Dossier", b =>
+                {
+                    b.HasOne("HAICOP.Models.Commission", "Commission")
+                        .WithMany("Dossiers")
+                        .HasForeignKey("CommissionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.FourInDossier", b =>
                 {
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
-                        .WithMany("Fournisseurs")
+                        .WithMany()
                         .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.Fournisseur", "Fournisseur")
+                        .WithMany()
+                        .HasForeignKey("FournisseurID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -518,14 +539,6 @@ namespace HAICOP.Migrations
                     b.HasOne("HAICOP.Models.ForeignInvestisseur", "ForeignInvestisseur")
                         .WithMany()
                         .HasForeignKey("ForeignInvestisseurID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HAICOP.Models.Lot", b =>
-                {
-                    b.HasOne("HAICOP.Models.Fournisseur", "Fournisseur")
-                        .WithMany("Lots")
-                        .HasForeignKey("FournisseurID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

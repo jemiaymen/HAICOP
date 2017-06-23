@@ -1,0 +1,53 @@
+@model IEnumerable<HAICOP.Models.Acheteur>
+
+@{
+    ViewData["Title"] = "القائمة الجملية المشتري العمومي";
+    ViewData["SubMenu"] = "التصرف فالثوابت";
+}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                        <th>
+                                                            المشتري العمومي
+                                                        </th>
+                                                        <th>
+                                                            تحيين
+                                                        </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model) {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Lbl)
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
+}

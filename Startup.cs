@@ -82,7 +82,6 @@ namespace HAICOP
             //     options.Filters.Add(new RequireHttpsAttribute ());
             // });
 
-            services.AddCloudscribePagination();
 
             services.Configure<IdentityOptions>(config =>
             {
@@ -211,4 +210,4 @@ namespace HAICOP
 }
 
 
-//dotnet aspnet-codegenerator --project . controller -name InvestisseurController -m ForeignInvestisseur -dc ApplicationDbContext
+//dotnet aspnet-codegenerator --project . controller -name FournisseurController -m Fournisseur -dc ApplicationDbContext

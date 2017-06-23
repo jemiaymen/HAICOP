@@ -2,22 +2,6 @@
   "version": 2,
   "targets": {
     ".NETCoreApp,Version=v1.1": {
-      "cloudscribe.Web.Pagination/1.1.3": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Mvc": "1.1.2",
-          "Microsoft.AspNetCore.Mvc.Core": "1.1.2",
-          "Microsoft.AspNetCore.Mvc.TagHelpers": "1.1.2",
-          "NETStandard.Library": "1.6.1",
-          "System.Linq.Queryable": "4.3.0"
-        },
-        "compile": {
-          "lib/netstandard1.6/cloudscribe.Web.Pagination.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.6/cloudscribe.Web.Pagination.dll": {}
-        }
-      },
       "Libuv/1.9.1": {
         "type": "package",
         "dependencies": {
@@ -2284,20 +2268,6 @@
           }
         }
       },
-      "Sendgrid/9.4.1": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
-          "NETStandard.Library": "1.6.1",
-          "Newtonsoft.Json": "9.0.1"
-        },
-        "compile": {
-          "lib/netstandard1.3/SendGrid.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.3/SendGrid.dll": {}
-        }
-      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -4407,19 +4377,6 @@
     }
   },
   "libraries": {
-    "cloudscribe.Web.Pagination/1.1.3": {
-      "sha512": "s5ShDnQlPyB5hPcEilUJ033jmQXB21tArmsdBwqJyeXkKpwkEarv/VWUdxNkxdYSlUD/r65+OuogKGoAcYM3uQ==",
-      "type": "package",
-      "path": "cloudscribe.web.pagination/1.1.3",
-      "files": [
-        "cloudscribe.web.pagination.1.1.3.nupkg.sha512",
-        "cloudscribe.web.pagination.nuspec",
-        "lib/net451/cloudscribe.Web.Pagination.dll",
-        "lib/net452/cloudscribe.Web.Pagination.dll",
-        "lib/net46/cloudscribe.Web.Pagination.dll",
-        "lib/netstandard1.6/cloudscribe.Web.Pagination.dll"
-      ]
-    },
     "Libuv/1.9.1": {
       "sha512": "r71SuEOCXn6Kc6hVGb1yUtsFhLDdWXh+NGvqhFR1VsjUNIKkcuW9+L/ePtq7H9v3FaSMlW17kXWnDX3M4ewtTQ==",
       "type": "package",
@@ -6485,21 +6442,6 @@
         "runtime.win7-x86.runtime.native.system.data.sqlclient.sni.4.3.0.nupkg.sha512",
         "runtime.win7-x86.runtime.native.system.data.sqlclient.sni.nuspec",
         "runtimes/win7-x86/native/sni.dll"
-      ]
-    },
-    "Sendgrid/9.4.1": {
-      "sha512": "+CZo902nUjmKbfXNA7WhD45y/saC1CzGhds6pY2TF19wdwJaz1SWT3O2bXhZVp2KiZ8U3/NaNn87zL3bPL17nA==",
-      "type": "package",
-      "path": "sendgrid/9.4.1",
-      "files": [
-        "lib/net452/SendGrid.dll",
-        "lib/net452/SendGrid.pdb",
-        "lib/net452/SendGrid.xml",
-        "lib/netstandard1.3/SendGrid.dll",
-        "lib/netstandard1.3/SendGrid.pdb",
-        "lib/netstandard1.3/SendGrid.xml",
-        "sendgrid.9.4.1.nupkg.sha512",
-        "sendgrid.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -11304,9 +11246,7 @@
       "Newtonsoft.Json >= 10.0.2",
       "Pomelo.EntityFrameworkCore.MySql >= 1.1.2",
       "Pomelo.EntityFrameworkCore.MySql.Design >= 1.1.2",
-      "Sendgrid >= 9.4.1",
-      "System.Composition >= 1.0.31",
-      "cloudscribe.Web.Pagination >= 1.1.3"
+      "System.Composition >= 1.0.31"
     ]
   },
   "packageFolders": {
@@ -11397,10 +11337,6 @@
             "target": "Package",
             "version": "1.1.2"
           },
-          "cloudscribe.Web.Pagination": {
-            "target": "Package",
-            "version": "1.1.3"
-          },
           "Microsoft.Composition": {
             "include": "None",
             "target": "Package",
@@ -11417,10 +11353,6 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "10.0.2"
-          },
-          "Sendgrid": {
-            "target": "Package",
-            "version": "9.4.1"
           }
         }
       }
