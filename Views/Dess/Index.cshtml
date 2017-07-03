@@ -1,9 +1,9 @@
-@using System.Linq
-@model IEnumerable<HAICOP.Models.Commission>
+@model IEnumerable<HAICOP.Models.Dessision>
+
 
 @{
-    ViewData["Title"] = "القائمة الجملية الهياكل";
-    ViewData["SubMenu"] = "التصرف فالثوابت";
+    ViewData["Title"] = "القائمة الجملية للقرارات";
+    ViewData["SubMenu"] = "التصرف في الثوابت";
 }
 
                     <div class="row">
@@ -18,13 +18,7 @@
                                             <thead>
                                                 <tr>
                                                         <th>
-                                                            @Html.DisplayNameFor(model => model.Lbl)
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayNameFor(model => model.LblFr)
-                                                        </th>
-                                                        <th>
-                                                            رئيس الهيكل
+                                                            القرار
                                                         </th>
                                                         <th>
                                                             تحيين
@@ -36,20 +30,6 @@
                                                         <tr>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Lbl)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.LblFr)
-                                                            </td>
-
-                                                            <td>
-                                                                @if( item.HavePresident && item.Agents != null){
-
-                                                                    @foreach(var i in item.Agents){
-                                                                        if(i.IsPresident){
-                                                                            @Html.DisplayFor(modelItem => i.Name);
-                                                                        }
-                                                                    }
-                                                                }
                                                             </td>
                                                             <td>
                                                                  <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
@@ -72,5 +52,4 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
 }
-
 

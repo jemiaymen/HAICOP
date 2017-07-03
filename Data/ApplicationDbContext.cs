@@ -101,6 +101,9 @@ namespace HAICOP.Data
             builder.Entity<InvInDossier>()
                     .HasKey(c => new {c.ForeignInvestisseurID , c.DossierID});
             
+            builder.Entity<DessisionInMetting>()
+                    .HasKey(c => new {c.DessisionID , c.MettingID});
+            
 
         }
 
@@ -119,5 +122,7 @@ namespace HAICOP.Data
         public DbSet<HAICOP.Models.ApplicationRole> ApplicationRole { get; set; }
         public DbSet<AchInDossier> AchInDossier { get; set; }
         public DbSet<FourInDossier> FourInDossier { get; set; }
+        public DbSet<DessisionInMetting> DessisionInMetting { get; set; }
+        
     }
 }

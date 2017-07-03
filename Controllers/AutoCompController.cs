@@ -107,5 +107,16 @@ namespace HAICOP.Controllers
                                                     }).ToList();
             return new {suggestions = result };
         }
+
+        [HttpGet]
+        [Route("api/sug/dess")]
+        public dynamic dess()
+        {
+            var result = _context.Dessision.Select(a => new {
+                                                        value = a.Lbl,
+                                                        id = a.ID
+                                                    }).ToList();
+            return new {suggestions = result };
+        }
     }
 }

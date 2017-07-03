@@ -19,57 +19,50 @@ namespace HAICOP.Controllers
             _context = context;    
         }
 
-        // GET: Controllers/Agent
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Agent.Include(a => a.Commission);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Controllers/Agent/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var agent = await _context.Agent
-                .Include(a => a.Commission)
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (agent == null)
-            {
-                return NotFound();
-            }
-
-            return View(agent);
-        }
-
-        // GET: Controllers/Agent/Create
         public IActionResult Create()
         {
             ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl");
             return View();
         }
 
-        // POST: Controllers/Agent/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,CommissionID,Name,NameFr,IsPresident")] Agent agent)
         {
+            if(AgentExists(agent.Name , agent.NameFr))
+            {
+                ModelState.AddModelError("Name", " موجود");
+                ModelState.AddModelError("NameFr", " موجود");
+                return View(agent);
+            }
+
             if (ModelState.IsValid)
             {
+                if(agent.IsPresident)
+                {
+                    if(HavePresident(agent.CommissionID))
+                    {
+                        ModelState.AddModelError("IsPresident", "لديها رئيس");
+                        ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+                        return View(agent);
+                    }
+                }
+
                 _context.Add(agent);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
+                
             }
             ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
             return View(agent);
         }
 
-        // GET: Controllers/Agent/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,9 +79,6 @@ namespace HAICOP.Controllers
             return View(agent);
         }
 
-        // POST: Controllers/Agent/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,CommissionID,Name,NameFr,IsPresident")] Agent agent)
@@ -100,6 +90,21 @@ namespace HAICOP.Controllers
 
             if (ModelState.IsValid)
             {
+                if(agent.IsPresident)
+                {
+                    var president = HavePresidentGet(agent.ID);
+                    if(president !=  null)
+                    {
+                        if( president.ID != agent.ID)
+                        {
+                            ModelState.AddModelError("IsPresident", "لديها رئيس");
+                            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+                            return View(agent);
+                        }
+                    }
+                }
+                
+
                 try
                 {
                     _context.Update(agent);
@@ -122,39 +127,30 @@ namespace HAICOP.Controllers
             return View(agent);
         }
 
-        // GET: Controllers/Agent/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var agent = await _context.Agent
-                .Include(a => a.Commission)
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (agent == null)
-            {
-                return NotFound();
-            }
-
-            return View(agent);
-        }
-
-        // POST: Controllers/Agent/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var agent = await _context.Agent.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Agent.Remove(agent);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
         private bool AgentExists(int id)
         {
             return _context.Agent.Any(e => e.ID == id);
+        }
+
+        private bool AgentExists(string Name , string NameFr)
+        {
+            return _context.Agent.Any(e => e.Name == Name && e.NameFr == NameFr);
+        }
+
+        public bool HavePresident(int ID)
+        {
+            return _context.Commission.Any(m => m.ID == ID && m.HavePresident == true);
+        }
+
+        public Agent HavePresidentGet(int ID)
+        {
+            return _context.Commission.AsNoTracking().Include(a => a.Agents).SingleOrDefault(m => m.ID == ID)
+                                      .Agents.SingleOrDefault(a => a.IsPresident  == true);
+        }
+
+        public Agent GetPresident(int ID)
+        {
+            return _context.Agent.AsNoTracking().Include( a => a.Commission ).SingleOrDefault( a => a.CommissionID == ID  && a.IsPresident == true);
         }
     }
 }

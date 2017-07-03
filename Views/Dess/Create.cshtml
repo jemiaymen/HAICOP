@@ -1,0 +1,39 @@
+@model HAICOP.Models.Dessision
+
+@{
+    ViewData["Title"] = "اظافة قرار";
+    ViewData["SubMenu"] = "التصرف في الثوابت";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Dess" asp-action="Create"  method="post" >
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label"> القرار </label>
+                    <div class="col-md-9">
+                        <input asp-for="Lbl" class="form-control" />
+                        <span asp-validation-for="Lbl" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+}
+

@@ -10,19 +10,18 @@ using HAICOP.Models;
 
 namespace HAICOP.Controllers
 {
-    public class CommController : Controller
+    public class DessController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CommController(ApplicationDbContext context)
+        public DessController(ApplicationDbContext context)
         {
             _context = context;    
         }
 
-
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Commission.Include(a => a.Agents).ToListAsync());
+            return View(await _context.Dessision.ToListAsync());
         }
 
         public IActionResult Create()
@@ -30,26 +29,24 @@ namespace HAICOP.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Lbl,LblFr,HavePresident")] Commission commission)
+        public async Task<IActionResult> Create([Bind("ID,Lbl")] Dessision dessision)
         {
-            if(CommissionExists(commission.Lbl , commission.LblFr)){
+            if(DessisionExists(dessision.Lbl))
+            {
                 ModelState.AddModelError("Lbl", " موجود");
-                ModelState.AddModelError("LblFr", " موجود");
-                return View(commission);
+                return View(dessision);
             }
-            
+
             if (ModelState.IsValid)
             {
-                _context.Add(commission);
+                _context.Add(dessision);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(commission);
+            return View(dessision);
         }
-
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -58,40 +55,39 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var commission = await _context.Commission.SingleOrDefaultAsync(m => m.ID == id);
-            if (commission == null)
+            var dessision = await _context.Dessision.SingleOrDefaultAsync(m => m.ID == id);
+            if (dessision == null)
             {
                 return NotFound();
             }
-            return View(commission);
+            return View(dessision);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblFr,HavePresident")] Commission commission)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl")] Dessision dessision)
         {
-            if (id != commission.ID)
+            if (id != dessision.ID)
             {
                 return NotFound();
             }
 
-            if(CommissionExists(commission.Lbl , commission.LblFr)){
+            if(DessisionExists(dessision.Lbl))
+            {
                 ModelState.AddModelError("Lbl", " موجود");
-                ModelState.AddModelError("LblFr", " موجود");
-                return View(commission);
+                return View(dessision);
             }
-
+            
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(commission);
+                    _context.Update(dessision);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommissionExists(commission.ID))
+                    if (!DessisionExists(dessision.ID))
                     {
                         return NotFound();
                     }
@@ -102,17 +98,17 @@ namespace HAICOP.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return View(commission);
+            return View(dessision);
         }
 
-        private bool CommissionExists(int id)
+        private bool DessisionExists(int id)
         {
-            return _context.Commission.Any(e => e.ID == id);
+            return _context.Dessision.Any(e => e.ID == id);
         }
 
-        private bool CommissionExists(string Lbl, string LblFr)
+        private bool DessisionExists(string Lbl)
         {
-            return _context.Commission.Any(e => e.Lbl == Lbl && e.LblFr == LblFr);
+            return _context.Dessision.Any(e => e.Lbl == Lbl);
         }
     }
 }

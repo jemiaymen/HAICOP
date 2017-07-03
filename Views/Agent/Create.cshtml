@@ -1,62 +1,65 @@
 @model HAICOP.Models.Agent
 
+
 @{
-    Layout = null;
+    ViewData["Title"] = "اظافة مقرر";
+    ViewData["SubMenu"] = "التصرف في الالثوابت";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
-
-<form asp-action="Create">
-    <div class="form-horizontal">
-        <h4>Agent</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="CommissionID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="CommissionID" class ="form-control" asp-items="ViewBag.CommissionID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="NameFr" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="NameFr" class="form-control" />
-                <span asp-validation-for="NameFr" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="checkbox">
-                    <input asp-for="IsPresident" />
-                    <label asp-for="IsPresident"></label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
     </div>
-</form>
+    <div class="panel-body">
+        <form asp-controller="Agent" asp-action="Create"  method="post" >
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">اللجنة</label>
+                    <div class="col-md-9">
+                        <select asp-for="CommissionID" class ="form-control" asp-items="ViewBag.CommissionID"></select>
+                    </div>
+                </div>
+
+                 <div class="form-group">
+                    <label asp-for="Name" class="col-md-3 control-label"></label>
+                    <div class="col-md-9">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NameFr" class="col-md-3 control-label"></label>
+                    <div class="col-md-9">
+                        <input asp-for="NameFr" class="form-control" />
+                        <span asp-validation-for="NameFr" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <div class="checkbox">
+                            <input asp-for="IsPresident" />
+                            <label asp-for="IsPresident"></label>
+                        </div>
+                        <span asp-validation-for="IsPresident" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
 </div>
 
-</body>
-</html>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+}
+

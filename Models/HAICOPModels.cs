@@ -145,11 +145,6 @@ namespace HAICOP.Models
 	{
 		public int ID {get ; set;}
 		
-		[ForeignKey("Metting")]
-        public int MettingID { get; set; }
-		
-		public virtual Metting Metting { get; set; }
-		
 		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "القرار")]
         [StringLength(200, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
@@ -185,8 +180,6 @@ namespace HAICOP.Models
         public int DossierID { get; set; }
 		
 		public virtual Dossier Dossier { get; set; }
-		
-		public virtual Dessision Dessision { get; set; }
 		
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ الجلسة")]
@@ -326,6 +319,19 @@ namespace HAICOP.Models
 		
         [Display(Name = "القسط")]
 		public float Montant {get ; set;}
+	}
+
+	public class DessisionInMetting
+	{
+		[Key]
+        [Column(Order = 0)]
+        public int DessisionID { get ; set;}
+        public virtual Dessision Dessision { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public int MettingID { get; set; }
+        public virtual Metting Metting { get; set; }
 	}
 
 }
