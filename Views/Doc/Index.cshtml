@@ -1,0 +1,127 @@
+@model IEnumerable<HAICOP.Models.Dossier>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Num)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Year)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Month)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nature)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Financement)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DocDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EnterDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TraitDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalLocal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalForeign)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Foreign)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commission)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Num)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Month)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nature)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Financement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnterDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TraitDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalLocal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalForeign)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Foreign)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Commission.Lbl)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>

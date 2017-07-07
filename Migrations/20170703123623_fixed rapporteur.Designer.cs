@@ -9,9 +9,10 @@ using HAICOP.Models;
 namespace HAICOP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170703123623_fixed rapporteur")]
+    partial class fixedrapporteur
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
@@ -183,20 +184,16 @@ namespace HAICOP.Migrations
 
                     b.Property<DateTime>("DocDate");
 
-                    b.Property<DateTime>("EnterDate");
-
                     b.Property<int>("Financement");
 
                     b.Property<string>("Foreign")
                         .HasMaxLength(250);
 
+                    b.Property<int>("Month");
+
                     b.Property<int>("Nature");
 
                     b.Property<int>("Num");
-
-                    b.Property<DateTime>("ProDate");
-
-                    b.Property<int>("State");
 
                     b.Property<string>("Subject")
                         .IsRequired()
@@ -209,6 +206,8 @@ namespace HAICOP.Migrations
                     b.Property<DateTime>("TraitDate");
 
                     b.Property<int>("Type");
+
+                    b.Property<int>("Year");
 
                     b.HasKey("ID");
 
@@ -240,10 +239,7 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("DossierID");
 
-                    b.Property<bool>("Foreign");
-
                     b.Property<string>("Lbl")
-                        .IsRequired()
                         .HasMaxLength(200);
 
                     b.Property<float>("Montant");
@@ -295,24 +291,13 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("DossierID");
 
-                    b.Property<string>("From")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("MailDate");
-
-                    b.Property<int>("MailNature");
-
-                    b.Property<int>("MailType");
-
-                    b.Property<string>("OriginRef")
-                        .HasMaxLength(20);
+                    b.Property<DateTime>("RecepDate");
 
                     b.Property<string>("Ref")
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<string>("Url");
+                    b.Property<int>("Type");
 
                     b.HasKey("ID");
 

@@ -27,6 +27,15 @@ namespace HAICOP.Models
 		Out = 2
 	}
 
+	public enum MailNature 
+	{
+		[Display(Name = "جديد")]
+		New = 1,
+		[Display(Name = "عناصر إجابة")]
+		Rep = 2,
+		[Display(Name = "وثائق تكميلية")]
+		Compl = 3
+	}
 
 	public enum DossierType 
 	{
@@ -53,12 +62,29 @@ namespace HAICOP.Models
 		[Display(Name = "مختلفة")]
 		quatre = 4
 	}
+
+	public enum DossierState 
+	{
+		[Display(Name = "اظافة")]
+		Creation = 1,
+		[Display(Name = "جاري")]
+		Encour = 2,
+		[Display(Name = "استراحة")]
+		Pause = 3,
+		[Display(Name = "إنجاز")]
+		Traitement = 4,
+		[Display(Name = "القبول")]
+		Accept = 5,
+		[Display(Name = "الرفض")]
+		Refus = 6
+	}
 	
 	public class Dossier 
 	{
 		public int ID {get ; set; }
 
 		[ForeignKey("Commission")]
+		[Display(Name = "اللجنة")]
         public int CommissionID { get; set; }
 
 		[Required(ErrorMessage = "اجباري")]
@@ -70,13 +96,6 @@ namespace HAICOP.Models
 		[Display(Name = "عدد الملف")]
 		public int Num {get ; set;}
 		
-		[Required(ErrorMessage = "اجباري")]
-		[Display(Name = "سنة الملف")]
-		public int Year {get ; set;}
-		
-		[Required(ErrorMessage = "اجباري")]
-		[Display(Name = "الشهر")]
-		public int Month {get ; set;}
 
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "طبيعة الملف")]
@@ -89,8 +108,17 @@ namespace HAICOP.Models
 		[Display(Name = "التمويل")]
 		public Financement Financement { get ; set;}
 		
+		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ الملف")]
 		public DateTime DocDate {get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = "تاريخ قبول الملف ")]
+		public DateTime EnterDate {get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = " تاريخ التعهد")]
+		public DateTime ProDate {get ; set;}
 		
 		[Display(Name = "تاريخ معالجة الملف")]
 		public DateTime TraitDate { get ; set;}
@@ -104,11 +132,20 @@ namespace HAICOP.Models
 		[Display(Name = "الممول الأجنبي")]
 		[StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
 		public string Foreign {get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = "حالت الملف")]
+		public DossierState State {get ; set;}
 		
 		
 		public virtual ICollection<Mail> Mails { get; set; }
 		public virtual ICollection<Metting> Mettings { get; set; }		
 		public virtual Commission Commission { get; set; }
+
+		public Dossier()
+		{
+			State = DossierState.Creation;
+		}
 		
 	}
 	
@@ -117,25 +154,43 @@ namespace HAICOP.Models
 		public int ID {get ; set; }
 		
 		[ForeignKey("Dossier")]
+		[Display(Name = "الملف")]
         public int DossierID { get; set; }
 		
 		public virtual Dossier Dossier { get; set; }
 		
 		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = "الموضوع")]
+        [Display(Name = "المرجع")]
         [StringLength(20, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
 		public string Ref {get ; set;}
+
+        [Display(Name = "المرجع الأصلي")]
+        [StringLength(20, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
+		public string OriginRef {get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المصدر")]
+        [StringLength(255, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+		public string From {get ; set;}
 		
 		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "النوعية")]
-		public MailType Type { get ; set;}
+		public MailType MailType { get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+        [Display(Name = "طبيعة المراسلة")]
+		public MailNature MailNature { get ; set;}
 		
-		[Display(Name = "تاريخ معالجة الملف")]
-		public DateTime RecepDate { get ; set;}
+		[Display(Name = "تاريخ المراسلة")]
+		public DateTime MailDate { get ; set;}
 		
         [Display(Name = "ملاحظات")]
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
 		public string Desc {get ; set;}
+
+		[Display(Name = "الوثيقة")]
+		[Url(ErrorMessage="الرجاء التثبت من الرابط")]
+		public string Url {get ; set;}
 		
 		
 		
@@ -248,7 +303,7 @@ namespace HAICOP.Models
 		}
 	}
 	
-	public class AppsUser 
+	public class Rapporteur 
 	{
 		[Key]
         [Column(Order = 0)]
@@ -257,8 +312,8 @@ namespace HAICOP.Models
 
         [Key]
         [Column(Order = 1)]
-        public string UserID { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
 	}
 
 	public class ForeignInvestisseur
@@ -311,14 +366,18 @@ namespace HAICOP.Models
         public int DossierID { get; set; }
         public virtual Dossier Dossier { get; set; }
 
-
+		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "المرجع")]
         [StringLength(200, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 1)]
 		public string Lbl {get ; set;}
 		
-		
+		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "القسط")]
 		public float Montant {get ; set;}
+
+        [Display(Name = "تمويل أجنبي")]
+		public bool Foreign {get ; set;}
+
 	}
 
 	public class DessisionInMetting

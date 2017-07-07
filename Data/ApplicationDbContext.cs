@@ -68,10 +68,6 @@ namespace HAICOP.Data
                     .HasIndex(c => c.Name)
                     .IsUnique();
             
-
-            builder.Entity<AppsUser>(entity => entity.Property(m => m.UserID)
-                .HasMaxLength(255));    
-            
             
             builder.Entity<ForeignInvestisseur>(entity => entity.Property(m => m.Name)
                     .HasMaxLength(255));
@@ -95,8 +91,8 @@ namespace HAICOP.Data
             builder.Entity<FourInDossier>()
                     .HasKey(c => new {c.FournisseurID , c.DossierID});
             
-            builder.Entity<AppsUser>()
-                    .HasKey(c => new {c.AgentID , c.UserID});
+            builder.Entity<Rapporteur>()
+                    .HasKey(c => new {c.AgentID , c.DossierID});
 
             builder.Entity<InvInDossier>()
                     .HasKey(c => new {c.ForeignInvestisseurID , c.DossierID});
@@ -116,7 +112,7 @@ namespace HAICOP.Data
         public DbSet<Metting> Metting {get ; set;}
         public DbSet<Commission> Commission {get ; set;}
         public DbSet<Agent> Agent {get ; set;}
-        public DbSet<AppsUser> AppsUser {get ; set;}
+        public DbSet<Rapporteur> Rapporteur {get ; set;}
         public DbSet<ForeignInvestisseur> ForeignInvestisseur { get ; set; }
         public DbSet<InvInDossier> InvInDossier { get ; set; }
         public DbSet<HAICOP.Models.ApplicationRole> ApplicationRole { get; set; }

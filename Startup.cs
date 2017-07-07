@@ -210,4 +210,4 @@ namespace HAICOP
 }
 
 
-//dotnet aspnet-codegenerator --project . controller -name DessController -m Dessision -dc ApplicationDbContext
+//dotnet aspnet-codegenerator --project . controller -name DocController -m Dossier -dc ApplicationDbContext

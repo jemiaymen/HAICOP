@@ -118,5 +118,70 @@ namespace HAICOP.Controllers
                                                     }).ToList();
             return new {suggestions = result };
         }
+
+
+        [HttpGet]
+        [Route("api/agent/{id}")]
+        public dynamic agent(int id)
+        {
+            var result = _context.Agent.Where(c => c.CommissionID == id && c.IsPresident == false ).Select(a => new {
+                                                        Lbl = a.Name,
+                                                        ID = a.ID
+                                                    }).ToList();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("api/doc/{id}")]
+        public dynamic doc(int id)
+        {
+            var result = _context.Dossier.Where(c => c.CommissionID == id && c.State == DossierState.Creation ).Select(a => new {
+                                                        Subject = a.Subject,
+                                                        ID = a.ID
+                                                    }).ToList();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("api/doc/ache/{com}/{ach}")]
+        public dynamic docache(int com , int ach)
+        {
+            var result = _context.AchInDossier.Include(d => d.Dossier)
+                                                .Where(c => c.Dossier.CommissionID == com && c.AcheteurID == ach && c.Dossier.State == DossierState.Creation  )
+                                                .Select(a => new {
+                                                        Subject = a.Dossier.Subject,
+                                                        ID = a.DossierID
+                                                    }).ToList();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("api/img/{id}")]
+        public dynamic img(int id)
+        {
+
+            try
+            {
+                var result = _context.Mail.SingleOrDefault(m => m.DossierID == id);
+                return result.Url;
+            }
+            catch (Exception)
+            {
+
+            }
+            
+            return null;
+        }
+
+        [HttpGet]
+        [Route("api/edit/doc/{id}")]
+        public dynamic editdoc(int id)
+        {
+            var result = _context.Dossier.Where(c => c.CommissionID == id ).Select(a => new {
+                                                        Subject = a.Subject,
+                                                        ID = a.ID
+                                                    }).ToList();
+            return result;
+        }
     }
 }

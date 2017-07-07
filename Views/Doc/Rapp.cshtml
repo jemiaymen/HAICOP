@@ -1,0 +1,239 @@
+@model HAICOP.Models.Rapp
+
+
+@{
+    ViewData["Title"] = "تكليف مقرر";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form id="frmrapp" asp-controller="Doc" asp-action="Rapp"  method="post" enctype="multipart/form-data">
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h2>التفاصيل بالنسبة الملف</h2> 
+                <hr />
+                <div class="form-group">
+                    <label asp-for="CommissionID" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="CommissionID" class ="form-control" asp-items="ViewBag.CommissionID">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AcheteurID" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="AcheteurID" asp-items="ViewBag.AcheteurID">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="AcheteurID"  class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Subject" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="ID" >
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AgentID" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="AgentID"  required>
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="AgentID" class="text-danger"></span>
+                    </div>
+                </div>
+                 
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">تكليف</button>
+                        <button type="button" id="btndocverif" data-toggle="modal" data-target="#myModalDanger" id="checkbtn"  class="btn ls-red-btn">تثبت</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+    <div class="modal fade" id="myModalDanger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header label-red white">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModaDanger">البريد</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <iframe id="docverif" frameBorder="0" width="865" height="500"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ls-red-btn btn-xs" data-dismiss="modal">خروج</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+
+            function formempty(){
+                $("#btndocverif").prop('disabled', true);
+                rapp.clearOptions();
+                dossier.clearOptions();
+                $("#CommissionID").val("");
+                $("#AcheteurID").val("");
+            }
+
+            $('#frmrapp').on('submit', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            url: $(this).attr('action'), 
+                            type: $(this).attr('method'), 
+                            data: $(this).serialize(), 
+                            success: function(html) { 
+                                console.log(html);
+                                if(html == true){
+                                    console.log(html);
+                                    $.amaran( {
+                                    content: {
+                                        message: "تمت عملية تكليف مقرر بنجاح", size: "", file: "", icon: "fa fa fa-check"
+                                    }
+                                    , theme:"default ok", position:"top left", inEffect:"slideLeft", outEffect:"slideTop", closeButton:true , delay:4000
+                                });
+                                formempty();
+                                }else {
+                                    $.amaran( {
+                                    content: {
+                                        message: "هناك خطأ تثبت من  المعلومات", size: "", file: "", icon: "fa fa fa-times"
+                                    }
+                                    , theme:"default error", position:"top left", inEffect:"slideLeft", outEffect:"slideTop", closeButton:true , delay:4000
+                                    });
+                                }
+                            },
+                            error : function(err){
+                                $.amaran( {
+                                    content: {
+                                        message: "هناك خطأ تثبت", size: "", file: "", icon: "fa fa fa-times"
+                                    }
+                                    , theme:"default error", position:"top left", inEffect:"slideLeft", outEffect:"slideTop", closeButton:true , delay:4000
+                                    });
+                            }
+                    });
+                    
+            });  
+
+
+            $("#btndocverif").prop('disabled', true);
+
+            var $dossier = $("#ID").selectize({
+                            valueField: 'id',
+                            labelField: 'subject',
+                            searchField: ['subject'],
+                            onChange : function(value){
+                                if (!value.length) return;
+                                xhrimg && xhrimg.abort();
+                                xhrimg = $.ajax({
+                                    url: '/api/img/' + value,
+                                    success: function(results) {
+                                        $("#docverif").attr("src","/uploads/" + results);
+                                        $("#btndocverif").prop('disabled', false);
+                                    },
+                                    error: function() {
+                                        callback();
+                                    }
+                                })
+                            } 
+            });
+            var $rapp = $("#AgentID").selectize({
+                            valueField: 'id',
+                            labelField: 'lbl',
+                            searchField: ['lbl']
+                        });
+
+            var rapp =$rapp[0].selectize;
+            var dossier =$dossier[0].selectize;
+
+            var xhragent , xhrdossier , xhrimg;
+
+            $("#CommissionID").selectize({
+                onChange: function(value) {
+                    if (!value.length) return;
+                    rapp.clearOptions();
+                    rapp.load(function(callback) {
+                        xhragent && xhragent.abort();
+                        xhragent = $.ajax({
+                            url: '/api/agent/' + value,
+                            success: function(results) {
+                                rapp.enable();
+                                callback(results);
+                            },
+                            error: function() {
+                                callback();
+                            }
+                        })
+                    });
+
+                    dossier.clearOptions();
+                    dossier.load(function(callback) {
+                        xhrdossier && xhrdossier.abort();
+                        xhrdossier = $.ajax({
+                            url: '/api/doc/' + value,
+                            success: function(results) {
+                                dossier.enable();
+                                callback(results);
+                            },
+                            error: function() {
+                                callback();
+                            }
+                        })
+                    });
+                }
+            });
+
+        
+            $("#AcheteurID").selectize({
+                onChange: function(value) {
+                    if (!value.length) return;
+                    dossier.clearOptions();
+                    dossier.load(function(callback) {
+                        xhrdossier && xhrdossier.abort();
+                        xhrdossier = $.ajax({
+                            url: '/api/doc/ache/' + $("#CommissionID").val() + '/' + value,
+                            success: function(results) {
+                                dossier.enable();
+                                callback(results);
+                            },
+                            error: function() {
+                                callback();
+                            }
+                        })
+                    });
+                }
+            });
+            
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+
