@@ -1,0 +1,50 @@
+@model HAICOP.Models.Dossier
+
+
+@{
+    ViewData["Title"] = "الرفض";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Avis" asp-action="Ref"  method="post" >
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                <h2> تأكد من رفض الملف</h2>
+                <hr/>
+
+                <input type="hidden" asp-for="ID" />
+                <input type="hidden" asp-for="Num" />
+
+                <div class="form-group">
+                    <label asp-for="Subject" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Subject" class="form-control" readonly="readonly"/>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Commission.Lbl" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Commission.Lbl" class="form-control" readonly="readonly"/>
+                    </div>                  
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <button type="submit" class="btn ls-red-btn">رفض</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>

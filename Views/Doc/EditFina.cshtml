@@ -1,0 +1,104 @@
+@model HAICOP.Models.AddFina
+
+
+@{
+    ViewData["Title"] = "تحيين تمويل";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Doc" asp-action="EditFina"  method="post" >
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <input type="hidden" asp-for="DossierID" />
+                <input type="hidden" asp-for="Foreign" />
+
+
+                <div class="form-group">
+                    <label asp-for="Financement" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="Financement" asp-items="Html.GetEnumSelectList<Financement>()">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="Financement" class="text-danger"></span>
+                    </div>              
+                </div>
+
+
+
+                <div class="form-group">
+                    <label asp-for="ForeignInvestisseurID" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="ForeignInvestisseurID" asp-items="ViewBag.ForeignInvestisseur" >
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="ForeignInvestisseurID" class="text-danger"></span>
+                    </div>              
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <button type="submit" class="btn ls-light-green-btn">تحيين</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+
+            var $f = $("#ForeignInvestisseurID").selectize({
+                            valueField: 'id',
+                            labelField: 'name',
+                            searchField: ['name'],
+                            onChange : function(){
+                               $("#Foreign").val(this.getItem(this.getValue()).text()); 
+                            }
+                        });
+
+            var f =$f[0].selectize;
+
+            var xhrf ;
+
+            $("#Financement").selectize({
+                onChange: function(value) {
+                    if (!value.length) return;
+                    if(value != 2) { f.clearOptions(); f.disable(); return};
+                    f.clearOptions();
+                    f.load(function(callback) {
+                        xhrf && xhrf.abort();
+                        xhrf = $.ajax({
+                            url: '/api/four',
+                            success: function(results) {
+                                f.enable();
+                                callback(results);
+                            },
+                            error: function() {
+                                callback();
+                                f.disable();
+                            }
+                        })
+                    });
+                }
+            });
+
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+

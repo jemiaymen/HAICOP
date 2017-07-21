@@ -182,6 +182,8 @@ namespace HAICOP.Models
 		public MailNature MailNature { get ; set;}
 		
 		[Display(Name = "تاريخ المراسلة")]
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		public DateTime MailDate { get ; set;}
 		
         [Display(Name = "ملاحظات")]
@@ -237,13 +239,18 @@ namespace HAICOP.Models
 		public virtual Dossier Dossier { get; set; }
 		
 		[Required(ErrorMessage = "اجباري")]
-		[Display(Name = "تاريخ الجلسة")]
-		public DateTime DocDate {get ; set;}
+		[Display(Name = "تاريخ الاجتماع")]
+		public DateTime MettDate {get ; set;}
+
+
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = "عدد الجلسات")]
+		public int MettNbr {get ; set;}
 		
 		
 		[Display(Name = "ملاحظات")]
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
-		public string Desc {get ; set;}
+		public string MettDesc {get ; set;}
 		
 	}
 	
@@ -366,12 +373,10 @@ namespace HAICOP.Models
         public int DossierID { get; set; }
         public virtual Dossier Dossier { get; set; }
 
-		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "المرجع")]
         [StringLength(200, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 1)]
 		public string Lbl {get ; set;}
 		
-		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "القسط")]
 		public float Montant {get ; set;}
 

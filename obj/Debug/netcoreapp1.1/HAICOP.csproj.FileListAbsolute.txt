@@ -1,9 +1,9 @@
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\bin\Debug\netcoreapp1.1\HAICOP.deps.json
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\bin\Debug\netcoreapp1.1\HAICOP.runtimeconfig.json
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\bin\Debug\netcoreapp1.1\HAICOP.runtimeconfig.dev.json
-C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
-C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.AssemblyInfo.cs
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\bin\Debug\netcoreapp1.1\HAICOP.dll
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\bin\Debug\netcoreapp1.1\HAICOP.pdb
+C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.AssemblyInfo.cs
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.dll
 C:\Users\rgabsi\Desktop\aymen\dev\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.pdb

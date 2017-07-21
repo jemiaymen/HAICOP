@@ -1,0 +1,108 @@
+@model HAICOP.Models.EditMail
+
+
+@{
+    ViewData["Title"] = "تحيين البريد";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Doc" asp-action="EditMail"  method="post" enctype="multipart/form-data">
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h2>التفاصيل بالنسبة للبريد</h2>
+                <hr/>
+
+                <input type="hidden" asp-for="ID" />
+                <input type="hidden" asp-for="DossierID" />
+                <input type="hidden" asp-for="Url" />
+
+                <div class="form-group">
+                    <label asp-for="Ref" class="col-md-2 control-label"></label>
+                    <div class="col-md-2">
+                        <input asp-for="Ref" class="form-control" />
+                        <span asp-validation-for="Ref" class="text-danger"></span>
+                    </div>
+                    <label asp-for="OriginRef" class="col-md-2 control-label"></label>
+                    <div class="col-md-2">
+                        <input asp-for="OriginRef" class="form-control" />
+                        <span asp-validation-for="OriginRef" class="text-danger"></span>
+                    </div>
+                    <label asp-for="From" class="col-md-2 control-label"></label>
+                    <div class="col-md-2">
+                        <input asp-for="From" class="form-control" />
+                        <span asp-validation-for="From" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MailType" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <select asp-for="MailType" asp-items="Html.GetEnumSelectList<MailType>()">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="MailType" class="text-danger"></span>
+                    </div>
+                    <label asp-for="MailNature" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <select asp-for="MailNature" asp-items="Html.GetEnumSelectList<MailNature>()">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="MailNature" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MailDate" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="MailDate" class="form-control" />
+                        <span asp-validation-for="MailDate" class="text-danger"></span>
+                    </div>
+                    <label asp-for="Desc" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <textarea asp-for="Desc" class="form-control"></textarea>
+                        <span asp-validation-for="Desc" class="text-danger"></span>
+                    </div>                   
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Url" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Location" class="form-control" accept=".pdf" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>                 
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <button type="submit" class="btn ls-light-green-btn">تحيين</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+            $("#MailNature").selectize();
+            $("#MailType").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+

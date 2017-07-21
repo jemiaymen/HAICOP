@@ -183,5 +183,29 @@ namespace HAICOP.Controllers
                                                     }).ToList();
             return result;
         }
+
+        [HttpGet]
+        [Route("api/img/id/{did}/{imid}")]
+        public dynamic img(int did , int imid)
+        {
+            try
+            {
+                var result = _context.Mail.SingleOrDefault(m => m.DossierID == did && m.ID == imid);
+                return result.Url;
+            }
+            catch (Exception)
+            {
+
+            }
+            
+            return null;
+        }
+
+        [HttpGet]
+        [Route("api/four")]
+        public dynamic fourauto()
+        {
+            return _context.ForeignInvestisseur.ToList();
+        }
     }
 }

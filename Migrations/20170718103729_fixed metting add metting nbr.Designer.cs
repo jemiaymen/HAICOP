@@ -9,9 +9,10 @@ using HAICOP.Models;
 namespace HAICOP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170718103729_fixed metting add metting nbr")]
+    partial class fixedmettingaddmettingnbr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
@@ -325,12 +326,12 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Desc")
+                        .HasMaxLength(500);
+
                     b.Property<int>("DossierID");
 
                     b.Property<DateTime>("MettDate");
-
-                    b.Property<string>("MettDesc")
-                        .HasMaxLength(500);
 
                     b.Property<int>("MettNbr");
 

@@ -1,8 +1,8 @@
 @using System.Linq
-@model IEnumerable<HAICOP.Models.Dossier>
+@model IEnumerable<HAICOP.Models.Mail>
 
 @{
-    ViewData["Title"] = "القائمة الجملية للملفات";
+    ViewData["Title"] = "القائمة الجملية للبريد";
     ViewData["SubMenu"] = "التصرف في الملفات";
 }
 
@@ -18,15 +18,24 @@
                                             <thead>
                                                 <tr>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Num)
+                                                        @Html.DisplayNameFor(model => model.Ref)
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Subject)
+                                                        @Html.DisplayNameFor(model => model.From)
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Commission.Lbl)
+                                                        @Html.DisplayNameFor(model => model.MailType)
                                                     </th>
-                                                    
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.MailNature)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.MailDate)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.Dossier.Subject)
+                                                    </th>
+
                                                     <th>
                                                             البريد
                                                     </th>
@@ -34,56 +43,38 @@
                                                     <th>
                                                          تحيين
                                                     </th>
-                                                    <th>
-                                                        اظافة بريد
-                                                    </th>
-                                                    <th>
-                                                        اجابة
-                                                    </th>
-                                                    <th>
-                                                        التمويل
-                                                    </th>
-                                                    <th>
-                                                        صاحب الصفقة
-                                                    </th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach (var item in Model) {
                                                     <tr>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Num)
+                                                            @Html.DisplayFor(modelItem => item.Ref)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                            @Html.DisplayFor(modelItem => item.From)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.MailType)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.MailNature)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.MailDate)
                                                         </td>
 
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Commission.Lbl)
+                                                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
+                                                        </td>
+
+                                                        <td>
+                                                            <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.DossierID" data-imid="@item.ID" class="img-show"><i class="fa fa-envelope"></i></a>
+
                                                         </td>
                                                         <td>
-                                                                @foreach(var m in item.Mails){
-                                                                    <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.ID" data-imid="@m.ID" class="img-show">@m.ID</a>
-                                                                }
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                            <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  |
-                                                            <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a> | 
-                                                            <a asp-action="EditFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a> |
-                                                            <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
+                                                            <a asp-action="EditMail" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> 
                                                         </td>
                                                     </tr>
                                                 }

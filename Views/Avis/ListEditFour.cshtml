@@ -1,8 +1,8 @@
 @using System.Linq
-@model IEnumerable<HAICOP.Models.Dossier>
+@model IEnumerable<HAICOP.Models.FourInDossier>
 
 @{
-    ViewData["Title"] = "القائمة الجملية للملفات";
+    ViewData["Title"] = "القائمة الجملية للمزودين";
     ViewData["SubMenu"] = "التصرف في الملفات";
 }
 
@@ -18,33 +18,23 @@
                                             <thead>
                                                 <tr>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Num)
+                                                        @Html.DisplayNameFor(model => model.Dossier.Subject)
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Subject)
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Commission.Lbl)
+                                                        @Html.DisplayNameFor(model => model.Dossier.Commission.Lbl)
                                                     </th>
                                                     
                                                     <th>
-                                                            البريد
+                                                            المزود
                                                     </th>
 
                                                     <th>
-                                                         تحيين
+                                                         الأقساط
                                                     </th>
                                                     <th>
-                                                        اظافة بريد
+                                                         المبلغ
                                                     </th>
                                                     <th>
-                                                        اجابة
-                                                    </th>
-                                                    <th>
-                                                        التمويل
-                                                    </th>
-                                                    <th>
-                                                        صاحب الصفقة
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -52,38 +42,23 @@
                                                 @foreach (var item in Model) {
                                                     <tr>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Num)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
                                                         </td>
 
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Commission.Lbl)
+                                                            @Html.DisplayFor(modelItem => item.Dossier.Commission.Lbl)
                                                         </td>
                                                         <td>
-                                                                @foreach(var m in item.Mails){
-                                                                    <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.ID" data-imid="@m.ID" class="img-show">@m.ID</a>
-                                                                }
+                                                            @Html.DisplayFor(modelItem => item.Fournisseur.Lbl)
                                                         </td>
                                                         <td>
-                                                            <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                            <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  |
-                                                            <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a> | 
-                                                            <a asp-action="EditFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a> |
-                                                            <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
+                                                            @Html.DisplayFor(modelItem => item.Lbl)
                                                         </td>
                                                         <td>
-                                                            <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
+                                                            @Html.DisplayFor(modelItem => item.Montant)
                                                         </td>
                                                         <td>
-                                                            <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
+                                                            <a asp-action="EditFour" asp-route-fid="@item.FournisseurID" asp-route-did="@item.DossierID"><i class="fa fa-pencil"></i></a> 
                                                         </td>
                                                     </tr>
                                                 }

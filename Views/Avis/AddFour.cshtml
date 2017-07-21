@@ -1,0 +1,73 @@
+@model HAICOP.Models.AddFour
+
+
+@{
+    ViewData["Title"] = "إجابة";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Avis" asp-action="AddFour"  method="post" >
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                <h2>التفاصيل بالنسبة لصاحب الصفقة</h2>
+                <hr/>
+
+                <input type="hidden" asp-for="DossierID" />
+                <input type="hidden" asp-for="Foreign" />
+
+                <div class="form-group">
+                    <label asp-for="FournisseurID" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="FournisseurID"  asp-items="@ViewBag.FournisseurID" >
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="FournisseurID" class="text-danger"></span>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Lbl" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="Lbl" class="form-control" />
+                        <span asp-validation-for="Lbl" class="text-danger"></span>
+                    </div>
+                    <label asp-for="Montant" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="Montant" class="form-control" />
+                        <span asp-validation-for="Montant" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+            $("#FournisseurID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+
