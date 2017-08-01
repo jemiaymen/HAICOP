@@ -25,6 +25,10 @@ namespace HAICOP.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
+                    b.Property<string>("LblLong")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.HasKey("ID");
 
                     b.HasIndex("Lbl")
@@ -81,6 +85,8 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<bool>("Auto");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -102,6 +108,8 @@ namespace HAICOP.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(255);
+
+                    b.Property<int>("Num");
 
                     b.Property<string>("PasswordHash");
 
@@ -132,6 +140,9 @@ namespace HAICOP.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("HavePresident");
 
@@ -352,6 +363,34 @@ namespace HAICOP.Migrations
                     b.HasIndex("DossierID");
 
                     b.ToTable("Rapporteur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.UserAgent", b =>
+                {
+                    b.Property<string>("UserID")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("AgentID");
+
+                    b.HasKey("UserID", "AgentID");
+
+                    b.HasAlternateKey("AgentID", "UserID");
+
+                    b.ToTable("UserAgent");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.UserCommission", b =>
+                {
+                    b.Property<string>("UserID")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("CommissionID");
+
+                    b.HasKey("UserID", "CommissionID");
+
+                    b.HasAlternateKey("CommissionID", "UserID");
+
+                    b.ToTable("UserCommission");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -583,6 +622,32 @@ namespace HAICOP.Migrations
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
                         .WithMany()
                         .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.UserAgent", b =>
+                {
+                    b.HasOne("HAICOP.Models.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.UserCommission", b =>
+                {
+                    b.HasOne("HAICOP.Models.Commission", "Commission")
+                        .WithMany()
+                        .HasForeignKey("CommissionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -99,6 +99,21 @@ namespace HAICOP.Data
             
             builder.Entity<DessisionInMetting>()
                     .HasKey(c => new {c.DessisionID , c.MettingID});
+
+
+
+            builder.Entity<UserAgent>(entity => entity.Property(m => m.UserID)
+                .HasMaxLength(255));
+            
+            builder.Entity<UserCommission>(entity => entity.Property(m => m.UserID)
+                .HasMaxLength(255));
+
+
+            builder.Entity<UserAgent>()
+                    .HasKey(c => new {c.UserID , c.AgentID});
+
+            builder.Entity<UserCommission>()
+                    .HasKey(c => new {c.UserID, c.CommissionID});
             
 
         }
@@ -119,6 +134,9 @@ namespace HAICOP.Data
         public DbSet<AchInDossier> AchInDossier { get; set; }
         public DbSet<FourInDossier> FourInDossier { get; set; }
         public DbSet<DessisionInMetting> DessisionInMetting { get; set; }
+
+        public DbSet<UserAgent> UserAgent {get ; set;}
+        public DbSet<UserCommission> UserCommission {get ; set;}
         
     }
 }

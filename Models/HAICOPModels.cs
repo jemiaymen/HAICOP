@@ -110,17 +110,21 @@ namespace HAICOP.Models
 		
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ الملف")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime DocDate {get ; set;}
 
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ قبول الملف ")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime EnterDate {get ; set;}
 
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = " تاريخ التعهد")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime ProDate {get ; set;}
 		
 		[Display(Name = "تاريخ معالجة الملف")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime TraitDate { get ; set;}
 		
 		[Display(Name = "التمويل المحلي")]
@@ -213,7 +217,7 @@ namespace HAICOP.Models
 		public int ID {get ; set;}
 		
 		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = "المزود")]
+        [Display(Name = "صاحب الصفقة")]
         [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
 		public string Lbl {get ; set;}
 	}
@@ -223,9 +227,14 @@ namespace HAICOP.Models
 		public int ID {get ; set;}
 		
 		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = "صاحب الصفقة")]
-        [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        [Display(Name = " (إختصار) المشتري العمومي")]
+        [StringLength(100, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
 		public string Lbl {get ; set;}
+
+		[Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المشتري العمومي")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+		public string LblLong {get ; set;}
 	}
 	
 	
@@ -274,6 +283,10 @@ namespace HAICOP.Models
 		
 		[Display(Name = "يوجد رئيس ؟")]
 		public bool HavePresident { get ; set;}
+
+		[Display(Name = "رمز اللجنة")]
+		[StringLength(100, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 1)]
+		public string Code { get ; set;}
 		
 		public Commission()
 		{
@@ -398,4 +411,29 @@ namespace HAICOP.Models
         public virtual Metting Metting { get; set; }
 	}
 
+	public class UserAgent
+	{
+		[Key]
+        [Column(Order = 0)]
+        public int AgentID { get ; set;}
+        public virtual Agent Agent { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public string UserID { get; set; }
+        public virtual ApplicationUser User { get; set; }
+	}
+
+	public class UserCommission
+	{
+		[Key]
+        [Column(Order = 0)]
+        public int CommissionID { get ; set;}
+        public virtual Commission Commission { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public string UserID { get; set; }
+        public virtual ApplicationUser User { get; set; }
+	}
 }

@@ -50,6 +50,8 @@ namespace HAICOP.Models.AccountViewModels
         [StringLength(255, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
         [Display(Name = "الإسم واللقب")]
         public string FirstLastName { get; set; }
+
+        public bool Auto { get; set; }
     }
 
     public class EditProfileViewModel

@@ -98,6 +98,7 @@ namespace HAICOP
                     }
                 };
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,6 +118,8 @@ namespace HAICOP
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 
             app.UseStaticFiles();
 

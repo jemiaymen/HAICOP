@@ -12,33 +12,62 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using HAICOP.Data;
 using HAICOP.Models;
-
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class AvisController : Controller
+    [Authorize(Roles ="root,Admin,President,Chef")]
+    public class AvisController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
         private IHostingEnvironment _environment;
         private ILogger _logger;
 
-        public AvisController(ApplicationDbContext context,IHostingEnvironment environment , ILoggerFactory loggerFactory)
+        public AvisController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db,
+                            IHostingEnvironment environment , ILoggerFactory loggerFactory):
+                            base(userManager,signInManager,db)
         {
-            _context = context;
             _environment = environment;
             _logger = loggerFactory.CreateLogger<AvisController>();
     
         }
 
+        [Authorize(Roles ="root,Admin,President,Chef")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext =  _context.Dossier.Include(d => d.Commission)
-                                                        .Include( d => d.Mails)
-                                                        .Where( d => d.State != DossierState.Accept && d.State != DossierState.Refus );
-            return View(await applicationDbContext.ToListAsync());
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+
+
+            if(ischef)
+            {
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
+
+                var ret = await db.Dossier.Include(d => d.Commission)
+                                         .Include( d => d.Mails)
+                                         .Where( d => d.State != DossierState.Accept && 
+                                                      d.State != DossierState.Refus && 
+                                                      d.CommissionID == comm.Agent.CommissionID )
+                                         .ToListAsync();
+
+                return View(ret) ;
+
+            }
+            
+            var re = await db.Dossier.Include(d => d.Commission)
+                                     .Include( d => d.Mails)
+                                     .Where( d => d.State != DossierState.Accept && d.State != DossierState.Refus )
+                                     .ToListAsync();
+
+            
+            return View(re);
+
+            
         }
 
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult Accept(int? id)
         {
             if(id == null)
@@ -46,7 +75,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var doc = _context.Dossier.Include( d => d.Commission)
+            var doc = db.Dossier.Include( d => d.Commission)
                                       .FirstOrDefault(d => d.ID == id.GetValueOrDefault());
 
             if(doc == null)
@@ -58,21 +87,23 @@ namespace HAICOP.Controllers
 
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> Accept(int ID,int Num)
         {
             if(ModelState.IsValid)
             {
-                var doc = _context.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
+                var doc = db.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
 
                 if(doc != null)
                 {
                     try
                     {
                         doc.State = DossierState.Accept;
-                        _context.Update(doc);
-                        await _context.SaveChangesAsync();
+                        db.Update(doc);
+                        await db.SaveChangesAsync();
                         return RedirectToAction("Rep","Doc");
                     }
                     catch (System.Exception ex)
@@ -87,6 +118,7 @@ namespace HAICOP.Controllers
             return Accept(ID);
         }
 
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult Ref(int? id)
         {
             if(id == null)
@@ -94,7 +126,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var doc = _context.Dossier.Include( d => d.Commission)
+            var doc = db.Dossier.Include( d => d.Commission)
                                       .FirstOrDefault(d => d.ID == id.GetValueOrDefault());
 
             if(doc == null)
@@ -108,19 +140,20 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> Ref(int ID,int Num)
         {
             if(ModelState.IsValid)
             {
-                var doc = _context.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
+                var doc = db.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
 
                 if(doc != null)
                 {
                     try
                     {
                         doc.State = DossierState.Refus;
-                        _context.Update(doc);
-                        await _context.SaveChangesAsync();
+                        db.Update(doc);
+                        await db.SaveChangesAsync();
                         return RedirectToAction("Rep","Doc");
                     }
                     catch (System.Exception ex)
@@ -136,6 +169,7 @@ namespace HAICOP.Controllers
         }
 
 
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult ListEditFour(int? id)
         {
             if(id == null)
@@ -143,7 +177,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var four = _context.FourInDossier.Include( f => f.Fournisseur)
+            var four = db.FourInDossier.Include( f => f.Fournisseur)
                                              .Include(f => f.Dossier)
                                              .Include(f => f.Dossier.Commission)
                                              .Where( f => f.DossierID == id.GetValueOrDefault())
@@ -153,6 +187,7 @@ namespace HAICOP.Controllers
             return View(four);
         }
 
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult EditFour(int? fid , int? did)
         {
             if( fid ==  null || did == null)
@@ -160,7 +195,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var four = _context.FourInDossier.Include( f => f.Fournisseur)
+            var four = db.FourInDossier.Include( f => f.Fournisseur)
                                              .Include(f => f.Dossier)
                                              .SingleOrDefault( f => f.DossierID == did.GetValueOrDefault() && f.FournisseurID == fid);
             if( four == null)
@@ -168,7 +203,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            ViewData["FournisseurID"] = new SelectList(_context.Fournisseur, "ID", "Lbl");  
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");  
 
             var model = new AddFour();
             model.InitFromFinD(four);
@@ -179,6 +214,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> EditFour(int DossierID,int tmpFournisseurID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign")] FourInDossier four )
         {
             if(ModelState.IsValid)
@@ -188,14 +224,14 @@ namespace HAICOP.Controllers
                 {
                     if(tmpFournisseurID != four.FournisseurID)
                     {
-                        _context.Remove( _context.FourInDossier.AsNoTracking().SingleOrDefault( f => f.DossierID == DossierID && f.FournisseurID == tmpFournisseurID ));
-                        _context.Add(four);
-                        await _context.SaveChangesAsync();
+                        db.Remove( db.FourInDossier.AsNoTracking().SingleOrDefault( f => f.DossierID == DossierID && f.FournisseurID == tmpFournisseurID ));
+                        db.Add(four);
+                        await db.SaveChangesAsync();
                     }
                     else 
                     {
-                        _context.Update(four);
-                        await _context.SaveChangesAsync();
+                        db.Update(four);
+                        await db.SaveChangesAsync();
                     }
                     return RedirectToAction("ListEditFour",new{ id = DossierID });
                 }
@@ -207,7 +243,7 @@ namespace HAICOP.Controllers
                 
             }
 
-            ViewData["FournisseurID"] = new SelectList(_context.Fournisseur, "ID", "Lbl");  
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");  
 
             var model = new AddFour();
             model.InitFromFinD(four);
@@ -217,7 +253,7 @@ namespace HAICOP.Controllers
 
 
 
-
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult AddFour(int? id)
         {
             if(id == null)
@@ -230,12 +266,13 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            ViewData["FournisseurID"] = new SelectList(_context.Fournisseur, "ID", "Lbl");  
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");  
             return View( new AddFour { DossierID = id.GetValueOrDefault() });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> AddFour(int DossierID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign")] FourInDossier four  )
         {
             if(!DossierExists(DossierID) )
@@ -247,8 +284,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Add(four);
-                    await _context.SaveChangesAsync();
+                    db.Add(four);
+                    await db.SaveChangesAsync();
                     return RedirectToAction("AddFour",new {id = DossierID});
                 }
                 catch (Exception ex)
@@ -264,7 +301,7 @@ namespace HAICOP.Controllers
             return View(err);
         }
 
-
+        [Authorize(Roles ="root,Admin,President")]
         public IActionResult Rep(int? id)
         {
             if(id == null)
@@ -277,11 +314,11 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var met = _context.Metting.AsNoTracking().SingleOrDefault( m => m.DossierID == id.GetValueOrDefault());
+            var met = db.Metting.AsNoTracking().SingleOrDefault( m => m.DossierID == id.GetValueOrDefault());
 
             if(met == null)
             {
-                ViewData["DessisionID"] = new SelectList(_context.Dessision, "ID", "Lbl");  
+                ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
                 return View( new AddAvis { DossierID = id.GetValueOrDefault() , MettNbr = 1  });
             }
             return RedirectToAction("Index","Doc");
@@ -290,6 +327,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> Rep(int DessisionID ,int DossierID,[Bind("DossierID,MettDate,MettNbr,MettDesc")] Metting metting , IFormFile Location, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail  )
         {
             if(!DossierExists( DossierID))
@@ -315,13 +353,13 @@ namespace HAICOP.Controllers
                         return View(model);
                     }
                     
-                    _context.Add(mail);
-                    _context.Add(metting);
-                    _context.Add(new DessisionInMetting { DessisionID = DessisionID , Metting = metting});
-                    var doc = await _context.Dossier.FindAsync(DossierID);
+                    db.Add(mail);
+                    db.Add(metting);
+                    db.Add(new DessisionInMetting { DessisionID = DessisionID , Metting = metting});
+                    var doc = await db.Dossier.FindAsync(DossierID);
                     doc.State = DossierState.Traitement;
-                    _context.Update(doc);
-                    await _context.SaveChangesAsync();
+                    db.Update(doc);
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Index","Doc");
                 }
                 catch (Exception ex)
@@ -346,7 +384,7 @@ namespace HAICOP.Controllers
             }
 
 
-            var doc = _context.Dossier.Include(d => d.Mails)
+            var doc = db.Dossier.Include(d => d.Mails)
                                       .Include(d => d.Mettings)
                                       .FirstOrDefault(d => d.ID == id.GetValueOrDefault());
             if(doc == null)
@@ -360,7 +398,7 @@ namespace HAICOP.Controllers
 
             var mail = doc.Mails.LastOrDefault();
             var metting = doc.Mettings.LastOrDefault();
-            var des = _context.DessisionInMetting.FirstOrDefault( m => m.MettingID == metting.ID);
+            var des = db.DessisionInMetting.FirstOrDefault( m => m.MettingID == metting.ID);
 
             model.InitFromMail(mail);
             model.InitFromMetting(metting);
@@ -369,12 +407,13 @@ namespace HAICOP.Controllers
             model.MettingID = metting.ID;
             model.DessisionID = des.DessisionID;
 
-            ViewData["DessisionID"] = new SelectList(_context.Dessision, "ID", "Lbl");  
+            ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID,[Bind("DossierID,MettDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
         {
             if (ModelState.IsValid)
@@ -386,12 +425,12 @@ namespace HAICOP.Controllers
 
                 try
                 {
-                    _context.Update(mail);
-                    _context.Update(metting);
-                    _context.Remove( _context.DessisionInMetting.AsNoTracking().Single(s => s.MettingID == MettingID));
+                    db.Update(mail);
+                    db.Update(metting);
+                    db.Remove( db.DessisionInMetting.AsNoTracking().Single(s => s.MettingID == MettingID));
                     var dinm = new DessisionInMetting { DessisionID = DessisionID , MettingID = MettingID};
-                    _context.Add(dinm);
-                    await _context.SaveChangesAsync();
+                    db.Add(dinm);
+                    await db.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -410,13 +449,13 @@ namespace HAICOP.Controllers
             m.MettingID = metting.ID;
             m.DessisionID = DessisionID;
 
-            ViewData["DessisionID"] = new SelectList(_context.Dessision, "ID", "Lbl");  
+            ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
             return View(m);
         }
 
         private bool DossierExists(int id)
         {
-            return _context.Dossier.Any(e => e.ID == id);
+            return db.Dossier.Any(e => e.ID == id);
         }
 
         private async Task<string> Upload(IFormFile Location)

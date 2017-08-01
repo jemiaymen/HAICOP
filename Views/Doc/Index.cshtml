@@ -31,21 +31,33 @@
                                                             البريد
                                                     </th>
 
-                                                    <th>
-                                                         تحيين
-                                                    </th>
-                                                    <th>
-                                                        اظافة بريد
-                                                    </th>
-                                                    <th>
-                                                        اجابة
-                                                    </th>
-                                                    <th>
-                                                        التمويل
-                                                    </th>
-                                                    <th>
-                                                        صاحب الصفقة
-                                                    </th>
+                                                        @if(ViewBag.ischef != null){
+
+                                                        }else if(ViewBag.isboc != null){
+                                                            <th>
+                                                                تحيين
+                                                            </th>
+                                                            <th>
+                                                                اظافة بريد
+                                                            </th>
+                                                        }else if(ViewBag.isadmin != null){
+                                                            <th>
+                                                                تحيين
+                                                            </th>
+                                                            <th>
+                                                                اظافة بريد
+                                                            </th>
+                                                            <th>
+                                                                اجابة
+                                                            </th>
+                                                            <th>
+                                                                التمويل
+                                                            </th>
+                                                            <th>
+                                                                صاحب الصفقة
+                                                            </th>
+                                                        }
+                                                    
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -66,25 +78,41 @@
                                                                     <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.ID" data-imid="@m.ID" class="img-show">@m.ID</a>
                                                                 }
                                                         </td>
-                                                        <td>
-                                                            <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                            <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  |
-                                                            <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a> | 
-                                                            <a asp-action="EditFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a> |
-                                                            <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a>
-                                                        </td>
-                                                        <td>
-                                                            <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
-                                                        </td>
+
+                                                        @if(ViewBag.ischef != null){
+
+                                                        }else if(ViewBag.isboc != null){
+                                                            <td>
+                                                                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
+                                                                <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  
+                                                            </td>
+                                                            <td>
+                                                                <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
+                                                            </td>
+                                                        }else if(ViewBag.isadmin != null){
+                                                            <td>
+                                                                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
+                                                                <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  |
+                                                                <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a> | 
+                                                                <a asp-action="EditFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a> |
+                                                                <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                <a asp-action="AddFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
+                                                            </td>
+                                                        }
+
+
+                                                        
                                                     </tr>
                                                 }
                                             </tbody>

@@ -1,86 +1,135 @@
-<ul class="mainNav">
-<li>
-    <a href="/">
-        <i class="fa fa-dashboard"></i> <span>الرئيسية</span>
-    </a>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-user"></i> <span>المستعملين</span> 
-    </a>
-    <ul>
-        <li><a href="/Account">التصرف في المستعملين</a></li>
-        <li><a href="/Account/Register">اظافة مستعمل</a></li>
-        <li><a href="/Role">التصرف في حقوق المستعملين</a></li>
-        <li><a href="/Role/Create"> اظافة حق مستعمل</a></li>
-    </ul>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-file-text"></i> <span>الملفات</span> 
-    </a>
-    <ul>
-        <li><a href="/Doc/"> القائمة الجملية</a></li>
-        <li><a href="/Doc/New">اظافة ملف </a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/Rapp">تكليف مقرر</a></li>
-        <li><a href="/Doc/EditRapp">تحيين مقرر</a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/Rep">القائمة الجملية للملفات التي تم الاجابة عليها</a></li>       
-    </ul>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-building"></i> <span>الثوابت</span> 
-    </a>
-    <ul>
-        <li><a href="/Invest">التصرف في الممولين</a></li>
-        <li><a href="/Invest/Create">اظافة ممول </a></li>
-        <li class="divider"></li>
-        <li><a href="/Acheteur">التصرف في المشتري العمومي</a></li>
-        <li><a href="/Acheteur/Create">اظافة مشتري العمومي</a></li>
-        <li class="divider"></li>
-        <li><a href="/Fournisseur">التصرف في المزودين</a></li>
-        <li><a href="/Fournisseur/Create">اظافة مزود</a></li>
-        <li class="divider"></li>
-        <li><a href="/Comm">التصرف في الهياكل</a></li>
-        <li><a href="/Comm/Create">اظافة هيكل</a></li>
-        <li class="divider"></li>
-        <li><a href="/Agent">التصرف في المقررين</a></li>
-        <li><a href="/Agent/Create">اظافة مقرر</a></li>
-        <li class="divider"></li>
-        <li><a href="/Dess">التصرف في القرارات</a></li>
-        <li><a href="/Dess/Create">اظافة قرار</a></li>
-    </ul>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-bar-chart-o"></i> <span>الإحصائيات</span> 
-    </a>
-    <ul>
-        <li><a href="/Doc/New">اظافة ملف جديد</a></li>
-        <li><a href="/Doc/Old">اظافة ملف </a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/Edit">تحيين ملف</a></li>
-        <li><a href="/Doc/Rapp">تكليف مقرر</a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/"> القائمة الجملية</a></li>
-    </ul>
-</li>
-<li>
-    <a href="#">
-        <i class="fa "></i> <span>log</span> 
-    </a>
-    <ul>
-        <li><a href="/Doc/New">اظافة ملف جديد</a></li>
-        <li><a href="/Doc/Old">اظافة ملف </a></li>
-        <li><a href="/Doc/Edit">تحيين ملف</a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/Rapp">تكليف مقرر</a></li>
-        <li><a href="/Doc/EditRapp">تحيين مقرر</a></li>
-        <li class="divider"></li>
-        <li><a href="/Doc/"> القائمة الجملية</a></li>
-    </ul>
-</li>
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-</ul>
+@if (SignInManager.IsSignedIn(User))
+{
+    bool ischef = await UserManager.IsInRoleAsync(ViewBag.user, "Chef");
+    bool isboc = await UserManager.IsInRoleAsync(ViewBag.user, "BOC");
+    bool isadmin = await UserManager.IsInRoleAsync(ViewBag.user , "Admin");
+    bool ispresident = await UserManager.IsInRoleAsync(ViewBag.user , "President");
+    bool isroot = await UserManager.IsInRoleAsync(ViewBag.user , "root");
+
+    if(ischef)
+    {   
+        <ul class="mainNav">
+            <li>
+                <a href="/">
+                    <i class="fa fa-dashboard"></i> <span>الرئيسية</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-file-text"></i> <span>الملفات</span> 
+                </a>
+                <ul>
+                    <li><a href="/Doc/All"> القائمة الجملية</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/Rapp">تكليف مقرر</a></li>
+                    <li><a href="/Doc/EditRapp">تحيين مقرر</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/Rep">القائمة الجملية للملفات التي تم الاجابة عليها</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/"> القائمة الجملية 2</a></li>        
+                </ul>
+            </li>
+        </ul>
+
+    }
+    else if(isboc)
+    {
+        <ul class="mainNav">
+            <li>
+                <a href="/">
+                    <i class="fa fa-dashboard"></i> <span>الرئيسية</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-file-text"></i> <span>الملفات</span> 
+                </a>
+                <ul>
+                    <li><a href="/Doc/All"> القائمة الجملية</a></li>
+                    <li><a href="/Doc/New">اظافة ملف </a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/Rep">القائمة الجملية للملفات التي تم الاجابة عليها</a></li> 
+                    <li class="divider"></li>
+                    <li><a href="/Doc/"> القائمة الجملية 2</a></li>        
+                </ul>
+            </li>
+        </ul>
+    }
+    else if(isadmin || ispresident || isroot)
+    {
+        <ul class="mainNav">
+            <li>
+                <a href="/">
+                    <i class="fa fa-dashboard"></i> <span>الرئيسية</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-user"></i> <span>المستعملين</span> 
+                </a>
+                <ul>
+                    <li><a href="/Account">التصرف في المستعملين</a></li>
+                    <li><a href="/Account/Register">اظافة مستعمل</a></li>
+                    <li><a href="/Role">التصرف في حقوق المستعملين</a></li>
+                    <li><a href="/Role/Create"> اظافة حق مستعمل</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-file-text"></i> <span>الملفات</span> 
+                </a>
+                <ul>
+                    <li><a href="/Doc/All"> القائمة الجملية</a></li>
+                    <li><a href="/Doc/New">اظافة ملف </a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/Rapp">تكليف مقرر</a></li>
+                    <li><a href="/Doc/EditRapp">تحيين مقرر</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Doc/Rep">القائمة الجملية للملفات التي تم الاجابة عليها</a></li> 
+                    <li><a href="/Doc/"> القائمة الجملية 2</a></li>      
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-building"></i> <span>الثوابت</span> 
+                </a>
+                <ul>
+                    <li><a href="/Invest">التصرف في الممولين</a></li>
+                    <li><a href="/Invest/Create">اظافة ممول </a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Acheteur">التصرف في المشتري العمومي</a></li>
+                    <li><a href="/Acheteur/Create">اظافة مشتري العمومي</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Fournisseur"> التصرف في أصحاب الصفقات</a></li>
+                    <li><a href="/Fournisseur/Create">اظافة صاحب الصفقة</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Comm">التصرف في الهياكل</a></li>
+                    <li><a href="/Comm/Create">اظافة هيكل</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Agent">التصرف في المقررين</a></li>
+                    <li><a href="/Agent/Create">اظافة مقرر</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Dess">التصرف في القرارات</a></li>
+                    <li><a href="/Dess/Create">اظافة قرار</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-bar-chart-o"></i> <span>الإحصائيات</span> 
+                </a>
+                <ul>
+                    <li><a href="/Doc/New">اظافة ملف جديد</a></li>
+                    <li><a href="/Doc/Old">اظافة ملف </a></li>
+                    <li class="divider"></li>
+                    
+                </ul>
+            </li>
+
+
+        </ul>
+    }
+}
+

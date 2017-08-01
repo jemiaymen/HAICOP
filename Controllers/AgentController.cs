@@ -7,27 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class AgentController : Controller
+    [Authorize(Roles ="root,Admin")]
+    public class AgentController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public AgentController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+        public AgentController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+                                base(userManager,signInManager,db) 
+        {}
 
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Agent.Include(a => a.Commission);
+            var applicationDbContext = db.Agent.Include(a => a.Commission);
             return View(await applicationDbContext.ToListAsync());
         }
 
         public IActionResult Create()
         {
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl");
+            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
             return View();
         }
 
@@ -49,17 +50,26 @@ namespace HAICOP.Controllers
                     if(HavePresident(agent.CommissionID))
                     {
                         ModelState.AddModelError("IsPresident", "لديها رئيس");
-                        ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+                        ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
                         return View(agent);
+                    }
+                    else
+                    {
+                        db.Add(agent);
+                        var comm = await db.Commission.FindAsync(agent.CommissionID);
+                        comm.HavePresident = true;
+                        db.Update(comm);
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("Index");
                     }
                 }
 
-                _context.Add(agent);
-                await _context.SaveChangesAsync();
+                db.Add(agent);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
                 
             }
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
             return View(agent);
         }
 
@@ -70,12 +80,12 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var agent = await _context.Agent.SingleOrDefaultAsync(m => m.ID == id);
+            var agent = await db.Agent.SingleOrDefaultAsync(m => m.ID == id);
             if (agent == null)
             {
                 return NotFound();
             }
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
             return View(agent);
         }
 
@@ -98,59 +108,70 @@ namespace HAICOP.Controllers
                         if( president.ID != agent.ID)
                         {
                             ModelState.AddModelError("IsPresident", "لديها رئيس");
-                            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+                            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
                             return View(agent);
+                        }
+                        else
+                        {
+                            db.Update(agent);
+                            var comm = await db.Commission.FindAsync(agent.CommissionID);
+                            comm.HavePresident = true;
+                            db.Update(comm);
+                            await db.SaveChangesAsync();
+                            return RedirectToAction("Index");
                         }
                     }
                 }
+
+                    try
+                    {
+                        db.Update(agent);
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AgentExists(agent.ID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 
 
-                try
-                {
-                    _context.Update(agent);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AgentExists(agent.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                
                 return RedirectToAction("Index");
             }
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", agent.CommissionID);
+            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
             return View(agent);
         }
 
         private bool AgentExists(int id)
         {
-            return _context.Agent.Any(e => e.ID == id);
+            return db.Agent.Any(e => e.ID == id);
         }
 
         private bool AgentExists(string Name , string NameFr)
         {
-            return _context.Agent.Any(e => e.Name == Name && e.NameFr == NameFr);
+            return db.Agent.Any(e => e.Name == Name && e.NameFr == NameFr);
         }
 
         public bool HavePresident(int ID)
         {
-            return _context.Commission.Any(m => m.ID == ID && m.HavePresident == true);
+            return db.Commission.Any(m => m.ID == ID && m.HavePresident == true);
         }
 
         public Agent HavePresidentGet(int ID)
         {
-            return _context.Commission.AsNoTracking().Include(a => a.Agents).SingleOrDefault(m => m.ID == ID)
+            return db.Commission.AsNoTracking().Include(a => a.Agents).SingleOrDefault(m => m.ID == ID)
                                       .Agents.SingleOrDefault(a => a.IsPresident  == true);
         }
 
         public Agent GetPresident(int ID)
         {
-            return _context.Agent.AsNoTracking().Include( a => a.Commission ).SingleOrDefault( a => a.CommissionID == ID  && a.IsPresident == true);
+            return db.Agent.AsNoTracking().Include( a => a.Commission ).SingleOrDefault( a => a.CommissionID == ID  && a.IsPresident == true);
         }
     }
 }

@@ -47,7 +47,10 @@
                                                     <th>
                                                         اجابة
                                                     </th>
-                                                    <th></th>
+                                                    @if(ViewBag.isroot != null){
+                                                        <th></th>
+                                                    }
+                                                    
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -90,11 +93,12 @@
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.Dessision.Lbl)
                                                         </td>
-                                                        <td>
-                                                            @Html.ActionLink("قبول", "Accept", "Avis",  new { id = item.Dossier.ID}) 
-                                                            @Html.ActionLink("رفض", "Ref", "Avis",  new { id = item.Dossier.ID}) 
-                                                        </td>
-
+                                                        @if(ViewBag.isroot != null){
+                                                            <td>
+                                                                @Html.ActionLink("قبول", "Accept", "Avis",  new { id = item.Dossier.ID}) 
+                                                                @Html.ActionLink("رفض", "Ref", "Avis",  new { id = item.Dossier.ID}) 
+                                                            </td>
+                                                        }
                                                     </tr>
                                                 }
                                             </tbody>

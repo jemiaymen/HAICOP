@@ -24,6 +24,9 @@
                                                             @Html.DisplayNameFor(model => model.LblFr)
                                                         </th>
                                                         <th>
+                                                            @Html.DisplayNameFor(model => model.Code)
+                                                        </th>
+                                                        <th>
                                                             رئيس الهيكل
                                                         </th>
                                                         <th>
@@ -40,15 +43,13 @@
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.LblFr)
                                                             </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Code)
+                                                            </td>
 
                                                             <td>
-                                                                @if( item.HavePresident && item.Agents != null){
-
-                                                                    @foreach(var i in item.Agents){
-                                                                        if(i.IsPresident){
-                                                                            @Html.DisplayFor(modelItem => i.Name);
-                                                                        }
-                                                                    }
+                                                                @if( item.HavePresident){
+                                                                    @Html.DisplayFor(modelItem => item.Agents.First(a => a.IsPresident == true).Name)
                                                                 }
                                                             </td>
                                                             <td>

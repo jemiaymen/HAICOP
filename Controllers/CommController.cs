@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class CommController : Controller
+    [Authorize(Roles ="root,Admin,Tech")]
+    public class CommController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public CommController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+        
+        public CommController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+                            base(userManager,signInManager,db) 
+        {}
 
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Commission.Include(a => a.Agents).ToListAsync());
+            return View(await db.Commission.Include(a => a.Agents).ToListAsync());
         }
 
         public IActionResult Create()
@@ -33,7 +35,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Lbl,LblFr,HavePresident")] Commission commission)
+        public async Task<IActionResult> Create([Bind("ID,Lbl,LblFr,HavePresident,Code")] Commission commission)
         {
             if(CommissionExists(commission.Lbl , commission.LblFr)){
                 ModelState.AddModelError("Lbl", " موجود");
@@ -43,8 +45,8 @@ namespace HAICOP.Controllers
             
             if (ModelState.IsValid)
             {
-                _context.Add(commission);
-                await _context.SaveChangesAsync();
+                db.Add(commission);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(commission);
@@ -58,7 +60,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var commission = await _context.Commission.SingleOrDefaultAsync(m => m.ID == id);
+            var commission = await db.Commission.SingleOrDefaultAsync(m => m.ID == id);
             if (commission == null)
             {
                 return NotFound();
@@ -69,7 +71,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblFr,HavePresident")] Commission commission)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblFr,HavePresident,Code")] Commission commission)
         {
             if (id != commission.ID)
             {
@@ -86,8 +88,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(commission);
-                    await _context.SaveChangesAsync();
+                    db.Update(commission);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -107,12 +109,12 @@ namespace HAICOP.Controllers
 
         private bool CommissionExists(int id)
         {
-            return _context.Commission.Any(e => e.ID == id);
+            return db.Commission.Any(e => e.ID == id);
         }
 
         private bool CommissionExists(string Lbl, string LblFr)
         {
-            return _context.Commission.Any(e => e.Lbl == Lbl && e.LblFr == LblFr);
+            return db.Commission.Any(e => e.Lbl == Lbl && e.LblFr == LblFr);
         }
     }
 }

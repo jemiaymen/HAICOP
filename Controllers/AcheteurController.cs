@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class AcheteurController : Controller
+    [Authorize(Roles ="root,Admin,Tech")]
+    public class AcheteurController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public AcheteurController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+        public AcheteurController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+                                base(userManager,signInManager,db) 
+        {}
 
         // GET: Acheteur
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Acheteur.ToListAsync());
+            return View(await db.Acheteur.ToListAsync());
         }
 
 
@@ -37,9 +38,9 @@ namespace HAICOP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Lbl")] Acheteur acheteur)
+        public async Task<IActionResult> Create([Bind("ID,Lbl,LblLong")] Acheteur acheteur)
         {
-            if (AcheteurExists(acheteur.Lbl))
+            if (AcheteurExists(acheteur.Lbl,acheteur.LblLong))
             {
                 ModelState.AddModelError("Lbl", "المشتري العمومي موجود");
                 return View(acheteur);
@@ -47,8 +48,8 @@ namespace HAICOP.Controllers
             
             if (ModelState.IsValid)
             {
-                _context.Add(acheteur);
-                await _context.SaveChangesAsync();
+                db.Add(acheteur);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(acheteur);
@@ -62,7 +63,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var acheteur = await _context.Acheteur.SingleOrDefaultAsync(m => m.ID == id);
+            var acheteur = await db.Acheteur.SingleOrDefaultAsync(m => m.ID == id);
             if (acheteur == null)
             {
                 return NotFound();
@@ -75,14 +76,14 @@ namespace HAICOP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl")] Acheteur acheteur)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblLong")] Acheteur acheteur)
         {
             if (id != acheteur.ID)
             {
                 return NotFound();
             }
 
-            if (AcheteurExists(acheteur.Lbl))
+            if (AcheteurExists(acheteur.Lbl,acheteur.LblLong))
             {
                 ModelState.AddModelError("Lbl", "المشتري العمومي موجود");
                 return View(acheteur);
@@ -92,8 +93,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(acheteur);
-                    await _context.SaveChangesAsync();
+                    db.Update(acheteur);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,12 +115,12 @@ namespace HAICOP.Controllers
 
         private bool AcheteurExists(int id)
         {
-            return _context.Acheteur.Any(e => e.ID == id);
+            return db.Acheteur.Any(e => e.ID == id);
         }
 
-        private bool AcheteurExists(string Lbl)
+        private bool AcheteurExists(string Lbl , string LblLong)
         {
-            return _context.Acheteur.Any(e => e.Lbl == Lbl);
+            return db.Acheteur.Any(e => e.Lbl == Lbl && e.LblLong == LblLong);
         }
     }
 }

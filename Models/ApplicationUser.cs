@@ -22,6 +22,10 @@ namespace HAICOP.Models
     {
         [Required]
         public string FirstLastName { get; set; }
+        
+        public int Num { get ; set;}
+
+        public bool Auto { get ; set;}
     }
 
     public class ApplicationRole : IdentityRole  

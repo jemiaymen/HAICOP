@@ -42,8 +42,8 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="deep-blue-color">
-    <nav class="navigation">
+<body >
+    <nav class="navigation hidden-print">
         <div class="container-fluid">
             <div class="header-logo">
                 <a href="/" title="">
@@ -64,8 +64,8 @@
                             </a>
                             <div class="dropdown-menu  top-dropDown-1">
                                 <h4>بحث</h4>
-                                <form action="Search" method="post">
-                                    <input type="search" placeholder="اكتب ما تريد البحث عنه؟" name="q">
+                                <form asp-controller="Search" asp-action="Index" method="get">
+                                    <input type="search" placeholder="اكتب ما تريد البحث عنه؟" name="q" id="q">
                                 </form>
                             </div>
 
@@ -78,7 +78,7 @@
     </nav>
 
     <section id="main-container">
-        <section id="left-navigation">
+        <section id="left-navigation" class="hidden-print">
 
             <div class="phone-nav-box visible-xs">
                 <a class="phone-logo" href="/" title="">
@@ -100,7 +100,7 @@
             </div>
         </section>
 
-        <section id="right-wrapper">
+        <section id="right-wrapper" class="hidden-print">
             <!--Right hidden  section close icon start-->
             <div class="close-right-wrapper">
                 <a href="javascript:void(0)"><i class="fa fa-times"></i></a>
@@ -122,7 +122,7 @@
             <!--Tab content -->
         </section>
 
-        <div id="change-color">
+        <div id="change-color" class="hidden-print">
             <div id="change-color-control">
                 <a href="javascript:void(0)"><i class="fa fa-magic"></i></a>
             </div>

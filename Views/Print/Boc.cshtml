@@ -1,0 +1,128 @@
+@model HAICOP.Models.Dossier
+
+
+@{
+    ViewData["Title"] = "طباعة ملف";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html >
+<head>
+
+    <title>@ViewData["Title"] - HAICOP</title>
+    <link href="/css/bootstrap-rtl.css" rel="stylesheet">
+
+</head>
+<body dir="rtl">
+
+    <style>
+         h2 , h3 , h4 {
+            margin-top:7px;
+        }
+        .docu {
+            margin-top:40px;
+        }
+        .panel  {
+            margin-top:0px;
+            margin-bottom: 0px;
+        }
+
+        .des {
+            margin-top:40px;
+        }
+        .p-not {
+            padding-left:0px;
+            padding-right: 0px;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-xs-4">
+            <center>
+                <h3>الجمهورية التونسية</h3>
+                <h2>رئاسة الحكومة</h2>
+                <h3> الهيئة العليا للطلب العمومي</h3>
+            </center>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <center><h1>@Html.DisplayFor(model => Model.Commission.Lbl) </h1><center>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-4">
+            <h1>تسجيل و تعهد</h1>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-xs-6">
+            <h3>عدد الملف :  @Html.DisplayFor(model => Model.Num)/ص ص/@Html.DisplayFor(model => Model.DocDate.Year) </h3>
+
+        </div>
+
+        <div class="col-xs-6">
+            <h3>تاريخ قبول الملف :  @Html.DisplayFor(model => Model.DocDate) </h3>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>طبيعة الملف :  @Html.DisplayFor(model => Model.Mails.First().MailNature)</h3>
+        </div>
+    </div>
+
+    <div class="row docu">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 >الموضوع :</h3>
+                </div>
+                <div class="panel-body">
+                    <h3>@Html.DisplayFor(model => Model.Subject)</h3>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 >المصدر : @Html.DisplayFor(model => Model.Mails.First().From )</h3>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 >المرجع : @Html.DisplayFor(model => Model.Mails.First().Ref )</h3>
+                </div>
+            </div>
+            <div class="col-xs-6 p-not">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 >رئيس اللجنة المختصة : @ViewBag.Chef</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 p-not">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 >المقرر : @ViewBag.Rapporteur</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row des">
+        <div class="col-xs-12">
+            <h3>الملاحظات : </h3>
+            <h3>@Html.DisplayFor(model => Model.Mails.First().Desc)</h3>
+        </div>
+    </div>
+</body>
+</html>
+

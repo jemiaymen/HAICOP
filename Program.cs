@@ -16,7 +16,7 @@ namespace HAICOP
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:80")
+                .UseUrls("http://0.0.0.0:80")
                 .Build();
 
             host.Run();

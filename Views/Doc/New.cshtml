@@ -27,7 +27,7 @@
                     </div>
                     <label asp-for="Num" class="col-md-2 control-label"></label>
                     <div class="col-md-2">
-                        <input asp-for="Num" class="form-control" readonly="readonly" value="@ViewData["Num"]" />
+                        @Html.EditorFor(model => model.Num, ViewBag.user.Auto ? (object)new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" }} : new { htmlAttributes = new { @class = "form-control" } })
                         <span asp-validation-for="Num" class="text-danger"></span>
                     </div>
                 </div>

@@ -12,128 +12,407 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using HAICOP.Data;
 using HAICOP.Models;
-
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class DocController : Controller
+    [Authorize(Roles = "root,Admin,BOC,Chef,President")]
+    public class DocController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
+
         private IHostingEnvironment _environment;
         private ILogger _logger;
 
-        public DocController(ApplicationDbContext context,IHostingEnvironment environment , ILoggerFactory loggerFactory)
+        public DocController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db, 
+                            IHostingEnvironment environment , ILoggerFactory loggerFactory ):
+                            base(userManager,signInManager,db) 
         {
-            _context = context;
             _environment = environment;
             _logger = loggerFactory.CreateLogger<DocController>();
     
         }
 
+        [Authorize(Roles = "root,Admin,BOC,Chef,President")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext =  _context.Dossier.Include(d => d.Commission)
-                                                        .Include( d => d.Mails)
-                                                        .Where( d => d.State != DossierState.Accept && d.State != DossierState.Refus );
-            return View(await applicationDbContext.ToListAsync());
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+
+
+
+
+            if(ischef)
+            {
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
+                _logger.LogDebug(2,comm.Agent.CommissionID  +"");
+
+                var ret = await db.Dossier.Include(d => d.Commission)
+                                         .Include( d => d.Mails)
+                                         .Where( d =>  d.CommissionID == comm.Agent.CommissionID && 
+                                                      (d.State != DossierState.Accept && d.State != DossierState.Refus )  )
+                                         .ToListAsync();
+                ViewBag.ischef = true;
+                return View(ret) ;
+
+            }
+            if(isboc)
+            {
+                
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserCommission.Where( a => a.UserID == id )
+                                            .Select(a => a.CommissionID).ToList();
+
+                var ret = await db.Dossier.Include(d => d.Commission)
+                                          .Include( d => d.Mails)
+                                          .Where( d => comm.Contains(d.CommissionID) &&  d.State != DossierState.Accept && d.State != DossierState.Refus )
+                                          .ToListAsync();
+                ViewBag.isboc = true;
+                return View(ret) ;
+
+            }
+
+            if(isadmin || ispresident || isroot) 
+            {
+                ViewBag.isadmin = true;
+
+                var re = await db.Dossier.Include(d => d.Commission)
+                                        .Include( d => d.Mails)
+                                        .Where( d =>  d.State != DossierState.Accept && d.State != DossierState.Refus  )
+                                        .ToListAsync();
+                return View(re);
+            }
+
+            return View();
+            
         }
 
-        public IActionResult Rep()
+        [Authorize(Roles = "root,Admin,BOC,Chef,President")]
+        public async Task<IActionResult> All()
         {
-            var doc =   _context.Dossier.Include( d => d.Mails)
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+
+
+
+
+            if(ischef)
+            {
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
+                _logger.LogDebug(2,comm.Agent.CommissionID  +"");
+
+                var ret = await db.Dossier.Include(d => d.Commission)
+                                         .Include( d => d.Mails)
+                                         .Where( d =>  d.CommissionID == comm.Agent.CommissionID && 
+                                                      (d.State != DossierState.Creation )  )
+                                         .ToListAsync();
+                ViewBag.ischef = true;
+                return View(ret) ;
+
+            }
+            if(isboc)
+            {
+                
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserCommission.Where( a => a.UserID == id )
+                                            .Select(a => a.CommissionID).ToList();
+
+                var ret = await db.Dossier.Include(d => d.Commission)
+                                          .Include( d => d.Mails)
+                                          .Where( d => comm.Contains(d.CommissionID) &&  d.State == DossierState.Creation  )
+                                          .ToListAsync();
+                ViewBag.isboc = true;
+                return View(ret) ;
+
+            }
+
+            if(isadmin || ispresident || isroot) 
+            {
+                ViewBag.isadmin = true;
+
+                var re = await db.Dossier.Include(d => d.Commission)
+                                        .Include( d => d.Mails)
+                                        .Where( d =>  d.State != DossierState.Creation )
+                                        .ToListAsync();
+                return View(re);
+            }
+
+            return View();
+            
+        }
+
+        public async Task<IActionResult> Rep()
+        {
+
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+
+
+
+            if(ischef)
+            {
+                string id = ViewBag.user.Id;
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
+
+                var doc =   db.Dossier.Include( d => d.Mails)
                                         .Include( d => d.Mettings)
                                         .Include( d => d.Commission)
-                                        .Where(d => d.State == DossierState.Traitement);
+                                        .Where(d => d.State == DossierState.Traitement && d.CommissionID == comm.Agent.CommissionID);
+                List<DocDetail> re = new List<DocDetail>();
+                foreach( var item in doc)
+                {
+                    var four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                    .Where( f => f.DossierID == item.ID)
+                                                    .Select(f => f.Fournisseur)
+                                                    .ToList();
 
-            List<DocDetail> re = new List<DocDetail>();
-            foreach( var item in doc)
-            {
-                var four = _context.FourInDossier.Include( f => f.Fournisseur)
-                                                 .Where( f => f.DossierID == item.ID)
-                                                 .Select(f => f.Fournisseur)
-                                                 .ToList();
+                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
+                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                    
+                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                    
+                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                .Include( d => d.Metting)
+                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
 
-                var achteur = _context.AchInDossier.Include( a => a.Acheteur)
-                                                    .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                
-                var rapporteur = _context.Rapporteur.Include( r => r.Agent)
-                                                    .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                
-                var dessision = _context.DessisionInMetting.Include( d => d.Dessision)
-                                                            .Include( d => d.Metting)
-                                                            .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                }
 
-                re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                ViewBag.ischef = true;                            
+                return View(re);
             }
-                                        
-            return View(re);
+
+            if(isboc)
+            {
+                string id = ViewBag.user.Id;
+
+                var comm = db.UserCommission.Where( a => a.UserID == id )
+                                            .Select(a => a.CommissionID).ToList();
+
+                var doc =   db.Dossier.Include( d => d.Mails)
+                                        .Include( d => d.Mettings)
+                                        .Include( d => d.Commission)
+                                        .Where(d => d.State == DossierState.Traitement && comm.Contains(d.CommissionID));
+
+                List<DocDetail> re = new List<DocDetail>();
+                foreach( var item in doc)
+                {
+                    var four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                    .Where( f => f.DossierID == item.ID)
+                                                    .Select(f => f.Fournisseur)
+                                                    .ToList();
+
+                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
+                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                    
+                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                    
+                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                .Include( d => d.Metting)
+                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+
+                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                }
+                ViewBag.isboc = true;                            
+                return View(re);
+            }
+
+            if(isadmin || ispresident || isroot)
+            {
+                var doc =   db.Dossier.Include( d => d.Mails)
+                                        .Include( d => d.Mettings)
+                                        .Include( d => d.Commission)
+                                        .Where(d => d.State == DossierState.Traitement );
+
+                List<DocDetail> re = new List<DocDetail>();
+                foreach( var item in doc)
+                {
+                    var four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                    .Where( f => f.DossierID == item.ID)
+                                                    .Select(f => f.Fournisseur)
+                                                    .ToList();
+
+                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
+                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                    
+                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                    
+                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                .Include( d => d.Metting)
+                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+
+                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                }
+                ViewBag.isroot = true;                            
+                return View(re);
+            }
+
+            
+            return View();
+
+            
         }
 
+        [Authorize(Roles = "BOC,Admin,root")]
         public IActionResult New()
         {
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl" );
-            ViewData["AcheteurID"] = new SelectList(_context.Acheteur, "ID", "Lbl" );
+            string id = ViewBag.user.Id;
+            var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where( a => a.UserID == id)
+                                        .Select( a => a.Commission).ToList();
+            if(comm == null)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" );
+            }
+            else 
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
+            }                            
+            
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" );
 
-            ViewData["Num"] = GenerateNewNum();
-            return View();
+            NewDossier model = new NewDossier();
+            model.Num = ViewBag.user.Num + 1;
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,BOC")]
         public async Task<IActionResult> New([Bind("ID,CommissionID,Subject,Num,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,FournisseurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc,Location")] NewDossier dossier)
         {
+            if( (dossier.DocDate > dossier.ProDate) || (dossier.DocDate > dossier.EnterDate) )
+            {
+                ModelState.AddModelError("DocDate", "يجب أن يكون تاريخ الملف أقل من تاريخ التعهد");
+            }
+
+            if(dossier.DocDate.DayOfWeek == DayOfWeek.Sunday || dossier.DocDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("DocDate","يجب أن يكون تاريخ الملف داخل أوقات العمل ");
+            }
+
+            if(dossier.ProDate.DayOfWeek == DayOfWeek.Sunday || dossier.ProDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("ProDate","يجب أن يكون تاريخ التعهد داخل أوقات العمل ");
+            }
+
+            if(dossier.EnterDate.DayOfWeek == DayOfWeek.Sunday || dossier.EnterDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("EnterDate","يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
+            }
+
             if (ModelState.IsValid)
             {
-
-                string file = Upload(dossier.Location).Result;
-
-                if(file != "")
+                try
                 {
-                    Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
-                                        Num = GenerateNewNum() , Type = dossier.Type , Nature = dossier.Nature,
-                                        DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
-                    _context.Add(doc);
-                    Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
-                                            MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
-                                            Desc = dossier.Desc , Url = file};
-                    
-                    await _context.SaveChangesAsync();
-                    AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
-                    _context.Add(ach);
-                    _context.Add(mail);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    string file = Upload(dossier.Location).Result;
+
+                    if(file != "")
+                    {
+                        Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
+                                            Num = dossier.Num , Type = dossier.Type , Nature = dossier.Nature,
+                                            DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
+                        db.Add(doc);
+                        Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
+                                                MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
+                                                Desc = dossier.Desc , Url = file};
+                        
+                        await db.SaveChangesAsync();
+                        AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
+                        db.Add(ach);
+                        db.Add(mail);
+                        ViewBag.user.Num += 1;
+                        db.Update(ViewBag.user);
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("All");
+                    }
                 }
+                catch (System.Exception ex)
+                {
+                    _logger.LogError(3, ex.Message);
+                    throw;
+                }
+
+                
             }
 
             ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
-            
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", dossier.CommissionID);
-            ViewData["AcheteurID"] = new SelectList(_context.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
-            ViewData["Num"] = GenerateNewNum();
+            string id = ViewBag.user.Id;
+            var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where( a => a.UserID == id)
+                                        .Select( a => a.Commission).ToList();
+            if(comm == null)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" , dossier.CommissionID);
+            }
+            else 
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" , dossier.CommissionID);
+            }  
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
+
             return View(dossier);
         }
 
+        [Authorize(Roles ="root,Admin,Chef")]
         public IActionResult Rapp()
         {
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl" );
-            ViewData["AcheteurID"] = new SelectList(_context.Acheteur, "ID", "Lbl" );
+            string id = ViewBag.user.Id;
+
+            var comm = db.UserAgent.Include(a => a.Agent)
+                                    .Include(a => a.Agent.Commission)
+                                    .Where( a => a.UserID == id && a.Agent.IsPresident == true)
+                                    .Select(a => a.Agent.Commission)
+                                    .ToList();
+
+            if(comm == null)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" );
+            }
+            else 
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
+            }  
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" );
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="root,Admin,Chef")]
         public async Task<bool> Rapp([Bind("ID,CommissionID,AcheteurID,AgentID")] Rapp model)
         {
             try
             {
                 Rapporteur rapporteur = new Rapporteur {AgentID = model.AgentID , DossierID = model.ID};
-                _context.Add(rapporteur);
-                var dossier = await _context.Dossier.SingleOrDefaultAsync(m => m.ID == model.ID);
+                db.Add(rapporteur);
+                var dossier = await db.Dossier.SingleOrDefaultAsync(m => m.ID == model.ID);
                 dossier.State = DossierState.Encour ;
-                _context.Update(dossier);
-                await _context.SaveChangesAsync();
+                db.Update(dossier);
+                await db.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -142,24 +421,42 @@ namespace HAICOP.Controllers
             }
         }
 
-
+        [Authorize(Roles = "root,Admin,Chef,President")]
         public async Task<IActionResult> EditRapp()
         {
-            return View(await _context.Rapporteur.Include(d => d.Dossier).Include(a => a.Agent).Include(c => c.Dossier.Commission).ToListAsync() );
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+
+            if(ischef)
+            {
+                string id = ViewBag.user.Id;
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
+                return View(await db.Rapporteur.Include(d => d.Dossier).Include(a => a.Agent).Include(c => c.Dossier.Commission).Where(a => a.Dossier.CommissionID == comm.Agent.CommissionID).ToListAsync() );
+            }
+            else if(isadmin || ispresident || isroot)
+            {
+                return View(await db.Rapporteur.Include(d => d.Dossier).Include(a => a.Agent).Include(c => c.Dossier.Commission).ToListAsync() );
+            }
+
+            return View();
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "root,Admin,Chef,President")]
         public async Task<bool> EditRapp(int DossierID , int AgentID , int OldAgentID)
         {
              _logger.LogInformation(3, string.Format( " dossier id {0} oldagent id {1} agentid {2}", DossierID,OldAgentID,AgentID ) );
                 try
                 {
-                    var rapp = await _context.Rapporteur.SingleAsync(m => m.DossierID == DossierID && m.AgentID == OldAgentID);
-                    _context.Remove(rapp);
-                    _context.Add(new Rapporteur { AgentID = AgentID , DossierID = DossierID});
-                    await _context.SaveChangesAsync();
+                    var rapp = await db.Rapporteur.SingleAsync(m => m.DossierID == DossierID && m.AgentID == OldAgentID);
+                    db.Remove(rapp);
+                    db.Add(new Rapporteur { AgentID = AgentID , DossierID = DossierID});
+                    await db.SaveChangesAsync();
                     return true;
                 }
                 catch (Exception ex)
@@ -179,7 +476,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var dossier =    await _context.AchInDossier.Include( d => d.Dossier)
+            var dossier =    await db.AchInDossier.Include( d => d.Dossier)
                                                         .Include( d => d.Acheteur)
                                                         .Include( c => c.Dossier.Commission)
                                                         .SingleOrDefaultAsync(m => m.DossierID == id);
@@ -188,9 +485,42 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            ViewData["AcheteurID"] = new SelectList(_context.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
             ViewData["OldAcheteurID"] = dossier.AcheteurID;
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);
+
+
+            string userid = ViewBag.user.Id;
+
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+            
+
+
+            if (isboc )
+            {
+                var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where( a => a.UserID == userid)
+                                        .Select( a => a.Commission).ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+            }
+            else if(ischef)
+            {
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                    .Include(a => a.Agent.Commission)
+                                    .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
+                                    .Select(a => a.Agent.Commission)
+                                    .ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+            }
+            else if(isadmin || ispresident || isroot)
+            {
+              ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);  
+            }
+
+            
             NewDossier doc = new NewDossier();
             doc.InitFromAchaInDossier(dossier);
             return View(doc);
@@ -209,16 +539,16 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(dossier);
+                    db.Update(dossier);
 
                     if(AcheteurID != OldAcheteurID)
                     {
-                        var ach = await _context.AchInDossier.SingleAsync(m => m.DossierID == dossier.ID && m.AcheteurID == OldAcheteurID);
-                        _context.Remove(ach);
-                        _context.Add(new AchInDossier { AcheteurID = AcheteurID  , DossierID = dossier.ID});
+                        var ach = await db.AchInDossier.SingleAsync(m => m.DossierID == dossier.ID && m.AcheteurID == OldAcheteurID);
+                        db.Remove(ach);
+                        db.Add(new AchInDossier { AcheteurID = AcheteurID  , DossierID = dossier.ID});
                     }
 
-                    await _context.SaveChangesAsync();
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -234,8 +564,37 @@ namespace HAICOP.Controllers
                 return RedirectToAction("Index");
             }
             
-            ViewData["AcheteurID"] = new SelectList(_context.Acheteur, "ID", "Lbl" , AcheteurID);
-            ViewData["CommissionID"] = new SelectList(_context.Commission, "ID", "Lbl", dossier.CommissionID);
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , AcheteurID);
+
+            string userid = ViewBag.user.Id;
+
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
+            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+            
+            if (isboc )
+            {
+                var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where( a => a.UserID == userid)
+                                        .Select( a => a.Commission).ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
+            else if(ischef)
+            {
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                    .Include(a => a.Agent.Commission)
+                                    .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
+                                    .Select(a => a.Agent.Commission)
+                                    .ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
+            else if(isadmin || isroot || ispresident)
+            {
+              ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);  
+            }
+
             NewDossier doc = new NewDossier();
             doc.InitFromDossier(dossier,AcheteurID);
             return View(doc);
@@ -248,7 +607,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var mails =  _context.Mail.Include( d => d.Dossier)
+            var mails =  db.Mail.Include( d => d.Dossier)
                                             .Include( c => c.Dossier.Commission)
                                             .Where(m => m.DossierID == id);
             if (mails == null)
@@ -260,7 +619,6 @@ namespace HAICOP.Controllers
             return View(await mails.ToListAsync());
         }
 
-
         public IActionResult EditMail(int? id)
         {
             if (id == null)
@@ -268,7 +626,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var mail = _context.Mail.SingleOrDefault(m => m.ID == id);
+            var mail = db.Mail.SingleOrDefault(m => m.ID == id);
             if (mail == null)
             {
                 return NotFound();
@@ -281,6 +639,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> EditMail(int id,IFormFile Location, [Bind("ID,DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
         {
             if (id != mail.ID)
@@ -292,18 +651,12 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    var tmpmail = _context.Mail.AsNoTracking().SingleOrDefault(m => m.ID == id);
+                    var tmpmail = db.Mail.AsNoTracking().SingleOrDefault(m => m.ID == id);
                     if(Location != null)
                     {
                          _logger.LogInformation(5, "houni location not null");
                         Del(tmpmail.Url) ;
                         mail.Url = Upload(Location).Result;
-
-                        ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
-
-                        EditMail model = new EditMail();
-                        model.InitFromMail(mail);
-                        return View(model);
 
                     }
                     else
@@ -311,8 +664,8 @@ namespace HAICOP.Controllers
                         mail.Url = tmpmail.Url;
                     }
                     
-                    _context.Update(mail);
-                    await _context.SaveChangesAsync();
+                    db.Update(mail);
+                    await db.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -324,6 +677,7 @@ namespace HAICOP.Controllers
 
             EditMail ma = new EditMail();
             ma.InitFromMail(mail);
+            ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
             return View(ma);
         }
         
@@ -364,8 +718,8 @@ namespace HAICOP.Controllers
                         return View(model);
                     }
                     
-                    _context.Add(mail);
-                    await _context.SaveChangesAsync();
+                    db.Add(mail);
+                    await db.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -380,6 +734,7 @@ namespace HAICOP.Controllers
             return View(ma);
         }
 
+        [Authorize(Roles = "root,Admin,President")]
         public IActionResult EditFina(int? id)
         {
             if(id == null)
@@ -387,30 +742,31 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var finan = _context.InvInDossier.Include(d => d.Dossier)
+            var finan = db.InvInDossier.Include(d => d.Dossier)
                                              .SingleOrDefault( e => e.DossierID == id);
 
             if(finan == null)
             {
-                var doc = _context.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
+                var doc = db.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
                 return View(new AddFina {Financement = doc.Financement , DossierID = doc.ID  });
             }
 
-            ViewData["ForeignInvestisseur"] = new SelectList(_context.ForeignInvestisseur, "ID", "Name" );
+            ViewData["ForeignInvestisseur"] = new SelectList(db.ForeignInvestisseur, "ID", "Name" );
 
             return View(new AddFina {Foreign = finan.Dossier.Foreign , Financement = finan.Dossier.Financement , DossierID = id.GetValueOrDefault() , ForeignInvestisseurID = finan.ForeignInvestisseurID});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "root,Admin,President")]
         public async Task<IActionResult> EditFina(string Foreign,int DossierID,Financement Financement,[Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
         {
             try
             {
-                var inv = _context.InvInDossier.AsNoTracking().FirstOrDefault(s => s.DossierID == DossierID);
+                var inv = db.InvInDossier.AsNoTracking().FirstOrDefault(s => s.DossierID == DossierID);
                 if(inv != null)
                 {
-                    _context.Remove(inv);
+                    db.Remove(inv);
                 }
                 return await AddFina(Foreign , Financement , indoc);
             }
@@ -422,6 +778,7 @@ namespace HAICOP.Controllers
 
         }
 
+        [Authorize(Roles = "root,Admin,President")]
         public IActionResult AddFina(int? id)
         {
             if(id == null)
@@ -429,7 +786,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var doc = _context.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
+            var doc = db.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
 
             if(doc.Financement == Financement.Foreign || doc.Financement == Financement.Local || doc.Financement == Financement.Hybride)
             {
@@ -442,6 +799,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "root,Admin,President")]
         public async Task<IActionResult> AddFina(string Foreign,Financement Financement,[Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
         {
             if (ModelState.IsValid)
@@ -454,22 +812,22 @@ namespace HAICOP.Controllers
                     {
                         try
                         {
-                             _context.Remove(_context.InvInDossier.AsNoTracking().SingleOrDefault( e => e.DossierID == indoc.DossierID));
+                             db.Remove(db.InvInDossier.AsNoTracking().SingleOrDefault( e => e.DossierID == indoc.DossierID));
                         }
                         catch (Exception e ) 
                         { 
                              _logger.LogError(2 , e.Message);
                         }
                        
-                        _context.Add(indoc);
+                        db.Add(indoc);
                     }
                     
-                    var dossier = _context.Dossier.SingleOrDefault(m => m.ID == indoc.DossierID );
+                    var dossier = db.Dossier.SingleOrDefault(m => m.ID == indoc.DossierID );
                     dossier.Financement = Financement;
                     dossier.Foreign = Foreign;
-                    _context.Update(dossier);
+                    db.Update(dossier);
 
-                    await _context.SaveChangesAsync();
+                    await db.SaveChangesAsync();
 
                     return RedirectToAction("Index");
                 }
@@ -483,7 +841,7 @@ namespace HAICOP.Controllers
 
         private bool DossierExists(int id)
         {
-            return _context.Dossier.Any(e => e.ID == id);
+            return db.Dossier.Any(e => e.ID == id);
         }
 
         private async Task<string> Upload(IFormFile Location)
@@ -523,18 +881,6 @@ namespace HAICOP.Controllers
             return false;
         }
 
-        private int GenerateNewNum()
-        {
-            try
-            {
-                var Num = _context.Dossier.Last();
-                return Num.Num + 1;
-            } 
-            catch(Exception )
-            {
-                return 1;
-            }
-        }
 
         private void printError()
         {

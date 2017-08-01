@@ -17,6 +17,9 @@
                                             <thead>
                                                 <tr>
                                                         <th>
+                                                         (إختصار) المشتري العمومي
+                                                        </th>
+                                                        <th>
                                                             المشتري العمومي
                                                         </th>
                                                         <th>
@@ -29,6 +32,9 @@
                                                         <tr>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Lbl)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.LblLong)
                                                             </td>
                                                             <td>
                                                                  <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>

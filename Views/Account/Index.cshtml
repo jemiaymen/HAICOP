@@ -35,6 +35,12 @@
                                                         <th>
                                                            تغيير كلمة السر
                                                         </th>
+                                                        <th>   
+                                                             لجنة
+                                                        </th>
+                                                        <th>
+                                                            مقرر/رئيس لجنة
+                                                        </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -57,6 +63,14 @@
                                                             </td>
                                                             <td>
                                                                  <a asp-action="ResetPassword" asp-route-id="@item.UserId"><i class="fa fa-key"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="Comm" asp-route-id="@item.UserId"><i class="fa fa-file"></i></a> | 
+                                                                 <a asp-action="AddComm" asp-route-id="@item.UserId"><i class="fa fa-plus"></i></a> 
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="Agent" asp-route-id="@item.UserId"><i class="fa fa-user"></i></a> | 
+                                                                 <a asp-action="AddAgent" asp-route-id="@item.UserId"><i class="fa fa-plus"></i></a>
                                                             </td>
                                                         </tr>
                                                 }

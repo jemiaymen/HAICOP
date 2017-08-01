@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class RoleController : Controller
+    [Authorize(Roles = "root")]
+    public class RoleController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public RoleController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+
+        public RoleController(UserManager<ApplicationUser> userManager,
+                            SignInManager<ApplicationUser> signInManager,
+                            ApplicationDbContext db):
+                            base(userManager,signInManager,db)  { }
 
         // GET: Role
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ApplicationRole.ToListAsync());
+            return View(await db.ApplicationRole.ToListAsync());
         }
 
         // GET: Role/Details/5
@@ -33,7 +36,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.ApplicationRole
+            var applicationRole = await db.ApplicationRole
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationRole == null)
             {
@@ -59,8 +62,8 @@ namespace HAICOP.Controllers
             applicationRole.NormalizedName = applicationRole.Name.ToUpper();
             if (ModelState.IsValid)
             {
-                _context.Add(applicationRole);
-                await _context.SaveChangesAsync();
+                db.Add(applicationRole);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(applicationRole);
@@ -74,7 +77,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.ApplicationRole.SingleOrDefaultAsync(m => m.Id == id);
+            var applicationRole = await db.ApplicationRole.SingleOrDefaultAsync(m => m.Id == id);
             if (applicationRole == null)
             {
                 return NotFound();
@@ -99,8 +102,8 @@ namespace HAICOP.Controllers
                 try
                 {
                     
-                    _context.Update(applicationRole);
-                    await _context.SaveChangesAsync();
+                    db.Update(applicationRole);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,7 +129,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.ApplicationRole
+            var applicationRole = await db.ApplicationRole
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationRole == null)
             {
@@ -141,15 +144,15 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var applicationRole = await _context.ApplicationRole.SingleOrDefaultAsync(m => m.Id == id);
-            _context.ApplicationRole.Remove(applicationRole);
-            await _context.SaveChangesAsync();
+            var applicationRole = await db.ApplicationRole.SingleOrDefaultAsync(m => m.Id == id);
+            db.ApplicationRole.Remove(applicationRole);
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool ApplicationRoleExists(string id)
         {
-            return _context.ApplicationRole.Any(e => e.Id == id);
+            return db.ApplicationRole.Any(e => e.Id == id);
         }
     }
 }

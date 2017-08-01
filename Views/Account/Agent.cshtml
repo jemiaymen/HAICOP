@@ -1,0 +1,65 @@
+@model IEnumerable<HAICOP.Models.UserAgent>
+
+@{
+    ViewData["Title"] = " القائمة الجملية";
+    ViewData["SubMenu"] = "التصرف في المستعملين";
+}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                        <th>
+                                                            الإسم واللقب
+                                                        </th>
+                                                        <th>
+                                                            اسم المستخدم
+                                                        </th>
+                                                        <th>
+                                                            إسم المقرر/رئيس اللجنة
+                                                        </th>
+                                                        <th>
+                                                            فسخ
+                                                        </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model) {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.User.FirstLastName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.User.UserName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Agent.Name)
+                                                            </td>
+                                                            <td>
+                                                                 <a asp-action="DelAgent" asp-route-UserID="@item.UserID" asp-route-AgentID="@item.AgentID"><i class="fa fa-ban"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
+}

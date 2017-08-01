@@ -1,0 +1,49 @@
+@model HAICOP.Models.UserAgent
+
+
+@{
+    ViewData["Title"] = "اظافة مقرر/رئيس لجنة";
+    ViewData["SubMenu"] = "التصرف في المستعملين";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-action="AddAgent"  method="post" >
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">مقرر/رئيس لجنة</label>
+                    <div class="col-md-9">
+                        <select asp-for="AgentID" class ="form-control" asp-items="ViewBag.AgentID"></select>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="UserID" />
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+            $("#AgentID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}

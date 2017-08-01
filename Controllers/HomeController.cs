@@ -6,36 +6,43 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-
+using HAICOP.Models;
+using HAICOP.Data;
 
 namespace HAICOP.Controllers
 {
 
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseCtrl
     {
+        public HomeController(UserManager<ApplicationUser> userManager,
+                            SignInManager<ApplicationUser> signInManager,
+                            ApplicationDbContext db):
+                            base(userManager,signInManager,db)  { }
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult About()
+        [AllowAnonymous]
+        public IActionResult Error(int? id)
         {
-            ViewData["Message"] = "Your application description page.";
+            if(id != null)
+            {
+                switch(id)
+                {
+                    case 404:
+                        return View("404");
+                    case 501:
+                        return View("501");
+                    case 500:
+                        return View("500");
+                    default:
+                        return View("404");
 
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View();
+                }
+            }
+            return View("404");
         }
     }
 }

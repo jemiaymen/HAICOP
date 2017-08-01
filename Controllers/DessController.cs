@@ -7,21 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class DessController : Controller
+    [Authorize(Roles ="root,Admin,Tech")]
+    public class DessController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public DessController(ApplicationDbContext context)
-        {
-            _context = context;    
+
+        public DessController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+                            base(userManager,signInManager,db) 
+        { 
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Dessision.ToListAsync());
+            return View(await db.Dessision.ToListAsync());
         }
 
         public IActionResult Create()
@@ -41,8 +44,8 @@ namespace HAICOP.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Add(dessision);
-                await _context.SaveChangesAsync();
+                db.Add(dessision);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(dessision);
@@ -55,7 +58,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var dessision = await _context.Dessision.SingleOrDefaultAsync(m => m.ID == id);
+            var dessision = await db.Dessision.SingleOrDefaultAsync(m => m.ID == id);
             if (dessision == null)
             {
                 return NotFound();
@@ -82,8 +85,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(dessision);
-                    await _context.SaveChangesAsync();
+                    db.Update(dessision);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -103,12 +106,12 @@ namespace HAICOP.Controllers
 
         private bool DessisionExists(int id)
         {
-            return _context.Dessision.Any(e => e.ID == id);
+            return db.Dessision.Any(e => e.ID == id);
         }
 
         private bool DessisionExists(string Lbl)
         {
-            return _context.Dessision.Any(e => e.Lbl == Lbl);
+            return db.Dessision.Any(e => e.Lbl == Lbl);
         }
     }
 }

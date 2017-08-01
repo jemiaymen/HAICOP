@@ -411,6 +411,8 @@ namespace HAICOP.Models
 		public Agent Rapporteur { get ; set;}
 		public Dessision Dessision {get ; set;}
 
+		public List<FourInDossier> FinD { get ; set;}
+
 	}
 
 

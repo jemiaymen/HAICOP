@@ -84,3 +84,14 @@ function formempty(){
 
 
 
+$("#Auto").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+  } else {
+    $(this).attr('value', 'false');
+  }
+});
+
+if($("#Auto").attr('value') == 'True'){
+    $('#Auto').attr('checked', true);
+}

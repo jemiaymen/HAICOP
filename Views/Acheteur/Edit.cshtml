@@ -14,9 +14,16 @@
             <div class="form-horizontal">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label" >المشتري العمومي</label>
+                    <label class="col-md-3 control-label" asp-for="Lbl" > </label>
                     <div class="col-md-9">
                         <input asp-for="Lbl" class="form-control" />
+                        <span asp-validation-for="Lbl" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LblLong" class="col-md-3 control-label" > </label>
+                    <div class="col-md-9">
+                        <input asp-for="LblLong" class="form-control" />
                         <span asp-validation-for="Lbl" class="text-danger"></span>
                     </div>
                 </div>

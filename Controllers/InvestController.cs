@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class InvestController : Controller
+    [Authorize(Roles ="root,Admin,Tech")]
+    public class InvestController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public InvestController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+        public InvestController(UserManager<ApplicationUser> userManager,
+                            SignInManager<ApplicationUser> signInManager,
+                            ApplicationDbContext db):
+                            base(userManager,signInManager,db)  { }
 
         // GET: Invest
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ForeignInvestisseur.ToListAsync());
+            return View(await db.ForeignInvestisseur.ToListAsync());
         }
 
         // GET: Invest/Create
@@ -44,8 +46,8 @@ namespace HAICOP.Controllers
             
             if (ModelState.IsValid)
             {
-                _context.Add(foreignInvestisseur);
-                await _context.SaveChangesAsync();
+                db.Add(foreignInvestisseur);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(foreignInvestisseur);
@@ -59,7 +61,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var foreignInvestisseur = await _context.ForeignInvestisseur.SingleOrDefaultAsync(m => m.ID == id);
+            var foreignInvestisseur = await db.ForeignInvestisseur.SingleOrDefaultAsync(m => m.ID == id);
             if (foreignInvestisseur == null)
             {
                 return NotFound();
@@ -86,8 +88,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(foreignInvestisseur);
-                    await _context.SaveChangesAsync();
+                    db.Update(foreignInvestisseur);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -107,11 +109,11 @@ namespace HAICOP.Controllers
 
         private bool ForeignInvestisseurExists(int id)
         {
-            return _context.ForeignInvestisseur.Any(e => e.ID == id);
+            return db.ForeignInvestisseur.Any(e => e.ID == id);
         }
         private bool ForeignInvestisseurExists(string Name)
         {
-            return _context.ForeignInvestisseur.Any(e => e.Name == Name);
+            return db.ForeignInvestisseur.Any(e => e.Name == Name);
         }
     }
 }

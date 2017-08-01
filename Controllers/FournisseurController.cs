@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    public class FournisseurController : Controller
+    [Authorize(Roles ="root,Admin,Tech")]
+    public class FournisseurController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public FournisseurController(ApplicationDbContext context)
+        
+        public FournisseurController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+        base(userManager,signInManager,db) 
         {
-            _context = context;    
         }
 
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Fournisseur.ToListAsync());
+            return View(await db.Fournisseur.ToListAsync());
         }
 
 
@@ -42,8 +45,8 @@ namespace HAICOP.Controllers
             }
             if (ModelState.IsValid)
             {
-                _context.Add(fournisseur);
-                await _context.SaveChangesAsync();
+                db.Add(fournisseur);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(fournisseur);
@@ -57,7 +60,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var fournisseur = await _context.Fournisseur.SingleOrDefaultAsync(m => m.ID == id);
+            var fournisseur = await db.Fournisseur.SingleOrDefaultAsync(m => m.ID == id);
             if (fournisseur == null)
             {
                 return NotFound();
@@ -84,8 +87,8 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    _context.Update(fournisseur);
-                    await _context.SaveChangesAsync();
+                    db.Update(fournisseur);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -106,12 +109,12 @@ namespace HAICOP.Controllers
 
         private bool FournisseurExists(int id)
         {
-            return _context.Fournisseur.Any(e => e.ID == id);
+            return db.Fournisseur.Any(e => e.ID == id);
         }
 
         private bool FournisseurExists(string Lbl)
         {
-            return _context.Fournisseur.Any(e => e.Lbl == Lbl);
+            return db.Fournisseur.Any(e => e.Lbl == Lbl);
         }
     }
 }

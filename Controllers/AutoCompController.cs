@@ -7,24 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HAICOP.Data;
 using HAICOP.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace HAICOP.Controllers
 {
     
-    public class AutoCompController : Controller
+    public class AutoCompController : BaseCtrl
     {
-        private readonly ApplicationDbContext _context;
 
-        public AutoCompController(ApplicationDbContext context)
-        {
-            _context = context;    
-        }
+        public AutoCompController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+                                base(userManager,signInManager,db) 
+        {}
 
         [HttpGet]
         [Route("api/sug/invest")]
         public dynamic invest()
         {
-            var result = _context.ForeignInvestisseur.Select(a => new {
+            var result = db.ForeignInvestisseur.Select(a => new {
                                                         value = a.Name,
                                                         id = a.ID
                                                     }).ToList();
@@ -35,7 +34,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/four")]
         public dynamic four()
         {
-            var result = _context.Fournisseur.Select(a => new {
+            var result = db.Fournisseur.Select(a => new {
                                                         value = a.Lbl,
                                                         id = a.ID
                                                     }).ToList();
@@ -46,7 +45,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/ach")]
         public dynamic acheteur()
         {
-            var result = _context.Acheteur.Select(a => new {
+            var result = db.Acheteur.Select(a => new {
                                                         value = a.Lbl,
                                                         id = a.ID
                                                     }).ToList();
@@ -57,7 +56,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/comm")]
         public dynamic commission()
         {
-            var result = _context.Commission.Select(a => new {
+            var result = db.Commission.Select(a => new {
                                                         value = a.Lbl,
                                                         id = a.ID
                                                     }).ToList();
@@ -68,7 +67,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/agent")]
         public dynamic agent()
         {
-            var result = _context.Agent.Select(a => new {
+            var result = db.Agent.Select(a => new {
                                                         value = a.Name,
                                                         id = a.ID
                                                     }).ToList();
@@ -79,7 +78,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/mail")]
         public dynamic mail()
         {
-            var result = _context.Mail.Select(a => new {
+            var result = db.Mail.Select(a => new {
                                                         value = a.Ref,
                                                         id = a.ID
                                                     }).ToList();
@@ -90,7 +89,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/docsub")]
         public dynamic docsub()
         {
-            var result = _context.Dossier.Select(a => new {
+            var result = db.Dossier.Select(a => new {
                                                         value = a.Subject,
                                                         id = a.ID
                                                     }).ToList();
@@ -101,7 +100,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/docnum")]
         public dynamic docnum()
         {
-            var result = _context.Dossier.Select(a => new {
+            var result = db.Dossier.Select(a => new {
                                                         value = a.Num,
                                                         id = a.ID
                                                     }).ToList();
@@ -112,7 +111,7 @@ namespace HAICOP.Controllers
         [Route("api/sug/dess")]
         public dynamic dess()
         {
-            var result = _context.Dessision.Select(a => new {
+            var result = db.Dessision.Select(a => new {
                                                         value = a.Lbl,
                                                         id = a.ID
                                                     }).ToList();
@@ -124,7 +123,7 @@ namespace HAICOP.Controllers
         [Route("api/agent/{id}")]
         public dynamic agent(int id)
         {
-            var result = _context.Agent.Where(c => c.CommissionID == id && c.IsPresident == false ).Select(a => new {
+            var result = db.Agent.Where(c => c.CommissionID == id && c.IsPresident == false ).Select(a => new {
                                                         Lbl = a.Name,
                                                         ID = a.ID
                                                     }).ToList();
@@ -135,7 +134,7 @@ namespace HAICOP.Controllers
         [Route("api/doc/{id}")]
         public dynamic doc(int id)
         {
-            var result = _context.Dossier.Where(c => c.CommissionID == id && c.State == DossierState.Creation ).Select(a => new {
+            var result = db.Dossier.Where(c => c.CommissionID == id && c.State == DossierState.Creation ).Select(a => new {
                                                         Subject = a.Subject,
                                                         ID = a.ID
                                                     }).ToList();
@@ -146,7 +145,7 @@ namespace HAICOP.Controllers
         [Route("api/doc/ache/{com}/{ach}")]
         public dynamic docache(int com , int ach)
         {
-            var result = _context.AchInDossier.Include(d => d.Dossier)
+            var result = db.AchInDossier.Include(d => d.Dossier)
                                                 .Where(c => c.Dossier.CommissionID == com && c.AcheteurID == ach && c.Dossier.State == DossierState.Creation  )
                                                 .Select(a => new {
                                                         Subject = a.Dossier.Subject,
@@ -162,7 +161,7 @@ namespace HAICOP.Controllers
 
             try
             {
-                var result = _context.Mail.SingleOrDefault(m => m.DossierID == id);
+                var result = db.Mail.SingleOrDefault(m => m.DossierID == id);
                 return result.Url;
             }
             catch (Exception)
@@ -177,7 +176,7 @@ namespace HAICOP.Controllers
         [Route("api/edit/doc/{id}")]
         public dynamic editdoc(int id)
         {
-            var result = _context.Dossier.Where(c => c.CommissionID == id ).Select(a => new {
+            var result = db.Dossier.Where(c => c.CommissionID == id ).Select(a => new {
                                                         Subject = a.Subject,
                                                         ID = a.ID
                                                     }).ToList();
@@ -190,7 +189,7 @@ namespace HAICOP.Controllers
         {
             try
             {
-                var result = _context.Mail.SingleOrDefault(m => m.DossierID == did && m.ID == imid);
+                var result = db.Mail.SingleOrDefault(m => m.DossierID == did && m.ID == imid);
                 return result.Url;
             }
             catch (Exception)
@@ -205,7 +204,7 @@ namespace HAICOP.Controllers
         [Route("api/four")]
         public dynamic fourauto()
         {
-            return _context.ForeignInvestisseur.ToList();
+            return db.ForeignInvestisseur.ToList();
         }
     }
 }
