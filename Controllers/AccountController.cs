@@ -74,12 +74,12 @@ namespace HAICOP.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(1, "User logged in.");
+                    _logger.LogDebug(1,$"User : {model.Email} Login .");
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning(2, "User account locked out.");
+                    _logger.LogDebug(2,$"User : {model.Email} Locked.");
                     return View("Lockout");
                 }
                 else
@@ -116,7 +116,8 @@ namespace HAICOP.Controllers
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User created a new account with password.");
+
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Create User : {model.UserName} .");
                     return RedirectToAction("Index");
                 }
                 AddErrors(result);
@@ -131,8 +132,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            _logger.LogDebug(2,$"User :  {ViewBag.user.Email} Login Out.");
             await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -152,7 +153,7 @@ namespace HAICOP.Controllers
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(3, "User change password.");
+                    _logger.LogDebug(1,$"User :  {user.Email} Change Password.");
                     return true;
                 }
             }
@@ -175,7 +176,7 @@ namespace HAICOP.Controllers
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(3, "User edit profile.");
+                    _logger.LogDebug(1,$"User :  {user.Email} edit profile.");
                     return true;
                 }
             }
@@ -242,7 +243,7 @@ namespace HAICOP.Controllers
             {
                 return NotFound();
             }
-            _logger.LogDebug(2,Role);
+
             
             var user = await _userManager.FindByIdAsync(UserId);
             user.Email = Email;
@@ -263,6 +264,8 @@ namespace HAICOP.Controllers
                         await _userManager.RemoveFromRoleAsync(user, existingRole);  
                         await _userManager.AddToRoleAsync(user,Role);
                     }
+
+                    _logger.LogDebug(1,$"Admin :  {ViewBag.user.UserName} edit User : {user.UserName}.");
                 }
                 catch (Exception)
                 {
@@ -315,6 +318,7 @@ namespace HAICOP.Controllers
                 var result = await _userManager.AddPasswordAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogDebug(1,$"Admin :  {ViewBag.user.UserName} Edit Password To User : {user.UserName}.");
                     return RedirectToAction(nameof(Index));
                 }
                 AddErrors(result);
@@ -365,6 +369,8 @@ namespace HAICOP.Controllers
             db.Remove(tmp);
             await db.SaveChangesAsync();
 
+            _logger.LogDebug(2,$"Admin :  {ViewBag.user.UserName} Del UserComm UserId : {tmp.UserID} CommissionID : {tmp.CommissionID}.");
+
             return RedirectToAction("Comm", new {Id = UserID});
 
         }
@@ -395,6 +401,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(model);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(2,$"Admin :  {ViewBag.user.UserName} Add UserComm User : {user.UserName} CommissionID : {model.CommissionID}.");
                 return RedirectToAction("Comm", new {Id = model.UserID});
             }
 
@@ -443,6 +450,9 @@ namespace HAICOP.Controllers
             db.Remove(tmp);
             await db.SaveChangesAsync();
 
+            _logger.LogDebug(2,$"Admin :  {ViewBag.user.UserName} Del UserAgent UserId : {tmp.UserID} AgentID : {tmp.AgentID}.");
+
+
             return RedirectToAction("Agent", new {Id = UserID});
 
         }
@@ -471,6 +481,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(model);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(2,$"Admin :  {ViewBag.user.UserName} Add UserAgent User : {user.UserName} AgentID : {model.AgentID}.");
                 return RedirectToAction("Agent", new {Id = model.UserID});
             }
 

@@ -9,6 +9,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
@@ -16,9 +17,12 @@ namespace HAICOP.Controllers
     public class AgentController : BaseCtrl
     {
 
-        public AgentController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+        private readonly ILogger _logger;
+        public AgentController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db,ILoggerFactory loggerFactory):
                                 base(userManager,signInManager,db) 
-        {}
+        {
+            _logger = loggerFactory.CreateLogger<AgentController>();
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -60,12 +64,18 @@ namespace HAICOP.Controllers
                         comm.HavePresident = true;
                         db.Update(comm);
                         await db.SaveChangesAsync();
+
+                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Agent : {agent.NameFr} .");
+
                         return RedirectToAction("Index");
                     }
                 }
 
                 db.Add(agent);
                 await db.SaveChangesAsync();
+
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Agent : {agent.NameFr} .");
+
                 return RedirectToAction("Index");
                 
             }
@@ -102,46 +112,30 @@ namespace HAICOP.Controllers
             {
                 if(agent.IsPresident)
                 {
-                    var president = HavePresidentGet(agent.ID);
-                    if(president !=  null)
+                    var president = GetPresident(agent.CommissionID);
+
+                    if(president != null)
                     {
-                        if( president.ID != agent.ID)
-                        {
-                            ModelState.AddModelError("IsPresident", "لديها رئيس");
-                            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
-                            return View(agent);
-                        }
-                        else
-                        {
-                            db.Update(agent);
-                            var comm = await db.Commission.FindAsync(agent.CommissionID);
-                            comm.HavePresident = true;
-                            db.Update(comm);
-                            await db.SaveChangesAsync();
-                            return RedirectToAction("Index");
-                        }
+                        president.IsPresident = false;
+                        db.Update(president);
                     }
+
+                    db.Update(agent);
+                    var com = await db.Commission.FindAsync(agent.CommissionID);
+                    com.HavePresident = true;
+                    db.Update(com);
+                    await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Agent : {agent.NameFr} .");
+                    return RedirectToAction("Index");
                 }
 
-                    try
-                    {
-                        db.Update(agent);
-                        await db.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!AgentExists(agent.ID))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                
+                var comm = await db.Commission.FindAsync(agent.CommissionID);
+                comm.HavePresident = HavePresident(agent.CommissionID);
 
-                
+                db.Update(agent);
+                await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Agent : {agent.NameFr} .");
+                            
                 return RedirectToAction("Index");
             }
             ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", agent.CommissionID);
@@ -171,7 +165,7 @@ namespace HAICOP.Controllers
 
         public Agent GetPresident(int ID)
         {
-            return db.Agent.AsNoTracking().Include( a => a.Commission ).SingleOrDefault( a => a.CommissionID == ID  && a.IsPresident == true);
+            return db.Agent.Include( a => a.Commission ).SingleOrDefault( a => a.CommissionID == ID  && a.IsPresident == true);
         }
     }
 }

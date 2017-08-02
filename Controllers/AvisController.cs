@@ -104,6 +104,8 @@ namespace HAICOP.Controllers
                         doc.State = DossierState.Accept;
                         db.Update(doc);
                         await db.SaveChangesAsync();
+
+                         _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Accept DossierID : {ID} .");
                         return RedirectToAction("Rep","Doc");
                     }
                     catch (System.Exception ex)
@@ -154,6 +156,7 @@ namespace HAICOP.Controllers
                         doc.State = DossierState.Refus;
                         db.Update(doc);
                         await db.SaveChangesAsync();
+                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Deny DossierID : {ID} .");
                         return RedirectToAction("Rep","Doc");
                     }
                     catch (System.Exception ex)
@@ -233,6 +236,8 @@ namespace HAICOP.Controllers
                         db.Update(four);
                         await db.SaveChangesAsync();
                     }
+
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Fournisseur DossierID : {DossierID} FournisseurID : {tmpFournisseurID} .");
                     return RedirectToAction("ListEditFour",new{ id = DossierID });
                 }
                 catch (System.Exception ex)
@@ -286,6 +291,8 @@ namespace HAICOP.Controllers
                 {
                     db.Add(four);
                     await db.SaveChangesAsync();
+
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Fournisseur DossierID : {DossierID} FournisseurID : {four.FournisseurID} .");
                     return RedirectToAction("AddFour",new {id = DossierID});
                 }
                 catch (Exception ex)
@@ -360,6 +367,8 @@ namespace HAICOP.Controllers
                     doc.State = DossierState.Traitement;
                     db.Update(doc);
                     await db.SaveChangesAsync();
+
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Response DossierID : {DossierID} MettingID : {metting.ID} .");
                     return RedirectToAction("Index","Doc");
                 }
                 catch (Exception ex)
@@ -431,6 +440,8 @@ namespace HAICOP.Controllers
                     var dinm = new DessisionInMetting { DessisionID = DessisionID , MettingID = MettingID};
                     db.Add(dinm);
                     await db.SaveChangesAsync();
+
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} EditAvis DossierID : {DossierID} MettingID : {metting.ID} .");
                 }
                 catch (Exception ex)
                 {
