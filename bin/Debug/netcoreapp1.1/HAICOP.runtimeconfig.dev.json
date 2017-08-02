@@ -1,7 +1,7 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "/home/jemix/.nuget/packages"
+      "C:\\Users\\rgabsi\\.nuget\\packages"
     ]
   }
 }
