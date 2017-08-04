@@ -9,17 +9,21 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
     [Authorize(Roles ="root,Admin,Tech")]
     public class InvestController : BaseCtrl
     {
-
+        private readonly ILogger _logger;
         public InvestController(UserManager<ApplicationUser> userManager,
                             SignInManager<ApplicationUser> signInManager,
-                            ApplicationDbContext db):
-                            base(userManager,signInManager,db)  { }
+                            ApplicationDbContext db,ILoggerFactory loggerFactory):
+                            base(userManager,signInManager,db)  
+        {
+            _logger = loggerFactory.CreateLogger<InvestController>();
+        }
 
         // GET: Invest
         public async Task<IActionResult> Index()
@@ -48,6 +52,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(foreignInvestisseur);
                 await db.SaveChangesAsync();
+                 _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add ForeignINvestisseur : {foreignInvestisseur.Name} .");
                 return RedirectToAction("Index");
             }
             return View(foreignInvestisseur);
@@ -90,6 +95,7 @@ namespace HAICOP.Controllers
                 {
                     db.Update(foreignInvestisseur);
                     await db.SaveChangesAsync();
+                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit ForeignINvestisseurID : {foreignInvestisseur.ID} .");
                 }
                 catch (DbUpdateConcurrencyException)
                 {

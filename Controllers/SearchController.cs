@@ -21,16 +21,13 @@ namespace HAICOP.Controllers
     public class SearchController : BaseCtrl
     {
 
-        private IHostingEnvironment _environment;
         private ILogger _logger;
 
         public SearchController (UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db, 
-                                IHostingEnvironment environment , ILoggerFactory loggerFactory):
+                                ILoggerFactory loggerFactory):
                                 base(userManager,signInManager,db) 
         {
-
-            _environment = environment;
-            _logger = loggerFactory.CreateLogger<DocController>();
+            _logger = loggerFactory.CreateLogger<SearchController>();
     
         }
 

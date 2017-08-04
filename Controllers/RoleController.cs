@@ -9,6 +9,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
@@ -16,19 +17,20 @@ namespace HAICOP.Controllers
     public class RoleController : BaseCtrl
     {
 
-
+        private readonly ILogger _logger;
         public RoleController(UserManager<ApplicationUser> userManager,
                             SignInManager<ApplicationUser> signInManager,
-                            ApplicationDbContext db):
-                            base(userManager,signInManager,db)  { }
+                            ApplicationDbContext db,ILoggerFactory loggerFactory):
+                            base(userManager,signInManager,db)  
+        { 
+            _logger = loggerFactory.CreateLogger<RoleController>();
+        }
 
-        // GET: Role
         public async Task<IActionResult> Index()
         {
             return View(await db.ApplicationRole.ToListAsync());
         }
 
-        // GET: Role/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -46,15 +48,12 @@ namespace HAICOP.Controllers
             return View(applicationRole);
         }
 
-        // GET: Role/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Role/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
@@ -64,12 +63,13 @@ namespace HAICOP.Controllers
             {
                 db.Add(applicationRole);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"Admin : {ViewBag.user.UserName} Add Role : {applicationRole.Name} .");
                 return RedirectToAction("Index");
             }
             return View(applicationRole);
         }
 
-        // GET: Role/Edit/5
+
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -85,9 +85,6 @@ namespace HAICOP.Controllers
             return View(applicationRole);
         }
 
-        // POST: Role/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Description,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
@@ -104,6 +101,7 @@ namespace HAICOP.Controllers
                     
                     db.Update(applicationRole);
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"Admin : {ViewBag.user.UserName} Edit RoleID : {applicationRole.Id} .");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,34 +119,6 @@ namespace HAICOP.Controllers
             return View(applicationRole);
         }
 
-        // GET: Role/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationRole = await db.ApplicationRole
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (applicationRole == null)
-            {
-                return NotFound();
-            }
-
-            return View(applicationRole);
-        }
-
-        // POST: Role/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var applicationRole = await db.ApplicationRole.SingleOrDefaultAsync(m => m.Id == id);
-            db.ApplicationRole.Remove(applicationRole);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
         private bool ApplicationRoleExists(string id)
         {

@@ -345,6 +345,7 @@ namespace HAICOP.Controllers
                         ViewBag.user.Num += 1;
                         db.Update(ViewBag.user);
                         await db.SaveChangesAsync();
+                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
                         return RedirectToAction("All");
                     }
                 }
@@ -413,6 +414,7 @@ namespace HAICOP.Controllers
                 dossier.State = DossierState.Encour ;
                 db.Update(dossier);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Rapporteur  RapporteurID : { model.AgentID}  DossierID : {model.ID}.");
                 return true;
             }
             catch (Exception)
@@ -457,6 +459,7 @@ namespace HAICOP.Controllers
                     db.Remove(rapp);
                     db.Add(new Rapporteur { AgentID = AgentID , DossierID = DossierID});
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Rapporteur  DossierID : {DossierID}.");
                     return true;
                 }
                 catch (Exception ex)
@@ -546,6 +549,8 @@ namespace HAICOP.Controllers
                         var ach = await db.AchInDossier.SingleAsync(m => m.DossierID == dossier.ID && m.AcheteurID == OldAcheteurID);
                         db.Remove(ach);
                         db.Add(new AchInDossier { AcheteurID = AcheteurID  , DossierID = dossier.ID});
+
+                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit DossierID : { id} .");
                     }
 
                     await db.SaveChangesAsync();
@@ -666,6 +671,7 @@ namespace HAICOP.Controllers
                     
                     db.Update(mail);
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit MailID {mail.ID} DossierID : { mail.DossierID} .");
                 }
                 catch (Exception ex)
                 {
@@ -720,6 +726,7 @@ namespace HAICOP.Controllers
                     
                     db.Add(mail);
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Mail : { mail.ID}  DossierID : {mail.DossierID}.");
                 }
                 catch (Exception ex)
                 {
@@ -828,6 +835,7 @@ namespace HAICOP.Controllers
                     db.Update(dossier);
 
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Fina : { indoc.DossierID} .");
 
                     return RedirectToAction("Index");
                 }

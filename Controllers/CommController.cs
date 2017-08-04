@@ -9,6 +9,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
@@ -16,10 +17,12 @@ namespace HAICOP.Controllers
     public class CommController : BaseCtrl
     {
 
-        
-        public CommController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+        private readonly ILogger _logger;
+        public CommController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db,ILoggerFactory loggerFactory):
                             base(userManager,signInManager,db) 
-        {}
+        {
+            _logger = loggerFactory.CreateLogger<CommController>();
+        }
 
 
         public async Task<IActionResult> Index()
@@ -47,6 +50,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(commission);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Commission : {commission.LblFr} .");
                 return RedirectToAction("Index");
             }
             return View(commission);
@@ -90,6 +94,7 @@ namespace HAICOP.Controllers
                 {
                     db.Update(commission);
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit CommissionID : {commission.ID} .");
                 }
                 catch (DbUpdateConcurrencyException)
                 {

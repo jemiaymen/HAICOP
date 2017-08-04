@@ -9,6 +9,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
@@ -16,10 +17,11 @@ namespace HAICOP.Controllers
     public class FournisseurController : BaseCtrl
     {
 
-        
-        public FournisseurController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+        private readonly ILogger _logger;
+        public FournisseurController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db,ILoggerFactory loggerFactory):
         base(userManager,signInManager,db) 
         {
+            _logger = loggerFactory.CreateLogger<FournisseurController>();
         }
 
 
@@ -47,6 +49,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(fournisseur);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Fournisseur : {fournisseur.Lbl} .");
                 return RedirectToAction("Index");
             }
             return View(fournisseur);
@@ -89,6 +92,7 @@ namespace HAICOP.Controllers
                 {
                     db.Update(fournisseur);
                     await db.SaveChangesAsync();
+                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit FournisseurID : {fournisseur.ID} .");
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -9,6 +9,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
@@ -16,10 +17,11 @@ namespace HAICOP.Controllers
     public class DessController : BaseCtrl
     {
 
-
-        public DessController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db):
+        private readonly ILogger _logger;
+        public DessController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db,ILoggerFactory loggerFactory):
                             base(userManager,signInManager,db) 
         { 
+            _logger = loggerFactory.CreateLogger<DessController>();
         }
 
         public async Task<IActionResult> Index()
@@ -46,6 +48,7 @@ namespace HAICOP.Controllers
             {
                 db.Add(dessision);
                 await db.SaveChangesAsync();
+                _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dessision : {dessision.Lbl} .");
                 return RedirectToAction("Index");
             }
             return View(dessision);
@@ -87,6 +90,7 @@ namespace HAICOP.Controllers
                 {
                     db.Update(dessision);
                     await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit DessisionID : {dessision.ID} .");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
