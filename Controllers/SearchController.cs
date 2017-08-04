@@ -172,5 +172,179 @@ namespace HAICOP.Controllers
             return View(re);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Rapporteur(SearchRapp search)
+        {
+            if(ModelState.IsValid)
+            {
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.IsPresident == false).ToList(), "ID", "Name");
+
+                        return View("Rapp",search);
+                    }
+
+                    var doc = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.AgentID == search.ID && 
+                                         (d.Dossier.ProDate >= search.From && d.Dossier.ProDate <= search.To) )
+                                   .ToList();
+                    return View("Result",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var res = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.AgentID == search.ID &&  d.Dossier.ProDate >= search.From   )
+                                   .ToList();
+                    return View("Result",res);
+                }
+
+                if(search.To != null)
+                {
+                    var rese = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.AgentID == search.ID &&  d.Dossier.ProDate <= search.To   )
+                                   .ToList();
+                    return View("Result",rese);
+                }
+
+                var re = db.Rapporteur.Include( d => d.Dossier)
+                                      .Include( d => d.Agent)
+                                      .Include( d => d.Dossier.Commission)
+                                      .Include(d => d.Dossier.Mettings)
+                                      .Include(d => d.Dossier.Mails)
+                                      .Where( d => d.AgentID == search.ID )
+                                      .ToList();
+                return View("Result",re);
+            }
+            return View("Result");
+            
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Commission(SearchStruct search)
+        {
+            if(ModelState.IsValid)
+            {
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
+
+                        return View("Struct",search);
+                    }
+
+                    var doc = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.Agent.CommissionID == search.CommissionID && 
+                                         (d.Dossier.ProDate >= search.From && d.Dossier.ProDate <= search.To) )
+                                   .ToList();
+                    return View("Result",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var res = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.Agent.CommissionID == search.CommissionID &&   d.Dossier.ProDate >= search.From   )
+                                   .ToList();
+                    return View("Result",res);
+                }
+
+                if(search.To != null)
+                {
+                    var rese = db.Rapporteur.Include( d => d.Dossier)
+                                   .Include( d => d.Agent)
+                                   .Include( d => d.Dossier.Commission)
+                                   .Include(d => d.Dossier.Mettings)
+                                   .Include(d => d.Dossier.Mails)
+                                   .Where( d => d.Agent.CommissionID == search.CommissionID &&   d.Dossier.ProDate <= search.To   )
+                                   .ToList();
+                    return View("Result",rese);
+                }
+
+                var re = db.Rapporteur.Include( d => d.Dossier)
+                                      .Include( d => d.Agent)
+                                      .Include( d => d.Dossier.Commission)
+                                      .Include(d => d.Dossier.Mettings)
+                                      .Include(d => d.Dossier.Mails)
+                                      .Where( d => d.Agent.CommissionID == search.CommissionID )
+                                      .ToList();
+                return View("Result",re);
+            }
+            return View("Result");
+            
+        }
+        public IActionResult Rapp()
+        {
+            ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.IsPresident == false).ToList(), "ID", "Name");
+            return View();
+        }
+
+        public IActionResult Struct()
+        {
+            ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
+            return View();
+        }
+
+        public IActionResult Acheteur()
+        {
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Acheteur(SearchAcheteur search)
+        {
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+            return View();
+        }
+
+        public IActionResult Fournisseur()
+        {
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+            return View();
+        }
+
+        public IActionResult TypeFinancement()
+        {
+            return View();
+        }
+
+        public IActionResult ForeignInv()
+        {
+            ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
+            return View();
+        }
+
+
+        
     }
 }

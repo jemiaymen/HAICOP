@@ -234,8 +234,8 @@ _Pvt_Extensions
 .fake/
 
 .vscode
-bin
-obj
+bin/
+obj/
 wwwroot/uploads
 wwwroot/images
 appsettings*
