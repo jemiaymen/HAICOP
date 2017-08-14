@@ -323,6 +323,67 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Acheteur(SearchAcheteur search)
         {
+            if(ModelState.IsValid)
+            {
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+
+                        return View(search);
+                    }
+
+                    var doc = db.AchInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Acheteur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.AcheteurID == search.AcheteurID && 
+                                                        (d.Dossier.ProDate >= search.From && d.Dossier.ProDate <= search.To) )
+                                             .ToList();
+
+                    return View("ResultAch",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var doc1 = db.AchInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Acheteur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.AcheteurID == search.AcheteurID &&  d.Dossier.ProDate >= search.From   )
+                                             .ToList();
+
+                    return View("ResultAch",doc1);
+                }
+
+                if(search.To != null)
+                {
+                    var doc2 = db.AchInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Acheteur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.AcheteurID == search.AcheteurID &&   d.Dossier.ProDate <= search.To)
+                                             .ToList();
+
+                    return View("ResultAch",doc2);
+                }
+
+                var doc3 = db.AchInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Acheteur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.AcheteurID == search.AcheteurID )
+                                             .ToList();
+
+                    return View("ResultAch",doc3);
+            }
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
             return View();
         }
@@ -333,9 +394,139 @@ namespace HAICOP.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Fournisseur(SearchFournisseur search)
+        {
+            if(ModelState.IsValid)
+            {
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+
+                        return View(search);
+                    }
+
+                    var doc = db.FourInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Fournisseur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.FournisseurID == search.FournisseurID && 
+                                                        (d.Dossier.ProDate >= search.From && d.Dossier.ProDate <= search.To) )
+                                             .ToList();
+
+                    return View("Resultf",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var doc1 = db.FourInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Fournisseur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.FournisseurID == search.FournisseurID &&   d.Dossier.ProDate >= search.From   )
+                                             .ToList();
+
+                    return View("Resultf",doc1);
+                }
+
+                if(search.To != null)
+                {
+                    var doc2 = db.FourInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Fournisseur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.FournisseurID == search.FournisseurID &&    d.Dossier.ProDate <= search.To)
+                                             .ToList();
+
+                    return View("Resultf",doc2);
+                }
+
+                var doc3 = db.FourInDossier.Include( d => d.Dossier)
+                                             .Include(d => d.Dossier.Commission)
+                                             .Include(d => d.Fournisseur)
+                                             .Include(d => d.Dossier.Mails)
+                                             .Include(d => d.Dossier.Mettings)
+                                             .Where(d => d.FournisseurID == search.FournisseurID )
+                                             .ToList();
+
+                    return View("Resultf",doc3);
+            }
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+            return View(search);
+        }
+
         public IActionResult TypeFinancement()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult TypeFinancement(SearchFina search)
+        {
+            if(ModelState.IsValid)
+            {
+                
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
+
+                        return View(search);
+                    }
+
+                    var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d =>  d.Financement == search.Financement &&
+                                                    (d.ProDate >= search.From && d.ProDate <= search.To) )
+                                        .ToList();
+
+                    return View("ResultFore",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var doc1 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Financement == search.Financement &&  d.ProDate >= search.From  )
+                                        .ToList();
+
+                    return View("ResultFore",doc1);
+                }
+
+                if(search.To != null)
+                {
+                    var doc2 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Financement == search.Financement && d.ProDate <= search.To) 
+                                        .ToList();
+
+                    return View("ResultFore",doc2);
+                }
+
+                var doc3 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Financement == search.Financement  )
+                                        .ToList();
+
+                    return View("ResultFore",doc3);
+            }
+            return View(search);
         }
 
         public IActionResult ForeignInv()
@@ -343,7 +534,69 @@ namespace HAICOP.Controllers
             ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
             return View();
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ForeignInv(SearchForeign search)
+        {
+            if(ModelState.IsValid)
+            {
+                
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+                        ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
 
+                        return View(search);
+                    }
+
+                    var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Foreign.Contains(search.Foreign)  && d.Financement == Financement.Foreign &&
+                                                    (d.ProDate >= search.From && d.ProDate <= search.To) )
+                                        .ToList();
+
+                    return View("ResultFore",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var doc1 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Foreign.Contains(search.Foreign)  && d.Financement == Financement.Foreign &&  d.ProDate >= search.From  )
+                                        .ToList();
+
+                    return View("ResultFore",doc1);
+                }
+
+                if(search.To != null)
+                {
+                    var doc2 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Foreign.Contains(search.Foreign)  && d.Financement == Financement.Foreign && d.ProDate <= search.To) 
+                                        .ToList();
+
+                    return View("ResultFore",doc2);
+                }
+
+                var doc3 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Foreign.Contains(search.Foreign)  && d.Financement == Financement.Foreign  )
+                                        .ToList();
+
+                    return View("ResultFore",doc3);
+            }
+
+            ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
+            return View(search);
+        }
 
         
     }

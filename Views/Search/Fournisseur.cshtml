@@ -1,7 +1,7 @@
-@model HAICOP.Models.SearchAcheteur
+@model HAICOP.Models.SearchFournisseur
 
 @{
-    ViewData["Title"] = "المشتري العمومي";
+    ViewData["Title"] = " صاحب الصفقة";
     ViewData["SubMenu"] = "بحث";
 }
 
@@ -10,14 +10,14 @@
          <h3 class="panel-title">@ViewData["Title"]</h3>
     </div>
     <div class="panel-body">
-        <form asp-controller="Search" asp-action="Acheteur"  method="post" >
+        <form asp-controller="Search" asp-action="Fournisseur"  method="post" >
             <div class="form-horizontal">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" asp-for="AcheteurID"> </label>
+                    <label class="col-md-2 control-label" asp-for="FournisseurID"> </label>
                     <div class="col-md-10">
-                        <select asp-for="AcheteurID" asp-items="ViewBag.AcheteurID"></select>
-                        <span asp-validation-for="AcheteurID" class="text-danger"></span>
+                        <select asp-for="FournisseurID" asp-items="ViewBag.FournisseurID"></select>
+                        <span asp-validation-for="FournisseurID" class="text-danger"></span>
                     </div>
                     <label class="col-md-2 control-label" asp-for="From"> </label>
                     <div class="col-md-4">
@@ -48,7 +48,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
         await Html.RenderPartialAsync("_SelectizeScript"); 
         <script>
-            $("#AcheteurID").selectize();
+            $("#FournisseurID").selectize();
         </script>
     }
 }
