@@ -67,4 +67,11 @@ namespace HAICOP.Models
 		public string Foreign { get ; set ;}
 	}
 
+	public class SearchTypeDoc : SearchRapp
+	{
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = "طبيعة الملف")]
+		public DossierType Type { get ; set ;}
+	}
+
 }

@@ -598,6 +598,73 @@ namespace HAICOP.Controllers
             return View(search);
         }
 
+        public IActionResult TypeDoc()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult TypeDoc(SearchTypeDoc search)
+        {
+            if(ModelState.IsValid)
+            {
+                
+                if(search.From != null && search.To != null)
+                {
+                    if(search.From > search.To)
+                    {
+                        ModelState.AddModelError("From","يجب أن يكون أصغر ");
+                        ModelState.AddModelError("To","يجب أن يكون أكبر");
+
+                        return View(search);
+                    }
+
+                    var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Type == search.Type &&
+                                                    (d.ProDate >= search.From && d.ProDate <= search.To) )
+                                        .ToList();
+
+                    return View("ResultType",doc);
+                }
+
+                if(search.From != null)
+                {
+                    var doc1 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Type == search.Type &&  d.ProDate >= search.From  )
+                                        .ToList();
+
+                    return View("ResultType",doc1);
+                }
+
+                if(search.To != null)
+                {
+                    var doc2 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Type == search.Type && d.ProDate <= search.To) 
+                                        .ToList();
+
+                    return View("ResultType",doc2);
+                }
+
+                var doc3 = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d => d.Type == search.Type  )
+                                        .ToList();
+
+                    return View("ResultType",doc3);
+            }
+
+            ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
+            return View(search);
+        }
+
         
     }
 }

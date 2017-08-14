@@ -1,0 +1,58 @@
+@model HAICOP.Models.SearchTypeDoc
+
+@{
+    ViewData["Title"] = " طبيعة الملف";
+    ViewData["SubMenu"] = "بحث";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Search" asp-action="TypeDoc"  method="post" >
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" asp-for="Type"> </label>
+                    <div class="col-md-10">
+                        <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()"></select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <label class="col-md-2 control-label" asp-for="From"> </label>
+                    <div class="col-md-4">
+                        <input asp-for="From" class="form-control" />
+                        <span asp-validation-for="From" class="text-danger"></span>
+                    </div>
+
+                    <label class="col-md-2 control-label" asp-for="To"> </label>
+                    <div class="col-md-4">
+                        <input asp-for="To" class="form-control" />
+                        <span asp-validation-for="To" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn ls-red-btn">بحث</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+            $("#Type").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
