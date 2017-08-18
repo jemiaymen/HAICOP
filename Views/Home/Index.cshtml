@@ -1,5 +1,272 @@
-﻿@{
-    ViewData["Title"] = "صفحة جديدة";
+﻿@using System.Linq
+@model IEnumerable<HAICOP.Models.DashboardComm>
+
+@{
+    ViewData["Title"] = "لوحة القيادة";
     ViewData["SubMenu"] = "الرئيسية";
 }
 
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">كل الهياكل</h3>
+             </div>
+            <div class="panel-body">
+            @{
+                int i = 0;
+            }
+            @foreach(var item in Model){
+                <a href="#" data-id="@i" class="btn-show">
+                <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                    <div class="ls-wizard label-@ViewBag.labels[i] ">
+                        <h2>@item.Lbl</h2>
+                        <span>@item.NonTrait</span>
+                        <div class="icon">
+                        @item.Accept
+                        </div>
+                    </div>
+                </div>
+                </a>
+                i++;
+            }
+            </div>
+        </div>
+    </div>
+</div>
+                @{
+                    i = 0;
+                }
+                @foreach(var docs in Model){
+                    <div class="row tohide" id="@i">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">نتيجة</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        عدد الملف
+                                                    </th>
+                                                    <th>
+                                                         الموضوع
+                                                    </th>
+                                                    <th>
+                                                        الهيكل
+                                                    </th>
+
+                                                    <th>
+                                                        تاريخ التعهد
+                                                    </th>
+                                                    
+                                                    <th>
+                                                            البريد
+                                                    </th>
+                                                    <th>
+                                                        عدد الجلسات
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in docs.Lst) {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Num)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                        </td>
+
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Commission.Lbl)
+                                                        </td>
+
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProDate)
+                                                        </td>
+
+
+
+                                                        <td>
+                                                                @foreach(var m in item.Mails){
+                                                                    <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.ID" data-imid="@m.ID" class="img-show">@m.ID</a>
+                                                                }
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Mettings.FirstOrDefault().MettNbr)
+                                                        </td>
+                                                        <td>
+                                                            @Html.ActionLink("كل العطيات", "Detail", "Search",  new { id = item.ID}) 
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (عدد الصفقات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-comm" ></canvas>                       
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-montant" ></canvas>                       
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (عدد الجلسات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-nbr" ></canvas>                       
+            </div>
+        </div>
+    </div>
+
+</div>
+               
+
+    <div class="modal fade" id="myModalDanger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header label-red white">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModaDanger">البريد</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <iframe id="docverif" frameBorder="0" width="865" height="500"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ls-red-btn btn-xs" data-dismiss="modal">خروج</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+@section Styles {
+    @{ 
+        await Html.RenderPartialAsync("_TableStylePartial");
+        <style>
+            .tohide{
+                display:none;
+            }
+        </style>
+    }
+}
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_TableScriptPartial"); 
+        await Html.RenderPartialAsync("_StatScriptPartial"); 
+        <script>
+            $(".btn-show").click(function(){
+                var id = "#" + $(this).data("id");
+                $(".tohide").hide();
+                $(id).show();
+            });
+
+            $(".img-show").click(function(){
+                var imgid = $(this).data('imid');
+                var docid = $(this).data('did');
+
+                $.ajax({
+                    url: '/api/img/id/' + docid + '/' + imgid,
+                    success: function(results) {
+                            $("#docverif").attr("src","/uploads/" + results);
+                    }
+                });
+            });
+            var year = new Date().getFullYear();
+
+            $.getJSON( "/api/stat/comm/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-comm"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'عدد الصفقات :' + year
+                    }
+                    }
+                });
+            });
+
+            $.getJSON( "/api/stat/montant/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-montant"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'قيمة الصفقات :' + year
+                    }
+                    }
+                });
+            });
+
+            $.getJSON( "/api/stat/nbr/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-nbr"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'عدد الجلسات :' + year
+                    }
+                    }
+                });
+            });
+        </script>
+    }
+}

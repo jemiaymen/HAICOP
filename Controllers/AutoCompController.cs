@@ -206,5 +206,78 @@ namespace HAICOP.Controllers
         {
             return db.ForeignInvestisseur.ToList();
         }
+
+
+        [HttpGet]
+        [Route("api/stat/comm/{year}")]
+        public dynamic statcomm(int year)
+        {
+            var from = new DateTime(year,1,1);
+            var to = new DateTime(year,12,30);
+
+            var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d =>  d.TraitDate >= from && d.TraitDate <= to)
+                                        .GroupBy( d => d.Commission.LblFr)
+                                        .Select( s => new TestMonth {
+                                                Count = s.Count() , 
+                                                Lbl = s.Key 
+                                             }) ;
+                                             
+            var labels = doc.Select( a => a.Lbl).ToArray();
+            var data = doc.Select(a => a.Count).ToArray();
+            string[] backgroundColor = { "#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e01a4","#0392ce","#a7194b","#fd5308","#fb9902"};
+            var datasets = new { data = data , backgroundColor = backgroundColor};
+            return new { labels = labels , datasets = datasets  };
+        }
+
+        [HttpGet]
+        [Route("api/stat/montant/{year}")]
+        public dynamic statmontant(int year)
+        {
+            var from = new DateTime(year,1,1);
+            var to = new DateTime(year,12,30);
+
+            var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d =>  d.TraitDate >= from && d.TraitDate <= to)
+                                        .GroupBy( d => d.Commission.LblFr)
+                                        .Select( s => new TestMonth {
+                                                Montant = db.FourInDossier.Where( d => s.Select( a => a.ID).Contains(d.DossierID)).Sum( m => m.Montant) , 
+                                                Lbl = s.Key 
+                                             }) ;
+                                             
+            var labels = doc.Select( a => a.Lbl).ToArray();
+            var data = doc.Select(a => a.Montant).ToArray();
+            string[] backgroundColor = { "#3e01a4","#0392ce","#a7194b","#fd5308","#fb9902","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"};
+            var datasets = new { data = data , backgroundColor = backgroundColor};
+            return new { labels = labels , datasets = datasets  };
+        }
+
+        [HttpGet]
+        [Route("api/stat/nbr/{year}")]
+        public dynamic statnbr(int year)
+        {
+            var from = new DateTime(year,1,1);
+            var to = new DateTime(year,12,30);
+
+            var doc = db.Dossier.Include(d => d.Commission)
+                                        .Include(d => d.Mails)
+                                        .Include(d => d.Mettings)
+                                        .Where(d =>  d.TraitDate >= from && d.TraitDate <= to)
+                                        .GroupBy( d => d.Commission.LblFr)
+                                        .Select( s => new TestMonth {
+                                                Nbr = s.Select( a => a.Mettings.Sum(b => b.MettNbr)).Sum() , 
+                                                Lbl = s.Key 
+                                             }) ;
+                                             
+            var labels = doc.Select( a => a.Lbl).ToArray();
+            var data = doc.Select(a => a.Nbr).ToArray();
+            string[] backgroundColor = {"#fd5308","#fb9902","#e8c3b9","#3e95cd", "#8e5ea2","#3cba9f", "#3e01a4","#0392ce","#a7194b","#c45850"};
+            var datasets = new { data = data , backgroundColor = backgroundColor};
+            return new { labels = labels , datasets = datasets  };
+        }
     }
 }

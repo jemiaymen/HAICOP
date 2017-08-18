@@ -365,6 +365,7 @@ namespace HAICOP.Controllers
                     db.Add(new DessisionInMetting { DessisionID = DessisionID , Metting = metting});
                     var doc = await db.Dossier.FindAsync(DossierID);
                     doc.State = DossierState.Traitement;
+                    doc.TraitDate = metting.MettDate;
                     db.Update(doc);
                     await db.SaveChangesAsync();
 
@@ -436,7 +437,8 @@ namespace HAICOP.Controllers
                 {
                     db.Update(mail);
                     db.Update(metting);
-                    db.Remove( db.DessisionInMetting.AsNoTracking().Single(s => s.MettingID == MettingID));
+                    db.Remove( await db.DessisionInMetting.AsNoTracking().SingleOrDefaultAsync(s => s.MettingID == MettingID));
+                    await db.SaveChangesAsync();
                     var dinm = new DessisionInMetting { DessisionID = DessisionID , MettingID = MettingID};
                     db.Add(dinm);
                     await db.SaveChangesAsync();
@@ -449,7 +451,7 @@ namespace HAICOP.Controllers
                     throw;
                 }
 
-                return RedirectToAction("EditAvis", new {id = DossierID});
+                return RedirectToAction("Index","Doc");
             }
             
             EditAvis m = new EditAvis();

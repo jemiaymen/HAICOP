@@ -1,0 +1,116 @@
+﻿@model HAICOP.Models.MonthStat
+
+@{
+    ViewData["Title"] = "الإحصائيات";
+    ViewData["SubMenu"] = "الرئيسية";
+}
+
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (عدد الصفقات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-comm" ></canvas>                       
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-montant" ></canvas>                       
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-4 col-sm-6 col-xs-12 col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">الإحصائيات (عدد الجلسات)</h3>
+            </div>
+            <div class="panel-body">
+                 <canvas id="pie-chart-nbr" ></canvas>                       
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+</div>
+
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_StatScriptPartial"); 
+
+        <script>
+
+            var year = new Date().getFullYear();
+
+            $.getJSON( "/api/stat/comm/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-comm"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'عدد الصفقات :' + year
+                    }
+                    }
+                });
+            });
+
+            $.getJSON( "/api/stat/montant/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-montant"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'قيمة الصفقات :' + year
+                    }
+                    }
+                });
+            });
+
+            $.getJSON( "/api/stat/nbr/" + year, function( data ) {
+                new Chart(document.getElementById("pie-chart-nbr"), {
+                    type: 'pie',
+                    data: { 
+                        labels : data.labels,
+                        datasets : [{
+                            backgroundColor : data.datasets.backgroundColor,
+                            data : data.datasets.data
+                        }]   
+                    },
+                    options: {
+                    title: {
+                        display: true,
+                        text: 'عدد الجلسات :' + year
+                    }
+                    }
+                });
+            });
+        </script>
+    }
+}
