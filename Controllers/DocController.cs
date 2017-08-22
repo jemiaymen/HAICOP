@@ -377,25 +377,33 @@ namespace HAICOP.Controllers
             return View(dossier);
         }
 
-        [Authorize(Roles ="root,Admin,Chef")]
+        [Authorize(Roles ="root,Admin,Chef,President")]
         public IActionResult Rapp()
         {
+            bool ischef = _userManager.IsInRoleAsync(ViewBag.user, "Chef").Result;
+            bool isadmin =  _userManager.IsInRoleAsync(ViewBag.user , "Admin").Result;
+            bool ispresident = _userManager.IsInRoleAsync(ViewBag.user , "President").Result;
+            bool isroot = _userManager.IsInRoleAsync(ViewBag.user , "root").Result;
+
             string id = ViewBag.user.Id;
 
-            var comm = db.UserAgent.Include(a => a.Agent)
+
+            if(ischef)
+            {
+                var comm = db.UserAgent.Include(a => a.Agent)
                                     .Include(a => a.Agent.Commission)
                                     .Where( a => a.UserID == id && a.Agent.IsPresident == true)
                                     .Select(a => a.Agent.Commission)
                                     .ToList();
-
-            if(comm == null)
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
+            }
+            else if(isadmin || isroot || ispresident)
             {
                 ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" );
             }
-            else 
-            {
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
-            }  
+
+
+
 
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" );
             return View();
@@ -403,7 +411,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="root,Admin,Chef")]
+        [Authorize(Roles ="root,Admin,Chef,President")]
         public async Task<bool> Rapp([Bind("ID,CommissionID,AcheteurID,AgentID")] Rapp model)
         {
             try

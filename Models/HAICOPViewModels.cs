@@ -19,7 +19,7 @@ namespace HAICOP.Models
 
 		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "الموضوع")]
-        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 12)]
 		public string Subject {get ; set;}
 		
 		[Required(ErrorMessage = "اجباري")]

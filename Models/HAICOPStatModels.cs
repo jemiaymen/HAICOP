@@ -17,12 +17,14 @@ namespace HAICOP.Models
 		[Display(Name = "من")]
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-		public DateTime? From { get ; set;}
-
+		public DateTime From { get ; set;}
+		
+		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "إلى")]
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-		public DateTime? To { get ; set;}
+		public DateTime To { get ; set;}
+
 	}
 
 	public class TestMonth

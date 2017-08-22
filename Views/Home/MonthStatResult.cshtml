@@ -1,0 +1,201 @@
+@using System.Linq
+@model IEnumerable<HAICOP.Models.TestMonth>
+
+@{
+    ViewData["Title"] = " إحصائيات شهرية";
+    ViewData["SubMenu"] = "إحصائيات";
+}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading hidden-print">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                       اللجنة المختصة لمراقبة و تدقيق صفقات
+                                                    </th>
+                                                    <th>
+                                                        عدد الجلسات
+                                                    </th>
+                                                    <th>
+                                                        عدد الصفقات
+                                                    </th>
+                                                    <th>
+                                                         قيمة 
+                                                    </th>
+                                                    <th>
+                                                        النسبة المأوية
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model) {
+
+                                                    <tr>
+                                                        
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Lbl)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Nbr)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Count)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Montant)
+                                                        </td>
+                                                        <td>
+                                                            % @Html.DisplayFor(modelItem => item.Poucentage) 
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td>
+                                                        @ViewBag.Total.Lbl
+                                                    </td>
+                                                    <td>
+                                                        @ViewBag.Total.Nbr
+                                                    </td>
+                                                    <td>
+                                                        @ViewBag.Total.Count
+                                                    </td>
+                                                    <td>
+                                                        @ViewBag.Total.Montant
+                                                    </td>
+                                                    <td>
+                                                       % @ViewBag.Total.Poucentage 
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading hidden-print">
+                                    <h3 class="panel-title">معطايات أخرى</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                                        <div class="ls-wizard label-lightBlue" style="margin-top:15px">
+                                            <h2>تمويل أجنبي</h2>
+                                            <div class="icon">
+                                                % @ViewBag.fp 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                                        <div class="ls-wizard label-red" style="margin-top:15px">
+                                            <h2> عدم الموافقة</h2>
+                                            <div class="icon">
+                                                % @ViewBag.nok
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" >
+                        
+
+                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <canvas id="pie-chart-montant" ></canvas>                       
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">التوزيع حسب العدد</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <canvas id="pie-chart-typenbr" ></canvas>                       
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">التوزيع حسب المبلغ</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <canvas id="pie-chart-typemontant" ></canvas>                       
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_TableScriptPartial"); 
+        await Html.RenderPartialAsync("_StatScriptPartial"); 
+
+        <script>
+
+                var backgroundColor = ["#fd5308","#fb9902","#e8c3b9","#3e95cd", "#8e5ea2","#3cba9f", "#3e01a4","#0392ce","#a7194b","#c45850" ];
+                
+
+                new Chart(document.getElementById("pie-chart-montant"), {
+                    type: 'pie',
+                    data: { 
+                        labels : @Html.Raw(ViewData["labels"]),
+                        datasets : [{
+                            backgroundColor : backgroundColor,
+                            data : @ViewBag.data
+                        }]   
+                    }
+                });
+
+                new Chart(document.getElementById("pie-chart-typenbr"), {
+                    type: 'pie',
+                    data: { 
+                        labels : @Html.Raw(ViewData["labelstype"]),
+                        datasets : [{
+                            backgroundColor : backgroundColor,
+                            data : @ViewBag.datacounttype
+                        }]   
+                    }
+                });
+
+                new Chart(document.getElementById("pie-chart-typemontant"), {
+                    type: 'pie',
+                    data: { 
+                        labels : @Html.Raw(ViewData["labelstype"]),
+                        datasets : [{
+                            backgroundColor : backgroundColor,
+                            data : @ViewBag.datamontanttype
+                        }]   
+                    }
+                });
+        </script>
+    }
+}
+
+
+
