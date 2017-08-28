@@ -803,7 +803,7 @@ namespace HAICOP.Controllers
 
             var doc = db.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
 
-            if(doc.Financement == Financement.Foreign || doc.Financement == Financement.Local || doc.Financement == Financement.Hybride)
+            if(doc.Financement == Financement.Foreign || doc.Financement == Financement.Local )
             {
                 return RedirectToAction("Index");
             }

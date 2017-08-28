@@ -13,9 +13,7 @@ namespace HAICOP.Models
 		[Display(Name = "التمويل المحلي")]
         Local = 1,
 		[Display(Name = "التمويل الأجنبي")]
-		Foreign = 2,
-		[Display(Name = "تمويل أجنبي ومحلي")]
-		Hybride = 3
+		Foreign = 2
 
     }
 	
@@ -34,8 +32,34 @@ namespace HAICOP.Models
 		[Display(Name = "عناصر إجابة")]
 		Rep = 2,
 		[Display(Name = "وثائق تكميلية")]
-		Compl = 3
+		Compl = 3,
+		[Display(Name = "الموافقة")]
+		Accept = 4,
+		[Display(Name = "إطلعت")]
+		Vue = 5,
+		[Display(Name = "موافاة")]
+		Mouwafat = 6,
+		[Display(Name = "إرجاء")]
+		ReVue = 7,
+		[Display(Name = "عدم الموافقة")]
+		Refu = 8,
+		[Display(Name = "عدم الإختصاص")]
+		NotSpeciality = 9,
+		[Display(Name = "الإجابة")]
+		Repense = 10,
+		[Display(Name = "إرجاع الملف")]
+		SendBack = 11,
+		[Display(Name = "عدم وجاهة")]
+		RefuTwo = 12,
+		[Display(Name = "يلغي ويعوض")]
+		RefuAndChangement = 13,
+		[Display(Name = "غير مثمر")]
+		NonComform = 14
 	}
+
+
+
+
 
 	public enum DossierType 
 	{
@@ -54,13 +78,43 @@ namespace HAICOP.Models
 	public enum DossierNature 
 	{
 		[Display(Name = "عريضة")]
-		un = 1,
+		Petition = 1,
 		[Display(Name = "إستشارة")]
-		deux = 2,
-		[Display(Name = "ختم")]
-		troi = 3,
-		[Display(Name = "مختلفة")]
-		quatre = 4
+		Consultation = 2,
+		[Display(Name = "ملحق")]
+		Extension = 3,
+		[Display(Name = "تقرير فرز العروض")]
+		Rapport = 4,
+		[Display(Name = "صفقة إطارية")]
+		Affaire = 5,
+		[Display(Name = "صفقة بالتفاوض المباشر")]
+		AffaireDirect = 6,
+		[Display(Name = "ختم نهائي")]
+		Final = 7,
+		[Display(Name = "قائمة الصفقات")]
+		ListAffaire = 8,
+		[Display(Name = "المخطط التقديري")]
+		Prevu = 9,
+		[Display(Name = "تكوين")]
+		Formation = 10,
+		[Display(Name = "موقع واب")]
+		Web = 11,
+		[Display(Name = "بطاقة تأليفية")]
+		Carte = 12,
+		[Display(Name = "نتيجة طلب العروض")]
+		ResulatAffaire = 13,
+		[Display(Name = "بطاقة بيانات")]
+		CarteDeDonne = 14,
+		[Display(Name = "معطيات تتعلق بالصفقات")]
+		AffaireDonnee = 15,
+		[Display(Name = "مراسلات مختلفة")]
+		MessageDiver = 16,
+		[Display(Name = "نشر إعلان")]
+		Annonce = 17,
+		[Display(Name = "تسجيل")]
+		Enregistrement = 18,
+		[Display(Name = "إجتماع")]
+		Reunion = 19
 	}
 
 	public enum DossierState 
