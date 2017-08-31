@@ -11255,16 +11255,16 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rgabsi\\Desktop\\aymen\\dev\\HAICOP\\HAICOP.csproj",
+      "projectUniqueName": "C:\\Users\\rgabsi\\Desktop\\HAICOP\\HAICOP.csproj",
       "projectName": "HAICOP",
-      "projectPath": "C:\\Users\\rgabsi\\Desktop\\aymen\\dev\\HAICOP\\HAICOP.csproj",
-      "outputPath": "C:\\Users\\rgabsi\\Desktop\\aymen\\dev\\HAICOP\\obj\\",
+      "projectPath": "C:\\Users\\rgabsi\\Desktop\\HAICOP\\HAICOP.csproj",
+      "outputPath": "C:\\Users\\rgabsi\\Desktop\\HAICOP\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"
       ],
       "files": {
-        "lib/netcoreapp1.1/HAICOP.dll": "C:\\Users\\rgabsi\\Desktop\\aymen\\dev\\HAICOP\\bin\\placeholder\\netcoreapp1.1\\HAICOP.dll"
+        "lib/netcoreapp1.1/HAICOP.dll": "C:\\Users\\rgabsi\\Desktop\\HAICOP\\bin\\placeholder\\netcoreapp1.1\\HAICOP.dll"
       },
       "frameworks": {
         "netcoreapp1.1": {

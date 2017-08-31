@@ -38,7 +38,7 @@ namespace HAICOP.Controllers
                               "المرصد",
                               "الشراءت على الخط",
                               "فض النزاعات",
-                              "المجلس"
+                              "المجلس الوطني للطلب العمومي"
             };
 
             bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
@@ -57,7 +57,11 @@ namespace HAICOP.Controllers
                                         Lst = s.ToList() ,
                                         Accept = s.Count(a => a.State == DossierState.Accept),
                                         Refu = s.Count(a => a.State == DossierState.Refus),
-                                        NonTrait = s.Count(a => a.State != DossierState.Accept && a.State != DossierState.Refus)
+                                        Petition = s.Count( a => a.Nature == DossierNature.Petition),
+                                        PetitionOk = s.Count( a => a.Nature == DossierNature.Petition && a.State == DossierState.Accept),
+                                        PetitionNotOk = s.Count( a => a.Nature == DossierNature.Petition && a.State == DossierState.Refus),
+                                        NonTrait = s.Count(a => a.State != DossierState.Accept && a.State != DossierState.Refus),
+                                        Montant = db.FourInDossier.Where( d => s.Select( a => a.ID).Contains(d.DossierID)).Sum( m => m.Montant)
                                 }) ;
 
             string[] labels = {"info","red","lightBlue","Blue","green","yellow","brown","light-green","info","red","lightBlue","Blue"};
@@ -67,6 +71,17 @@ namespace HAICOP.Controllers
             ViewBag.i = 0;
             
             ViewBag.order = order;
+
+            ViewBag.Montant = doc.Sum( a => a.Montant);
+
+            ViewBag.NumberAll = doc.Sum( a => a.Accept);
+
+            ViewBag.Petition = doc.Sum(a => a.Petition);
+
+            ViewBag.PetitionOk = doc.Sum(a => a.PetitionOk);
+
+            ViewBag.PetitionNotOk = doc.Sum(a => a.PetitionNotOk);
+
 
             if(ischef)
             {
@@ -78,7 +93,38 @@ namespace HAICOP.Controllers
             }
             else if(isroot || isadmin || ispresident)
             {
-                return View(doc);
+                var re = new List<DashboardComm>();
+
+                if(doc.Count() > 0)
+                {
+                    foreach(string  s in order)
+                    {
+                        var tmp = doc.FirstOrDefault(a => a.Lbl == s);
+
+                        if(tmp != null)
+                        {
+                            var insert = new DashboardComm{ Lbl = s};
+                            insert.Init(tmp);
+                            re.Add(insert);
+                        }
+                        else 
+                        {
+                            re.Add(new DashboardComm { Lbl = s});
+                        }
+                    }
+
+                    return View(re);
+                }
+                else
+                {
+                    foreach(string s in order)
+                    {
+                        re.Add(new DashboardComm { Lbl = s});
+                    }
+
+                    return View(re);
+
+                }
             }
 
             return View(new List<DashboardComm>());

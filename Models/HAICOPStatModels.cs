@@ -43,6 +43,32 @@ namespace HAICOP.Models
 		public int NonTrait  {get ; set;}
 		public int Accept { get ; set;}
 		public int Refu {get ; set;}
+
+		public int Petition { get ; set;}
+
+		public int PetitionOk { get ; set;}
+		public int PetitionNotOk { get ; set;}
+
+		public DashboardComm()
+		{
+			Trait = 0;
+			NonTrait = 0;
+			Accept = 0;
+			Refu = 0;
+			Lst  = null;
+			Petition = 0;
+			PetitionOk = 0;
+			PetitionNotOk = 0;
+		}
+
+		public void Init(DashboardComm tmp)
+		{
+			Trait = tmp.Trait;
+			NonTrait = tmp.NonTrait;
+			Accept = tmp.Accept;
+			Refu = tmp.Refu;
+			Lst = tmp.Lst;
+		}
 	}
 
 }

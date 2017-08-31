@@ -124,7 +124,7 @@ namespace HAICOP.Models
 				} 
 		}
 
-		[Required(ErrorMessage = "اجباري")]
+
 		[DataType(DataType.Upload)]
 		public IFormFile Location { get ; set;}
 

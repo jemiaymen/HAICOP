@@ -322,11 +322,26 @@ namespace HAICOP.Controllers
                 ModelState.AddModelError("EnterDate","يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
             }
 
+            printError();
+
+            ModelState.Remove("Location");
+            ModelState.Remove("Url");
+
             if (ModelState.IsValid)
             {
+                string file = "";
                 try
                 {
-                    string file = Upload(dossier.Location).Result;
+                    file = Upload(dossier.Location).Result;
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(3, ex.Message);
+                }
+
+                try
+                {
+                    
 
                     if(file != "")
                     {
@@ -337,6 +352,26 @@ namespace HAICOP.Controllers
                         Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
                                                 MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
                                                 Desc = dossier.Desc , Url = file};
+                        
+                        await db.SaveChangesAsync();
+                        AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
+                        db.Add(ach);
+                        db.Add(mail);
+                        ViewBag.user.Num += 1;
+                        db.Update(ViewBag.user);
+                        await db.SaveChangesAsync();
+                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
+                        return RedirectToAction("All");
+                    }
+                    else 
+                    {
+                        Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
+                                            Num = dossier.Num , Type = dossier.Type , Nature = dossier.Nature,
+                                            DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
+                        db.Add(doc);
+                        Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
+                                                MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
+                                                Desc = dossier.Desc };
                         
                         await db.SaveChangesAsync();
                         AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
@@ -885,14 +920,21 @@ namespace HAICOP.Controllers
 
         private bool Del(string url)
         {
-            var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), url ) ; 
-            _logger.LogInformation(3,filePath);
-
-            if(System.IO.File.Exists(filePath)) 
+            try
             {
-                System.IO.File.Delete(filePath);
-                _logger.LogInformation(3, "del file");
-                return true;
+                var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), url ) ; 
+                _logger.LogInformation(3,filePath);
+
+                if(System.IO.File.Exists(filePath)) 
+                {
+                    System.IO.File.Delete(filePath);
+                    _logger.LogInformation(3, "del file");
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(1,ex.Message);
             }
             return false;
         }
