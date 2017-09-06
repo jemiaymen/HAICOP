@@ -300,7 +300,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,BOC")]
-        public async Task<IActionResult> New([Bind("ID,CommissionID,Subject,Num,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,FournisseurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc,Location")] NewDossier dossier)
+        public async Task<IActionResult> New([Bind("ID,CommissionID,Subject,Num,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,FournisseurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] NewDossier dossier)
         {
             if( (dossier.DocDate > dossier.ProDate) || (dossier.DocDate > dossier.EnterDate) )
             {
@@ -322,67 +322,34 @@ namespace HAICOP.Controllers
                 ModelState.AddModelError("EnterDate","يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
             }
 
-            printError();
+            
 
-            ModelState.Remove("Location");
             ModelState.Remove("Url");
+
+            printError();
 
             if (ModelState.IsValid)
             {
-                string file = "";
-                try
-                {
-                    file = Upload(dossier.Location).Result;
-                }
-                catch(Exception ex)
-                {
-                    _logger.LogError(3, ex.Message);
-                }
 
                 try
                 {
-                    
-
-                    if(file != "")
-                    {
-                        Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
+                    Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
                                             Num = dossier.Num , Type = dossier.Type , Nature = dossier.Nature,
                                             DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
-                        db.Add(doc);
-                        Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
-                                                MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
-                                                Desc = dossier.Desc , Url = file};
-                        
-                        await db.SaveChangesAsync();
-                        AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
-                        db.Add(ach);
-                        db.Add(mail);
-                        ViewBag.user.Num += 1;
-                        db.Update(ViewBag.user);
-                        await db.SaveChangesAsync();
-                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
-                        return RedirectToAction("All");
-                    }
-                    else 
-                    {
-                        Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
-                                            Num = dossier.Num , Type = dossier.Type , Nature = dossier.Nature,
-                                            DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
-                        db.Add(doc);
-                        Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
+                    db.Add(doc);
+                    Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
                                                 MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
                                                 Desc = dossier.Desc };
                         
-                        await db.SaveChangesAsync();
-                        AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
-                        db.Add(ach);
-                        db.Add(mail);
-                        ViewBag.user.Num += 1;
-                        db.Update(ViewBag.user);
-                        await db.SaveChangesAsync();
-                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
-                        return RedirectToAction("All");
-                    }
+                    await db.SaveChangesAsync();
+                    AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
+                    db.Add(ach);
+                    db.Add(mail);
+                    ViewBag.user.Num += 1;
+                    db.Update(ViewBag.user);
+                    await db.SaveChangesAsync();
+                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
+                    return RedirectToAction("All");
                 }
                 catch (System.Exception ex)
                 {
@@ -393,7 +360,6 @@ namespace HAICOP.Controllers
                 
             }
 
-            ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
             string id = ViewBag.user.Id;
             var comm = db.UserCommission.Include(a => a.Commission)
                                         .Where( a => a.UserID == id)
@@ -525,6 +491,7 @@ namespace HAICOP.Controllers
             var dossier =    await db.AchInDossier.Include( d => d.Dossier)
                                                         .Include( d => d.Acheteur)
                                                         .Include( c => c.Dossier.Commission)
+							.AsNoTracking()
                                                         .SingleOrDefaultAsync(m => m.DossierID == id);
             if (dossier == null)
             {
@@ -549,6 +516,7 @@ namespace HAICOP.Controllers
             {
                 var comm = db.UserCommission.Include(a => a.Commission)
                                         .Where( a => a.UserID == userid)
+					.AsNoTracking()
                                         .Select( a => a.Commission).ToList();
                 ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
             }
@@ -557,6 +525,7 @@ namespace HAICOP.Controllers
                 var comm = db.UserAgent.Include(a => a.Agent)
                                     .Include(a => a.Agent.Commission)
                                     .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
+				    .AsNoTracking()
                                     .Select(a => a.Agent.Commission)
                                     .ToList();
                 ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
@@ -585,7 +554,18 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    db.Update(dossier);
+                    var d = await db.Dossier.SingleOrDefaultAsync(a => a.ID == id);
+
+                    d.CommissionID = dossier.CommissionID;
+                    d.Subject = dossier.Subject;
+                    d.Num = dossier.Num ;
+                    d.Type = dossier.Type;
+                    d.Nature = dossier.Nature;
+                    d.DocDate = dossier.DocDate;
+                    d.EnterDate = dossier.EnterDate;
+                    d.ProDate = dossier.ProDate;
+
+                    db.Update(d);
 
                     if(AcheteurID != OldAcheteurID)
                     {

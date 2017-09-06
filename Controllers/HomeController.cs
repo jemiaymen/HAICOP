@@ -46,6 +46,7 @@ namespace HAICOP.Controllers
             bool isroot = await _userManager.IsInRoleAsync(ViewBag.user, "root");
             bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user, "Admin");
             bool ispresident = await _userManager.IsInRoleAsync(ViewBag.user, "President");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user ,"BOC");
 
             var doc = db.Dossier.Include(d => d.Commission)
                                 .Include(d => d.Mails)
@@ -82,7 +83,11 @@ namespace HAICOP.Controllers
 
             ViewBag.PetitionNotOk = doc.Sum(a => a.PetitionNotOk);
 
+            if(isboc)
+            {
+                ViewBag.isboc = true;
 
+            }
             if(ischef)
             {
 
@@ -91,7 +96,7 @@ namespace HAICOP.Controllers
             {
 
             }
-            else if(isroot || isadmin || ispresident)
+            else if(isroot || isadmin || ispresident || isboc)
             {
                 var re = new List<DashboardComm>();
 

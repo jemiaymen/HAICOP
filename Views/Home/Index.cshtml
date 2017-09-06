@@ -18,20 +18,38 @@
             @{
                 int i = 0;
             }
-            @foreach(var item in Model ){
-                <a href="#" data-id="@i" class="btn-show">
-                <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                    <div class="ls-wizard label-@ViewBag.labels[i]" style="margin-top:15px">
-                        <h2>@item.Lbl</h2>
-                        <span>@item.NonTrait</span>
-                        <div class="icon">
-                        @(item.Accept + item.Refu )
+            @if(ViewBag.isboc != null){
+                @foreach(var item in Model ){
+                    <a href="/Doc/New" >
+                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                        <div class="ls-wizard label-@ViewBag.labels[i]" style="margin-top:15px">
+                            <h2>@item.Lbl</h2>
+                            <span>@item.NonTrait</span>
+                            <div class="icon">
+                            @(item.Accept + item.Refu )
+                            </div>
                         </div>
                     </div>
-                </div>
-                </a>
-                i++;
+                    </a>
+                    i++;
+                }
+            }else{
+                @foreach(var item in Model ){
+                    <a href="#" data-id="@i" class="btn-show">
+                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                        <div class="ls-wizard label-@ViewBag.labels[i]" style="margin-top:15px">
+                            <h2>@item.Lbl</h2>
+                            <span>@item.NonTrait</span>
+                            <div class="icon">
+                            @(item.Accept + item.Refu )
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                    i++;
+                }
             }
+            
             </div>
         </div>
     </div>

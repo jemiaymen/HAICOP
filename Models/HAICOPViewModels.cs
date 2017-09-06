@@ -112,22 +112,6 @@ namespace HAICOP.Models
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
 		public string Desc {get ; set;}
 
-		[Display(Name = "الوثيقة")]
-		[FileExtensions(Extensions ="pdf" , ErrorMessage = "يقبل ملفات  (pdf)")]
-		public string Url {
-				get
-				{
-					if (Location != null)
-						return Location.FileName;
-					else
-						return "";
-				} 
-		}
-
-
-		[DataType(DataType.Upload)]
-		public IFormFile Location { get ; set;}
-
 		
 		public void InitFromAchaInDossier(AchInDossier doc)
 		{
