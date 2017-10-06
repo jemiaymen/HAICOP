@@ -33,8 +33,11 @@ namespace HAICOP.Models
 		public int Count { get ; set;}
 		public string Lbl {get ; set;}
 		public int Nbr { get ; set;}
-		public float Montant { get ; set;}
-		public float Poucentage { get ; set;}
+
+		[DisplayFormat(DataFormatString = "{0:N3}", ApplyFormatInEditMode = true)]
+		public decimal Montant { get ; set;}
+		[DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
+		public decimal Poucentage { get ; set;}
 	}
 
 	public class DashboardComm : TestMonth

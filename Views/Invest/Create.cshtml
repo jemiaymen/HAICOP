@@ -34,20 +34,9 @@
 @section Scripts {
     @{ 
         await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
-        await Html.RenderPartialAsync("_AutoCompl"); 
     }
-    <script>
-        $('#Name').autocomplete({
-            serviceUrl: '/api/sug/invest',
-            onSelect: function (suggestion) {
-                alert('You selected: ' + suggestion.id + ', ' + suggestion.value);
-            }
-        });
-    </script>
+
 }
 
-@section Styles{
-    @{ await Html.RenderPartialAsync("_AutoComplstyle") ;}
-}
 
 

@@ -8,21 +8,74 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HAICOP.Models
 {
+	public enum NaturePrice
+	{
+		[Display(Name = "أسعار ثابتة")]
+        Fixe = 1,
+		[Display(Name = "أسعار قابلة للمراجعة")]
+		Review = 2
+	}
+
+	public enum MethodPrice
+	{
+		[Display(Name = "أسعار فردية")]
+        Alone = 1,
+		[Display(Name = "أسعار جزافية")]
+		Excessif = 2
+	}
+
+	public enum Method
+    {
+		[Display(Name = "مسبوق بانتقاء")]
+        First = 1,
+		[Display(Name = "طلب عروض مفتوح")]
+        Open = 2,
+		[Display(Name = "طلب عروض مضيق")]
+		Close = 3,
+		[Display(Name = "طلب عروض دولي")]
+		International = 4,
+		[Display(Name = "طلب عروض بتمويل")]
+		WithFinancement = 5,
+		[Display(Name = "إستشارة")]
+		Consultation = 6,
+		[Display(Name = "مناظرة")]
+		Concour = 7,
+		[Display(Name = "إتفاق مباشر")]
+		AgreeDirect = 8,
+		[Display(Name = "استشارة دولية")]
+		ConsultationInternational = 9,
+		[Display(Name = "طلب ترشحات")]
+		DemandeSelection = 10,
+		[Display(Name = "عقد")]
+		Contra = 11,
+		[Display(Name = "مناقصة")]
+		Tender = 12
+    }
+
+	public enum MethodTri
+	{
+		[Display(Name = "طلبات عادية")]
+        Normal = 1,
+		[Display(Name = "طلبات معقدة")]
+		Complex = 2
+	}
+
 	public enum Financement
     {
-		[Display(Name = "التمويل المحلي")]
+		[Display(Name = "التمويل ذاتي")]
         Local = 1,
+		[Display(Name = "ميزانية")]
+		Budget = 3,
 		[Display(Name = "التمويل الأجنبي")]
 		Foreign = 2
-
     }
 	
 	public enum MailType 
 	{
-		[Display(Name = "الصادر")]
-		In = 1,
 		[Display(Name = "الوارد")]
-		Out = 2
+		Out = 2,
+		[Display(Name = "الصادر")]
+		In = 1
 	}
 
 	public enum MailNature 
@@ -54,7 +107,9 @@ namespace HAICOP.Models
 		[Display(Name = "يلغي ويعوض")]
 		RefuAndChangement = 13,
 		[Display(Name = "غير مثمر")]
-		NonComform = 14
+		NonComform = 14,
+		[Display(Name = "تذكير")]
+		Rappel = 15
 	}
 
 
@@ -182,10 +237,10 @@ namespace HAICOP.Models
 		public DateTime TraitDate { get ; set;}
 		
 		[Display(Name = "التمويل المحلي")]
-		public float TotalLocal {get ; set;}
+		public decimal TotalLocal {get ; set;}
 		
 		[Display(Name = "التمويل الأجنبي")]
-		public float TotalForeign {get ; set;}
+		public decimal TotalForeign {get ; set;}
 		
 		[Display(Name = "الممول الأجنبي")]
 		[StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
@@ -301,9 +356,17 @@ namespace HAICOP.Models
 		
 		public virtual Dossier Dossier { get; set; }
 		
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ الاجتماع")]
 		public DateTime MettDate {get ; set;}
+
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+		[Required(ErrorMessage = "اجباري")]
+		[Display(Name = "تاريخ التبليغ")]
+		public DateTime NotifDate {get ; set;}
 
 
 		[Required(ErrorMessage = "اجباري")]
@@ -445,7 +508,8 @@ namespace HAICOP.Models
 		public string Lbl {get ; set;}
 		
         [Display(Name = "القسط")]
-		public float Montant {get ; set;}
+		[DisplayFormat(DataFormatString = "{0:N3}")]
+		public decimal Montant {get ; set;}
 
         [Display(Name = "تمويل أجنبي")]
 		public bool Foreign {get ; set;}

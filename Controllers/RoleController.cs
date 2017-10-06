@@ -99,7 +99,13 @@ namespace HAICOP.Controllers
                 try
                 {
                     
-                    db.Update(applicationRole);
+                    var role = await db.ApplicationRole.FindAsync(id);
+                    role.Description = applicationRole.Description;
+                    role.Name = applicationRole.Name;
+                    role.NormalizedName = applicationRole.NormalizedName;
+                    role.ConcurrencyStamp = applicationRole.ConcurrencyStamp;
+
+                    db.Update(role);
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"Admin : {ViewBag.user.UserName} Edit RoleID : {applicationRole.Id} .");
                 }

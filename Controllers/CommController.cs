@@ -92,7 +92,12 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    db.Update(commission);
+                    var com = await db.Commission.FindAsync(id);
+                    com.Lbl = commission.Lbl;
+                    com.LblFr = commission.LblFr;
+                    com.HavePresident = commission.HavePresident;
+                    com.Code = commission.Code;
+                    db.Update(com);
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit CommissionID : {commission.ID} .");
                 }

@@ -1,11 +1,14 @@
 
-    <script src="~/lib/editable-table/jquery.dataTables.js"></script>
+    <script src="~/lib/datatable/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatable/extensions/ColReorder/js/dataTables.colReorder.min.js"></script>
+    <script src="~/lib/datatable/extensions/colresizable/colResizable-1.6.min.js"></script>
 
 
 <script>
 
     $(".ls-table").dataTable({
         sPaginationType: "full_numbers",
+        colReorder: true,
 
         "language": {
             "sProcessing":   "جارٍ التحميل...",
@@ -26,6 +29,8 @@
         }
         
     });
+
+    $(".ls-table").colResizable();
    
 </script>
 

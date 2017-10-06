@@ -1,0 +1,70 @@
+@using System.Linq
+@model IEnumerable<HAICOP.Models.Dossier>
+
+@{
+    ViewData["Title"] = "القائمة الجملية ";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        التعهد
+                                                    </th>
+                                                    <th>
+                                                        إضافة بطاقة إسناد
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.Subject)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.Num)
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody >
+                                                <center>
+                                                @foreach (var item in Model) {
+                                                    <tr >
+                                                        <td >
+                                                            @Html.DisplayFor(modelItem => item.ProDate)
+                                                        </td>
+                                                        <td >
+                                                            @Html.DisplayFor(modelItem => item.Num)
+                                                        </td>
+                                                        <td >
+                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                        </td>
+                                                        <td>
+                                                            <a asp-action="Add"  asp-controller="Affect" asp-route-id="@item.ID"><i class="fa fa-plus"></i></a> 
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                }
+                                                </center>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+}
+
+
+

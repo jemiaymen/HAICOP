@@ -11,6 +11,7 @@ using HAICOP.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace HAICOP.Controllers
 {
@@ -19,6 +20,7 @@ namespace HAICOP.Controllers
     public class HomeController : BaseCtrl
     {
         private readonly ILogger _logger;
+        private string role;
         public HomeController(UserManager<ApplicationUser> userManager,
                             SignInManager<ApplicationUser> signInManager,
                             ApplicationDbContext db,ILoggerFactory loggerFactory):
@@ -26,7 +28,7 @@ namespace HAICOP.Controllers
         {
             _logger = loggerFactory.CreateLogger<HomeController>();
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             string[] order = {"البناءات والهندسة المدنية",
                               "تكنولوجيات الإتصال و الإعلامية والكهرباء",
@@ -41,12 +43,10 @@ namespace HAICOP.Controllers
                               "المجلس الوطني للطلب العمومي"
             };
 
-            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
-            bool israpp = await _userManager.IsInRoleAsync(ViewBag.user, "Rapporteur");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user, "root");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user, "Admin");
-            bool ispresident = await _userManager.IsInRoleAsync(ViewBag.user, "President");
-            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user ,"BOC");
+            role = (string) ViewBag.role.ToString();
+
+            
+
 
             var doc = db.Dossier.Include(d => d.Commission)
                                 .Include(d => d.Mails)
@@ -83,56 +83,49 @@ namespace HAICOP.Controllers
 
             ViewBag.PetitionNotOk = doc.Sum(a => a.PetitionNotOk);
 
-            if(isboc)
-            {
-                ViewBag.isboc = true;
 
-            }
-            if(ischef)
+            switch(role)
             {
+                case "Chef":
+                    return RedirectToAction("Dashboard","Doc");
+                case "assistant":
+                    return RedirectToAction("Index","Doc");
+                default :{
+                    var re = new List<DashboardComm>();
 
-            }
-            else if(israpp)
-            {
-
-            }
-            else if(isroot || isadmin || ispresident || isboc)
-            {
-                var re = new List<DashboardComm>();
-
-                if(doc.Count() > 0)
-                {
-                    foreach(string  s in order)
+                    if(doc.Count() > 0)
                     {
-                        var tmp = doc.FirstOrDefault(a => a.Lbl == s);
-
-                        if(tmp != null)
+                        foreach(string  s in order)
                         {
-                            var insert = new DashboardComm{ Lbl = s};
-                            insert.Init(tmp);
-                            re.Add(insert);
+                            var tmp = doc.FirstOrDefault(a => a.Lbl == s);
+
+                            if(tmp != null)
+                            {
+                                var insert = new DashboardComm{ Lbl = s};
+                                insert.Init(tmp);
+                                re.Add(insert);
+                            }
+                            else 
+                            {
+                                re.Add(new DashboardComm { Lbl = s});
+                            }
                         }
-                        else 
+
+                        return View(re);
+                    }
+                    else
+                    {
+                        foreach(string s in order)
                         {
                             re.Add(new DashboardComm { Lbl = s});
                         }
+
+                        return View(re);
+
                     }
-
-                    return View(re);
                 }
-                else
-                {
-                    foreach(string s in order)
-                    {
-                        re.Add(new DashboardComm { Lbl = s});
-                    }
-
-                    return View(re);
-
-                }
+                
             }
-
-            return View(new List<DashboardComm>());
         }
 
         [AllowAnonymous]
@@ -197,14 +190,14 @@ namespace HAICOP.Controllers
                 
                 ViewBag.Total = tmp;
                 ViewBag.labels = JsonConvert.SerializeObject(doc.Select(a => a.Lbl).ToArray());
-                ViewBag.data = JsonConvert.SerializeObject(doc.Select(a => a.Montant).ToArray() );
+                ViewBag.data = JsonConvert.SerializeObject(doc.Select(a =>  Double.Parse(a.Montant.ToString("F0"), NumberStyles.Float, CultureInfo.InvariantCulture)).ToArray() );
 
                 ViewBag.labelstype = JsonConvert.SerializeObject(type.Select(a => a.Lbl).ToArray());
-                ViewBag.datamontanttype = JsonConvert.SerializeObject(type.Select(a => a.Montant).ToArray() );
+                ViewBag.datamontanttype = JsonConvert.SerializeObject(type.Select(a => Double.Parse(a.Montant.ToString("F0"), NumberStyles.Float, CultureInfo.InvariantCulture)).ToArray() );
                 ViewBag.datacounttype = JsonConvert.SerializeObject(type.Select(a => a.Count).ToArray() );
 
                 List<TestMonth> re = new List<TestMonth>();
-                float ForeignMontant = 0;
+                decimal ForeignMontant = 0;
                 int notok = 0;
 
                 foreach(var i in doc)

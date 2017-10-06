@@ -19,7 +19,7 @@
                 <h2>التفاصيل بالنسبة الملف</h2> 
                 <hr />
                 <div class="form-group">
-                    <label asp-for="CommissionID" class="col-md-2 control-label"></label>
+                    <label asp-for="CommissionID" class="col-md-2 control-label">الهيكل</label>
                     <div class="col-md-6">
                         <select asp-for="CommissionID" class ="form-control" asp-items="ViewBag.CommissionID">
                             <option value=""></option>
@@ -30,6 +30,15 @@
                         @Html.EditorFor(model => model.Num, ViewBag.user.Auto ? (object)new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" }} : new { htmlAttributes = new { @class = "form-control" } })
                         <span asp-validation-for="Num" class="text-danger"></span>
                     </div>
+                </div>
+                <div class="form-group new-four" >
+                    <label asp-for="FournisseurID" class="col-md-2 control-label">العارض</label>
+                    <div class="col-md-10">
+                        <select asp-for="FournisseurID"  asp-items="@ViewBag.FournisseurID" >
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="FournisseurID" class="text-danger"></span>
+                    </div>                  
                 </div>
                 <div class="form-group">
                     <label asp-for="Subject" class="col-md-2 control-label"></label>
@@ -154,12 +163,23 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
         await Html.RenderPartialAsync("_SelectizeScript"); 
         <script>
+            $(".new-four").hide();
             $("#CommissionID").selectize();
+            $("#FournisseurID").selectize();
             $("#Type").selectize();
             $("#Nature").selectize();
             $("#AcheteurID").selectize();
             $("#MailNature").selectize();
             $("#MailType").selectize();
+
+            $("#CommissionID").change(function(){
+                if( $("#CommissionID").val() == 3 || $("#CommissionID").val() == 4 || $("#CommissionID").val() == 8){
+                    $(".new-four").show();
+                }else{
+                    $(".new-four").hide();
+                }
+            });
+
         </script>
     }
 }

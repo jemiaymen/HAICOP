@@ -49,7 +49,7 @@
                                                             @Html.DisplayFor(modelItem => item.Count)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Montant)
+                                                            @Html.DisplayFor(modelItem => item.Montant )
                                                         </td>
                                                         <td>
                                                             % @Html.DisplayFor(modelItem => item.Poucentage) 
@@ -67,10 +67,10 @@
                                                         @ViewBag.Total.Count
                                                     </td>
                                                     <td>
-                                                        @ViewBag.Total.Montant
+                                                        @ViewBag.Total.Montant.ToString("N3")
                                                     </td>
                                                     <td>
-                                                       % @ViewBag.Total.Poucentage 
+                                                       % @ViewBag.Total.Poucentage.ToString("F2") 
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -80,6 +80,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel panel-default">
@@ -91,7 +92,7 @@
                                         <div class="ls-wizard label-lightBlue" style="margin-top:15px">
                                             <h2>تمويل أجنبي</h2>
                                             <div class="icon">
-                                                % @ViewBag.fp 
+                                                % @ViewBag.fp.ToString("F2")  
                                             </div>
                                         </div>
                                     </div>
@@ -110,37 +111,51 @@
 
                     <div class="row" >
                         
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label">الإختيار </label>
+                                    <div class="col-md-6">
+                                        <select name="choice" id="choice" class="form-control" >
+                                            <option value="pie">Pie</option>
+                                            <option value="doughnut">Doughnut</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
 
-                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <canvas id="pie-chart-montant" ></canvas>                       
+                                    <canvas id="chart-montant" ></canvas>                       
                                 </div>
                             </div>
                         </div>
 
 
-                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">التوزيع حسب العدد</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <canvas id="pie-chart-typenbr" ></canvas>                       
+                                    <canvas id="chart-typenbr" ></canvas>                       
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">التوزيع حسب المبلغ</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <canvas id="pie-chart-typemontant" ></canvas>                       
+                                    <canvas id="chart-typemontant" ></canvas>                       
                                 </div>
                             </div>
                         </div>
@@ -153,46 +168,90 @@
 
 @section Scripts {
     @{ 
-        await Html.RenderPartialAsync("_TableScriptPartial"); 
+        await Html.RenderPartialAsync("_TableScriptPatialWithout"); 
         await Html.RenderPartialAsync("_StatScriptPartial"); 
 
         <script>
 
-                var backgroundColor = ["#fd5308","#fb9902","#e8c3b9","#3e95cd", "#8e5ea2","#3cba9f", "#3e01a4","#0392ce","#a7194b","#c45850" ];
+                var backgroundColor = ["#3e95cd", "#8e5ea2","#3cba9f","#fd5308","#fb9902","#e8c3b9", "#3e01a4","#0392ce","#a7194b","#c45850" ];
+                
+                var _type = 'pie';
+
+                $("#choice").change(function(){
+                   _type = $("#choice").val();
+                   new Chart(document.getElementById("chart-montant"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labels"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.data
+                            }]   
+                        }
+                    });
+
+                    new Chart(document.getElementById("chart-typenbr"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labelstype"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.datacounttype
+                            }]   
+                        }
+                    });
+
+                    new Chart(document.getElementById("chart-typemontant"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labelstype"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.datamontanttype
+                            }]   
+                        }
+                    });
+
+                });
+
+                    new Chart(document.getElementById("chart-montant"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labels"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.data
+                            }]   
+                        }
+                    });
+
+                    new Chart(document.getElementById("chart-typenbr"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labelstype"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.datacounttype
+                            }]   
+                        }
+                    });
+
+                    new Chart(document.getElementById("chart-typemontant"), {
+                        type: _type ,
+                        data: { 
+                            labels : @Html.Raw(ViewData["labelstype"]),
+                            datasets : [{
+                                backgroundColor : backgroundColor,
+                                data : @ViewBag.datamontanttype
+                            }]   
+                        }
+                    });
+
                 
 
-                new Chart(document.getElementById("pie-chart-montant"), {
-                    type: 'pie',
-                    data: { 
-                        labels : @Html.Raw(ViewData["labels"]),
-                        datasets : [{
-                            backgroundColor : backgroundColor,
-                            data : @ViewBag.data
-                        }]   
-                    }
-                });
+                
 
-                new Chart(document.getElementById("pie-chart-typenbr"), {
-                    type: 'pie',
-                    data: { 
-                        labels : @Html.Raw(ViewData["labelstype"]),
-                        datasets : [{
-                            backgroundColor : backgroundColor,
-                            data : @ViewBag.datacounttype
-                        }]   
-                    }
-                });
-
-                new Chart(document.getElementById("pie-chart-typemontant"), {
-                    type: 'pie',
-                    data: { 
-                        labels : @Html.Raw(ViewData["labelstype"]),
-                        datasets : [{
-                            backgroundColor : backgroundColor,
-                            data : @ViewBag.datamontanttype
-                        }]   
-                    }
-                });
+                
         </script>
     }
 }

@@ -35,10 +35,24 @@ namespace HAICOP.Controllers
         {
             int num = 0;
             Int32.TryParse(q, out num);
-            var doc =   db.Dossier.Include( d => d.Mails)
-                                        .Include( d => d.Mettings)
-                                        .Include( d => d.Commission)
-                                        .Where(d => d.Subject.Contains(q) || d.Commission.Lbl.Contains(q) || d.Num == num );
+            var doc = db.Dossier.Include( d => d.Mails)
+                                .Include( d => d.Mettings)
+                                .Include( d => d.Commission)
+                                .Where(d => d.Subject.Contains(q) || d.Commission.Lbl.Contains(q) || d.Num == num );
+
+            if(doc.Count() == 0)
+            {
+                doc = db.AchInDossier.Include(d => d.Acheteur)
+                                     .Include(d => d.Dossier)
+                                     .Include(d => d.Dossier.Mails)
+                                     .Include( d => d.Dossier.Mettings)
+                                     .Include(d => d.Dossier.Commission)
+                                     .Where( d => d.Acheteur.Lbl.Contains(q) || d.Acheteur.LblLong.Contains(q))
+                                     .Select(d => d.Dossier);
+                
+            }
+
+            
 
             List<DocDetail> re = new List<DocDetail>();
             foreach( var item in doc)
@@ -254,51 +268,39 @@ namespace HAICOP.Controllers
                         return View("Struct",search);
                     }
 
-                    var doc = db.Rapporteur.Include( d => d.Dossier)
-                                   .Include( d => d.Agent)
-                                   .Include( d => d.Dossier.Commission)
-                                   .Include(d => d.Dossier.Mettings)
-                                   .Include(d => d.Dossier.Mails)
-                                   .Where( d => d.Agent.CommissionID == search.CommissionID && 
-                                         (d.Dossier.ProDate >= search.From && d.Dossier.ProDate <= search.To) )
-                                   .ToList();
-                    return View("Result",doc);
+                    var doc = db.Dossier.Include( d => d.Commission)
+                                        .Include(d => d.Mettings)
+                                        .Where( d => d.CommissionID == search.CommissionID && 
+                                         (d.ProDate >= search.From && d.ProDate <= search.To) )
+                                        .ToList();
+                    return View("ResultStruct",doc);
                 }
 
                 if(search.From != null)
                 {
-                    var res = db.Rapporteur.Include( d => d.Dossier)
-                                   .Include( d => d.Agent)
-                                   .Include( d => d.Dossier.Commission)
-                                   .Include(d => d.Dossier.Mettings)
-                                   .Include(d => d.Dossier.Mails)
-                                   .Where( d => d.Agent.CommissionID == search.CommissionID &&   d.Dossier.ProDate >= search.From   )
-                                   .ToList();
-                    return View("Result",res);
+                    var res = db.Dossier.Include( d => d.Commission)
+                                        .Include(d => d.Mettings)
+                                        .Where( d => d.CommissionID == search.CommissionID &&   d.ProDate >= search.From   )
+                                        .ToList();
+                    return View("ResultStruct",res);
                 }
 
                 if(search.To != null)
                 {
-                    var rese = db.Rapporteur.Include( d => d.Dossier)
-                                   .Include( d => d.Agent)
-                                   .Include( d => d.Dossier.Commission)
-                                   .Include(d => d.Dossier.Mettings)
-                                   .Include(d => d.Dossier.Mails)
-                                   .Where( d => d.Agent.CommissionID == search.CommissionID &&   d.Dossier.ProDate <= search.To   )
-                                   .ToList();
-                    return View("Result",rese);
+                    var rese = db.Dossier.Include( d => d.Commission)
+                                         .Include(d => d.Mettings)
+                                         .Where( d => d.CommissionID == search.CommissionID &&   d.ProDate <= search.To   )
+                                         .ToList();
+                    return View("ResultStruct",rese);
                 }
 
-                var re = db.Rapporteur.Include( d => d.Dossier)
-                                      .Include( d => d.Agent)
-                                      .Include( d => d.Dossier.Commission)
-                                      .Include(d => d.Dossier.Mettings)
-                                      .Include(d => d.Dossier.Mails)
-                                      .Where( d => d.Agent.CommissionID == search.CommissionID )
+                var re =  db.Dossier.Include( d => d.Commission)
+                                    .Include(d => d.Mettings)
+                                    .Where( d => d.CommissionID == search.CommissionID )
                                       .ToList();
-                return View("Result",re);
+                return View("ResultStruct",re);
             }
-            return View("Result");
+            return View("ResultStruct");
             
         }
         public IActionResult Rapp()

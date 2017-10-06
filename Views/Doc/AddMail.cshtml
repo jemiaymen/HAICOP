@@ -22,7 +22,7 @@
                 <hr/>
 
                 <input type="hidden" asp-for="DossierID" />
-                <input type="hidden" asp-for="Url" />
+                <input type="hidden" id="OldAgentID" name="OldAgentID" value="@ViewBag.OldAgentID" />
 
                 <div class="form-group">
                     <label asp-for="Ref" class="col-md-2 control-label"></label>
@@ -75,11 +75,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Url" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Location" class="form-control" accept=".pdf" />
-                        <span asp-validation-for="Location" class="text-danger"></span>
-                    </div>                 
+                    <label asp-for="AgentID" class="col-md-2 control-label"></label>
+                    <div class="col-md-4">
+                        <select asp-for="AgentID" asp-items="@ViewBag.AgentID">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="AgentID" class="text-danger"></span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -99,6 +101,7 @@
         <script>
             $("#MailNature").selectize();
             $("#MailType").selectize();
+            $("#AgentID").selectize();
         </script>
     }
 }

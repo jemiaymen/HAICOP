@@ -18,17 +18,16 @@
                                             <thead>
                                                 <tr>
                                                     <th>
+                                                        التعهد
+                                                    </th>
+                                                    <th>
                                                         @Html.DisplayNameFor(model => model.Num)
                                                     </th>
                                                     <th>
                                                         @Html.DisplayNameFor(model => model.Subject)
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Commission.Lbl)
-                                                    </th>
-                                                    
-                                                    <th>
-                                                            البريد
+                                                        الهيكل
                                                     </th>
                                                     <th> 
                                                         تحيين
@@ -41,30 +40,25 @@
                                             <tbody>
                                                 @foreach (var item in Model) {
                                                     <tr>
-                                                        <td>
+                                                        <td >
+                                                            @Html.DisplayFor(mdelItem => item.ProDate)
+                                                        </td>
+                                                        <td >
                                                             @Html.DisplayFor(modelItem => item.Num)
                                                         </td>
-                                                        <td>
+                                                        <td >
                                                             @Html.DisplayFor(modelItem => item.Subject)
                                                         </td>
-
-                                                        <td>
+                                                        <td >
                                                             @Html.DisplayFor(modelItem => item.Commission.Lbl)
                                                         </td>
                                                         <td>
-                                                                @foreach(var m in item.Mails){
-                                                                    <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.ID" data-imid="@m.ID" class="img-show">@m.ID</a>
-                                                                }
+                                                            <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
+                                                            <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a> 
                                                         </td>
-                                                        <td>
-                                                                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                                <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a> 
-                                                        </td>
-
                                                         <td>
                                                             <a asp-action="Boc"  asp-controller="Print" asp-route-id="@item.ID"><i class="fa fa-print"></i></a> 
                                                         </td>
-                                                        
                                                     </tr>
                                                 }
                                             </tbody>
@@ -75,47 +69,12 @@
                         </div>
                     </div>
 
-    <div class="modal fade" id="myModalDanger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header label-red white">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModaDanger">البريد</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <iframe id="docverif" frameBorder="0" width="865" height="500"></iframe>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn ls-red-btn btn-xs" data-dismiss="modal">خروج</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 @section Styles {
     @{ await Html.RenderPartialAsync("_TableStylePartial");}
 }
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
-    <script> 
-
-        $(".img-show").click(function(){
-            var imgid = $(this).data('imid');
-            var docid = $(this).data('did');
-
-            $.ajax({
-                url: '/api/img/id/' + docid + '/' + imgid,
-                success: function(results) {
-                        $("#docverif").attr("src","/uploads/" + results);
-                }
-            });
-        });
-        
-
-    </script>
+    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
 }
 
 

@@ -99,7 +99,11 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    db.Update(acheteur);
+                    var ach = await db.Acheteur.FindAsync(id);
+                    ach.Lbl = acheteur.Lbl;
+                    ach.LblLong = acheteur.LblLong;
+
+                    db.Update(ach);
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Acheteur : {acheteur.Lbl} .");
                 }

@@ -1,8 +1,7 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "/home/jemix/.dotnet/store/|arch|/|tfm|",
-      "/home/jemix/.nuget/packages"
+      "C:\\Users\\ajimi\\.nuget\\packages"
     ]
   }
 }

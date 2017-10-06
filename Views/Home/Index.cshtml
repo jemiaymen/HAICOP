@@ -17,26 +17,10 @@
             <div class="panel-body">
             @{
                 int i = 0;
-            }
-            @if(ViewBag.isboc != null){
-                @foreach(var item in Model ){
-                    <a href="/Doc/New" >
-                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                        <div class="ls-wizard label-@ViewBag.labels[i]" style="margin-top:15px">
-                            <h2>@item.Lbl</h2>
-                            <span>@item.NonTrait</span>
-                            <div class="icon">
-                            @(item.Accept + item.Refu )
-                            </div>
-                        </div>
-                    </div>
-                    </a>
-                    i++;
-                }
-            }else{
-                @foreach(var item in Model ){
+                foreach(var item in Model ){
+                    
                     <a href="#" data-id="@i" class="btn-show">
-                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                    <div class="col-md-2 col-sm-4 col-xs-6 col-lg-2">
                         <div class="ls-wizard label-@ViewBag.labels[i]" style="margin-top:15px">
                             <h2>@item.Lbl</h2>
                             <span>@item.NonTrait</span>
@@ -46,6 +30,13 @@
                         </div>
                     </div>
                     </a>
+                   
+
+                    <!-- <div class="col-md-2 col-sm-2 col-xs-6">
+                        <img class="img-circle" src="/images/struct/tic.png" />
+                        <center><h4>@item.Lbl</h4></center>
+                    </div>
+                     -->
                     i++;
                 }
             }
@@ -72,6 +63,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th>
+                                                             التعهد
+                                                        </th>
+                                                        <th>
                                                             عدد الملف
                                                         </th>
                                                         <th>
@@ -79,10 +73,6 @@
                                                         </th>
                                                         <th>
                                                             الهيكل
-                                                        </th>
-
-                                                        <th>
-                                                            تاريخ التعهد
                                                         </th>
                                                         <th>
                                                             عدد الجلسات
@@ -93,6 +83,9 @@
                                                 <tbody>
                                                     @foreach (var item in docs.Lst) {
                                                         <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProDate)
+                                                            </td>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Num)
                                                             </td>
@@ -109,15 +102,9 @@
                                                                 }
                                                                 
                                                             </td>
-
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Commission.Lbl)
                                                             </td>
-
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.ProDate)
-                                                            </td>
-
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Mettings.FirstOrDefault().MettNbr)
                                                             </td>
@@ -138,7 +125,9 @@
                     
                     i++;
                 }
+
 <div class="row">
+    
     <div class="col-md-6 col-sm-6 col-xs-12 col-lg-4">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -153,7 +142,7 @@
                     <tbody>
                         <tr>
                             <td>@ViewBag.NumberAll</td>
-                            <td>@ViewBag.Montant</td>
+                            <td>@ViewBag.Montant.ToString("N3")</td>
                         </tr>
                     </tbody>
                 </table>                     
@@ -237,7 +226,7 @@
 
 @section Scripts {
     @{ 
-        await Html.RenderPartialAsync("_TableScriptPartial"); 
+        await Html.RenderPartialAsync("_TableScriptPatialWithout"); 
         await Html.RenderPartialAsync("_StatScriptPartial"); 
         <script>
             $(".btn-show").click(function(){

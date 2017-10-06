@@ -88,7 +88,9 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    db.Update(dessision);
+                    var des = await db.Dessision.FindAsync(id);
+                    des.Lbl = dessision.Lbl;
+                    db.Update(des);
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit DessisionID : {dessision.ID} .");
                 }

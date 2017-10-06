@@ -117,10 +117,21 @@ namespace HAICOP.Controllers
                     if(president != null)
                     {
                         president.IsPresident = false;
-                        db.Update(president);
+                        var ag = await db.Agent.FindAsync(id);
+                        ag.CommissionID = agent.CommissionID;
+                        ag.Name = agent.Name;
+                        ag.NameFr = agent.NameFr;
+                        ag.IsPresident = agent.IsPresident;
+                        db.Update(ag);
                     }
 
-                    db.Update(agent);
+                    var age = await db.Agent.FindAsync(id);
+                    age.CommissionID = agent.CommissionID;
+                    age.Name = agent.Name;
+                    age.NameFr = agent.NameFr;
+                    age.IsPresident = agent.IsPresident;
+                    db.Update(age);
+
                     var com = await db.Commission.FindAsync(agent.CommissionID);
                     com.HavePresident = true;
                     db.Update(com);

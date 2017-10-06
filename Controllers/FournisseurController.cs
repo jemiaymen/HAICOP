@@ -90,7 +90,9 @@ namespace HAICOP.Controllers
             {
                 try
                 {
-                    db.Update(fournisseur);
+                    var four = await db.Fournisseur.FindAsync(id);
+                    four.Lbl = fournisseur.Lbl;
+                    db.Update(four);
                     await db.SaveChangesAsync();
                      _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit FournisseurID : {fournisseur.ID} .");
                 }

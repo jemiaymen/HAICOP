@@ -1,0 +1,82 @@
+@using System.Linq
+@model IEnumerable<HAICOP.Models.Dossier>
+
+@{
+    ViewData["Title"] = "نتيجة البحث";
+    ViewData["SubMenu"] = "البحث";
+}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                         التعهد
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.Num)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.Subject)
+                                                    </th>
+                                                    <th>
+                                                        الهيكل
+                                                    </th>
+                                                    <th>
+                                                        عدد الجلسات
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model) {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProDate)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Num)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                        </td>
+
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Commission.Lbl)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Mettings.FirstOrDefault().MettNbr)
+                                                        </td>
+                                                        <td>
+                                                            @Html.ActionLink("كل العطيات", "Detail", "Search",  new { id = item.ID}) 
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+}
+
+
+

@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace HAICOP
 {
     public class Startup
@@ -99,6 +100,14 @@ namespace HAICOP
                 };
             });
 
+
+            // services.Configure<RequestLocalizationOptions>(options =>
+            // {
+            //     options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("ar-TN");
+            // });
+
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -137,6 +146,7 @@ namespace HAICOP
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
 
         

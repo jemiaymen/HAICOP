@@ -1,0 +1,284 @@
+@using System.Linq
+@model HAICOP.Models.BulletinView
+
+@{
+    ViewData["Title"] = "إضافة بطاقة إسناد";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+                    <div class="row">
+                        <form asp-controller="Affect" asp-action="Add"  method="post" class="form-horizontal" >
+                            
+                        </form>
+                    </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <h3 class="panel-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="panel-body">
+        <form asp-controller="Affect" asp-action="Add"  method="post" >
+            <div class="form-horizontal">
+               
+               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="DossierID" />
+
+                <div class="form-group">
+                    <label asp-for="AcheteurID" class="col-md-3 control-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="AcheteurID"  asp-items="@ViewBag.AcheteurID" >
+                                <option value=""></option>
+                            </select>
+                        <span asp-validation-for="AcheteurID" class="text-danger"></span>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FirstLastName" class="col-md-3 control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="FirstLastName" class="form-control" />
+                        <span asp-validation-for="FirstLastName" class="text-danger"></span>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Tel" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <input asp-for="Tel" class="form-control" />
+                        <span asp-validation-for="Tel" class="text-danger"></span>
+                    </div>
+                    <label asp-for="Fax" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <input asp-for="Fax" class="form-control" />
+                        <span asp-validation-for="Fax" class="text-danger"></span>
+                    </div>                  
+                </div>
+                <h2>معلومات حول الصفقة</h2>
+                <hr />
+
+                <div class="form-group">
+                    <label asp-for="Type" class="col-md-3 control-label"></label>
+                    <div class="col-md-9">
+                        <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>                 
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Subject" class="col-md-3 control-label"></label>
+                    <div class="col-md-9">
+                        <textarea asp-for="Subject" class="form-control" style="font-size:18px;"></textarea>
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IsSmall" class="col-md-3 control-label"></label>
+                    <div class="col-md-9">
+                        <input asp-for="IsSmall" class="form-control"  />
+                        <span asp-validation-for="IsSmall" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TotalLocal" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <input asp-for="TotalLocal" class="form-control" />
+                        <span asp-validation-for="TotalLocal" class="text-danger"></span>
+                    </div>
+                    <label asp-for="Financement" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <select asp-for="Financement" asp-items="Html.GetEnumSelectList<Financement>()">
+                                <option value=""></option>
+                            </select>
+                        <span asp-validation-for="Financement" class="text-danger"></span>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NbrLot" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <input asp-for="NbrLot" class="form-control" />
+                        <span asp-validation-for="NbrLot" class="text-danger"></span>
+                    </div>
+                    <label asp-for="Method" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <select asp-for="Method" asp-items="Html.GetEnumSelectList<Method>()">
+                                <option value=""></option>
+                            </select>
+                        <span asp-validation-for="Method" class="text-danger"></span>
+                    </div>                  
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FournisseurID" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <select asp-for="FournisseurID"  asp-items="@ViewBag.FournisseurID" >
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="FournisseurID" class="text-danger"></span>
+                    </div>
+
+                    <label asp-for="Nationalite" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <input asp-for="Nationalite" class="form-control" />
+                        <span asp-validation-for="Nationalite" class="text-danger"></span>
+                    </div>                   
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Activity" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <input asp-for="Activity" class="form-control" />
+                        <span asp-validation-for="Activity" class="text-danger"></span>
+                    </div>                   
+                </div>
+                <div class="form-group">
+                    <label asp-for="Speciality" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <input asp-for="Speciality" class="form-control" />
+                        <span asp-validation-for="Speciality" class="text-danger"></span>
+                    </div>                   
+                </div>
+                <div class="form-group">
+                    <label asp-for="Category" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <input asp-for="Category" class="form-control" />
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>                   
+                </div>
+
+                <h2>معلومات حول الآجال</h2>
+                <hr />
+
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label asp-for="DateAnConc" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateAnConc" class="form-control" />
+                            </td>
+                            <td>
+                                <label asp-for="DateProFinance" ></label>
+                                <label asp-for="DateProTech" > </label>
+                            </td>
+                            <td>
+                                <input asp-for="DateProFinance" class="form-control" />
+                                <input asp-for="DateProTech" class="form-control" />
+                            </td>
+                            <td>
+                                <label asp-for="DelaiTraveau" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DelaiTraveau" class="form-control" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label asp-for="DateLastChanceAcceptTechnique" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateLastChanceAcceptTechnique" class="form-control" />
+                            </td>
+                            <td>
+                                <label asp-for="DateAvisFinance" ></label>
+                                <label asp-for="DateAvisTech" > </label>
+                            </td>
+                            <td>
+                                <input asp-for="DateAvisFinance" class="form-control" />
+                                <input asp-for="DateAvisTech" class="form-control" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label asp-for="DateOpenAnTechnique" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateOpenAnTechnique" class="form-control" />
+                            </td>
+                            <td>
+                                <label asp-for="DateDebu" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateDebu" class="form-control" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label asp-for="DateOpenAnFinance" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateOpenAnFinance" class="form-control" />
+                            </td>
+                            <td>
+                                <label asp-for="DateTraveau" ></label>
+                            </td>
+                            <td>
+                                <input asp-for="DateTraveau" class="form-control" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <th><label asp-for="NbrChaier" ></label></th>
+                        <th><label asp-for="NbrOffre" ></label></th>
+                        <th><label asp-for="NbrSuppBeforeFinance" ></label></th>
+                        <th><label asp-for="NbrOffreFinance" ></label></th>                 
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input asp-for="NbrChaier" class="form-control" />
+                            </td>
+                            <td>
+                                <input asp-for="NbrOffre" class="form-control" />
+                            </td>
+                            <td>
+                                <input asp-for="NbrSuppBeforeFinance" class="form-control" />
+                            </td>
+                            <td>
+                                <input asp-for="NbrOffreFinance" class="form-control" />
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
+                    </div>
+                </div>
+            </div>  
+        </form>                            
+    </div>
+</div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_SelectizeScript"); 
+        <script>
+            $("#AcheteurID").selectize();
+            $("#Type").selectize();
+            $("#Financement").selectize();
+            $("#Method").selectize();
+            $("#FournisseurID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+
+
+

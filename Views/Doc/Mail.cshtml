@@ -35,13 +35,11 @@
                                                     <th>
                                                         @Html.DisplayNameFor(model => model.Dossier.Subject)
                                                     </th>
-
-                                                    <th>
-                                                            البريد
-                                                    </th>
-
                                                     <th>
                                                          تحيين
+                                                    </th>
+                                                    <th>
+                                                        طباعة
                                                     </th>
 
                                                 </tr>
@@ -68,13 +66,11 @@
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.Dossier.Subject)
                                                         </td>
-
-                                                        <td>
-                                                            <a data-toggle="modal" data-target="#myModalDanger" data-did="@item.DossierID" data-imid="@item.ID" class="img-show"><i class="fa fa-envelope"></i></a>
-
-                                                        </td>
                                                         <td>
                                                             <a asp-action="EditMail" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> 
+                                                        </td>
+                                                        <td>
+                                                            <a asp-action="Bureau" asp-controller="Print" asp-route-id="@item.DossierID" asp-route-mid="@item.ID"><i class="fa fa-print"></i></a> 
                                                         </td>
                                                     </tr>
                                                 }
@@ -86,47 +82,13 @@
                         </div>
                     </div>
 
-    <div class="modal fade" id="myModalDanger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header label-red white">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModaDanger">البريد</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <iframe id="docverif" frameBorder="0" width="865" height="500"></iframe>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn ls-red-btn btn-xs" data-dismiss="modal">خروج</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 @section Styles {
     @{ await Html.RenderPartialAsync("_TableStylePartial");}
 }
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_TableScriptPartial"); }
-    <script> 
-
-        $(".img-show").click(function(){
-            var imgid = $(this).data('imid');
-            var docid = $(this).data('did');
-
-            $.ajax({
-                url: '/api/img/id/' + docid + '/' + imgid,
-                success: function(results) {
-                        $("#docverif").attr("src","/uploads/" + results);
-                }
-            });
-        });
-        
-
-    </script>
+    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
 }
 
 

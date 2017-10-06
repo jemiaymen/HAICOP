@@ -213,9 +213,9 @@ namespace HAICOP.Migrations
                         .IsRequired()
                         .HasMaxLength(500);
 
-                    b.Property<float>("TotalForeign");
+                    b.Property<decimal>("TotalForeign");
 
-                    b.Property<float>("TotalLocal");
+                    b.Property<decimal>("TotalLocal");
 
                     b.Property<DateTime>("TraitDate");
 
@@ -256,7 +256,7 @@ namespace HAICOP.Migrations
                     b.Property<string>("Lbl")
                         .HasMaxLength(200);
 
-                    b.Property<float>("Montant");
+                    b.Property<decimal>("Montant");
 
                     b.HasKey("FournisseurID", "DossierID");
 
@@ -344,6 +344,8 @@ namespace HAICOP.Migrations
                         .HasMaxLength(500);
 
                     b.Property<int>("MettNbr");
+
+                    b.Property<DateTime>("NotifDate");
 
                     b.HasKey("ID");
 
