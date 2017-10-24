@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
-    [Authorize(Roles ="root,Admin,Tech")]
+    [Authorize(Roles ="root,Admin,Tech,assistant")]
     public class InvestController : BaseCtrl
     {
         private readonly ILogger _logger;

@@ -89,18 +89,16 @@
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Num)
                                                             </td>
-                                                            <td>
-                                                                
+                                                            <td>                       
                                                                 @if(item.State != DossierState.Accept && item.State != DossierState.Refus ){
                                                                     <span class="label label-danger">
-                                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                                        @item.Subject.ToString().Substring(0, (item.Subject.Length > 50) ? 50 : item.Subject.Length ) 
                                                                     </span>
                                                                 }else{
                                                                     <span class="label label-success">
-                                                                        @Html.DisplayFor(modelItem => item.Subject)
+                                                                        @item.Subject.ToString().Substring(0, (item.Subject.Length > 50) ? 50 : item.Subject.Length )
                                                                     </span>
-                                                                }
-                                                                
+                                                                }              
                                                             </td>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.Commission.Lbl)

@@ -403,6 +403,7 @@ namespace HAICOP.Models
 	public class DocDetail
 	{
 		public Dossier Dossier {get ; set;}
+		public Commission Commission {get ; set;}
 		public Acheteur Acheteur { get ; set;}
 		public List<Fournisseur> Fournisseurs { get ; set;}
 		public Agent Rapporteur { get ; set;}

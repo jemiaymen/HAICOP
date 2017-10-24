@@ -36,25 +36,26 @@
                                             </thead>
                                             <tbody>
                                                 @foreach (var item in Model) {
-
-                                                    <tr>
+                                                    if(item.Montant > 0){
+                                                        <tr>
                                                         
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Lbl)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Nbr)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Count)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Montant )
-                                                        </td>
-                                                        <td>
-                                                            % @Html.DisplayFor(modelItem => item.Poucentage) 
-                                                        </td>
-                                                    </tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Lbl)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Nbr)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Count)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Montant )
+                                                            </td>
+                                                            <td>
+                                                                % @Html.DisplayFor(modelItem => item.Poucentage) 
+                                                            </td>
+                                                        </tr>
+                                                    } 
                                                 }
                                                 <tr>
                                                     <td>
@@ -100,7 +101,7 @@
                                         <div class="ls-wizard label-red" style="margin-top:15px">
                                             <h2> عدم الموافقة</h2>
                                             <div class="icon">
-                                                % @ViewBag.nok
+                                                % @ViewBag.nok.ToString("F2")
                                             </div>
                                         </div>
                                     </div>

@@ -24,21 +24,22 @@
                                                         @Html.DisplayNameFor(model => model.Dossier.Num)
                                                     </th>
                                                     <th>
+                                                        المشتري العمومي
+                                                    </th>
+                                                    <th>
                                                         @Html.DisplayNameFor(model => model.Dossier.Subject)
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Commission.Lbl)
+                                                        الهيكل
                                                     </th>
 
                                                     <th>
                                                         المقرر
                                                     </th>
 
+                                                    
                                                     <th>
-                                                        المشتري العمومي
-                                                    </th>
-                                                    <th>
-                                                            صاحب الصفقة
+                                                        صاحب الصفقة
                                                     </th>
                                                     <th>
                                                         اجابة
@@ -57,20 +58,21 @@
                                                             @Html.DisplayFor(modelItem => item.Dossier.Num)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
+                                                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
+                                                        </td>
+                                                        <td>
+                                                            @item.Dossier.Subject.ToString().Substring(0, (item.Dossier.Subject.Length > 50) ? 50 : item.Dossier.Subject.Length ) ...
                                                         </td>
 
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Commission.Lbl)
+                                                            @item.Commission.Lbl.ToString().Substring(0, (item.Commission.Lbl.Length > 25) ? 25 : item.Commission.Lbl.Length ) ...
                                                         </td>
 
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.Rapporteur.Name)
                                                         </td>
 
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
-                                                        </td>
+                                                        
 
                                                         <td>
                                                             @foreach(var f in item.Fournisseurs){

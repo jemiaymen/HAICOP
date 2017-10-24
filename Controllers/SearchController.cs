@@ -35,20 +35,17 @@ namespace HAICOP.Controllers
         {
             int num = 0;
             Int32.TryParse(q, out num);
-            var doc = db.Dossier.Include( d => d.Mails)
-                                .Include( d => d.Mettings)
-                                .Include( d => d.Commission)
-                                .Where(d => d.Subject.Contains(q) || d.Commission.Lbl.Contains(q) || d.Num == num );
 
-            if(doc.Count() == 0)
-            {
-                doc = db.AchInDossier.Include(d => d.Acheteur)
+            var doc = db.AchInDossier.Include(d => d.Acheteur)
                                      .Include(d => d.Dossier)
-                                     .Include(d => d.Dossier.Mails)
-                                     .Include( d => d.Dossier.Mettings)
                                      .Include(d => d.Dossier.Commission)
                                      .Where( d => d.Acheteur.Lbl.Contains(q) || d.Acheteur.LblLong.Contains(q))
                                      .Select(d => d.Dossier);
+
+            if(doc.Count() == 0)
+            {
+                doc = db.Dossier.Include( d => d.Commission)
+                                .Where(d => d.Subject.Contains(q) || d.Commission.Lbl.Contains(q) || d.Num == num );
                 
             }
 
@@ -62,8 +59,8 @@ namespace HAICOP.Controllers
                                                  .Where( f => f.DossierID == item.ID)
                                                  .Select(f => f.Fournisseur)
                                                  .ToList();
-
-                var tmp = new DocDetail { Dossier = item  };
+                var comm = db.Commission.FirstOrDefault( c => c.ID == item.CommissionID);
+                var tmp = new DocDetail { Dossier = item ,Commission = comm };
 
                 try
                 {
