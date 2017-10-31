@@ -371,7 +371,8 @@ namespace HAICOP.Controllers
                     await db.SaveChangesAsync();
 
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Response DossierID : {DossierID} MettingID : {metting.ID} .");
-                    return RedirectToAction("Index","Doc");
+
+                    return RedirectToAction("Select","Doc", new {id = DossierID});
                 }
                 catch (Exception ex)
                 {
@@ -456,7 +457,7 @@ namespace HAICOP.Controllers
                     throw;
                 }
 
-                return RedirectToAction("Index","Doc");
+                return RedirectToAction("Select","Doc", new {id = DossierID});
             }
             
             EditAvis m = new EditAvis();

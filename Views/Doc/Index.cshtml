@@ -28,32 +28,9 @@
                                                     <th>
                                                         الهيكل
                                                     </th>
-                                                    @if(ViewBag.ischef != null){
-
-                                                        }else if(ViewBag.isboc != null){
-                                                            <th>
-                                                                طباعة
-                                                            </th>
-                                                            <th>
-                                                                تحيين
-                                                            </th>
-                                                            <th>
-                                                                اظافة بريد
-                                                            </th>
-                                                        }else if(ViewBag.isadmin != null){
-                                                            <th>
-                                                                التمويل
-                                                            </th>
-                                                            <th>
-                                                                صاحب الصفقة
-                                                            </th>
-                                                            <th>
-                                                                القرار
-                                                            </th>
-                                                            <th>
-                                                                تحيين
-                                                            </th>
-                                                        }
+                                                    <th>
+                                                         تحديد
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody >
@@ -68,44 +45,15 @@
                                                             @Html.DisplayFor(modelItem => item.Num)
                                                         </td>
                                                         <td >
-                                                            @Html.DisplayFor(modelItem => item.Subject)
+                                                            @item.Subject.ToString().Substring(0, (item.Subject.Length > 70) ? 70 : item.Subject.Length ) ...
                                                         </td>
                                                         <td >
-                                                            @Html.DisplayFor(modelItem => item.Commission.Lbl)
+                                                            @item.Commission.Lbl.ToString().Substring(0, (item.Commission.Lbl.Length > 35) ? 35 : item.Commission.Lbl.Length ) ...
                                                         </td>
-                                                        @if(ViewBag.ischef != null){
-
-                                                        }else if(ViewBag.isboc != null){
-                                                            <td>
-                                                                <a asp-action="Boc"  asp-controller="Print" asp-route-id="@item.ID"><i class="fa fa-print"></i></a> 
-                                                            </td>
-                                                            <td >
-                                                                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                                <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  
-                                                            </td>
-                                                            <td >
-                                                                <a asp-action="AddMail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>
-                                                            </td>
-
-                                                            
-                                                        }else if(ViewBag.isadmin != null){
-                                                            <td >
-                                                                <a asp-action="AddFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a>
-                                                            </td>
-                                                            <td >
-                                                                <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
-                                                            </td>
-                                                            <td >
-                                                                <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a>
-                                                            </td>
-                                                            <td >
-                                                                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a> | 
-                                                                <a asp-action="Mail" asp-route-id="@item.ID"><i class="fa fa-envelope"></i></a>  |
-                                                                <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-check-square"></i></a> | 
-                                                                <a asp-action="EditFina" asp-route-id="@item.ID"><i class="fa fa-money"></i></a> |
-                                                                <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@item.ID"><i class="fa fa-dollar"></i></a>
-                                                            </td> 
-                                                        }
+                                                        <td>
+                                                            <a asp-action="Select"  asp-controller="Doc" asp-route-id="@item.ID"><i class="fa fa-check"></i></a> 
+                                                        </td>
+                                                        
                                                     </tr>
                                                     
                                                 }

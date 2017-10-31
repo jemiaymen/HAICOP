@@ -97,6 +97,54 @@ namespace HAICOP.Controllers
             
         }
 
+        public IActionResult Select(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var dossier =   db.Dossier.Include( c => c.Commission).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
+            if (dossier == null)
+            {
+                return NotFound();
+            }
+
+            role = (string) ViewBag.role.ToString();
+
+            switch(role)
+            {
+
+                case "Chef" : {
+                    ViewBag.ischef = true;
+                    return View(dossier) ;
+                }
+                case "BOC" : {
+                    ViewBag.isboc = true;
+                    return View(dossier) ;
+                }
+                case "Admin": {
+                    ViewBag.isadmin = true;
+                    return View(dossier) ;
+                }
+                case "root": {
+                    ViewBag.isadmin = true;
+                    return View(dossier) ;
+                }
+                case "President": {
+                    ViewBag.isadmin = true;
+                    return View(dossier) ;
+                }
+                case "assistant": {
+                    ViewBag.isadmin = true;
+                    return View(dossier) ;
+                }
+                default : {
+                    return View(dossier) ;
+                }
+            }
+
+        }
+
         [Authorize(Roles = "Chef,Admin,root,assistant")]
         public async Task<IActionResult> Dashboard()
         {
@@ -192,121 +240,150 @@ namespace HAICOP.Controllers
             
         }
 
-        public async Task<IActionResult> Rep()
+        public IActionResult Rep()
         {
 
-            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
-            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
-            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+            role = (string) ViewBag.role.ToString();
+            string id = ViewBag.user.Id;
 
-
-
-            if(ischef)
+            switch(role)
             {
-                string id = ViewBag.user.Id;
-                var comm = db.UserAgent.Include(a => a.Agent)
+
+                case "Chef" : {
+                    var comm = db.UserAgent.Include(a => a.Agent)
                                        .First( a => a.UserID == id && a.Agent.IsPresident == true );
 
-                var doc =   db.Dossier.Include( d => d.Mails)
-                                        .Include( d => d.Mettings)
-                                        .Include( d => d.Commission)
-                                        .Where(d => d.State == DossierState.Traitement && d.CommissionID == comm.Agent.CommissionID);
-                List<DocDetail> re = new List<DocDetail>();
-                foreach( var item in doc)
-                {
-                    var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                    .Where( f => f.DossierID == item.ID)
-                                                    .Select(f => f.Fournisseur)
-                                                    .ToList();
+                    var doc =   db.Dossier.Include( d => d.Mails)
+                                            .Include( d => d.Mettings)
+                                            .Include( d => d.Commission)
+                                            .Where(d => d.State == DossierState.Traitement && d.CommissionID == comm.Agent.CommissionID);
+                    List<DocDetail> re = new List<DocDetail>();
+                    foreach( var item in doc)
+                    {
+                        var four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                        .Where( f => f.DossierID == item.ID)
+                                                        .Select(f => f.Fournisseur)
+                                                        .ToList();
 
-                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                    
-                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                    
-                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                .Include( d => d.Metting)
-                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                        var achteur = db.AchInDossier.Include( a => a.Acheteur)
+                                                            .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                        
+                        var rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                            .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                        
+                        var dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                    .Include( d => d.Metting)
+                                                                    .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
 
-                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                        re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                    }
+
+                    ViewBag.ischef = true;                            
+                    return View(re);
                 }
-
-                ViewBag.ischef = true;                            
-                return View(re);
-            }
-
-            if(isboc)
-            {
-                string id = ViewBag.user.Id;
-
-                var comm = db.UserCommission.Where( a => a.UserID == id )
+                case "BOC" : {
+                    var comm = db.UserCommission.Where( a => a.UserID == id )
                                             .Select(a => a.CommissionID).ToList();
 
-                var doc =   db.Dossier.Include( d => d.Mails)
-                                        .Include( d => d.Mettings)
-                                        .Include( d => d.Commission)
-                                        .Where(d => d.State == DossierState.Traitement && comm.Contains(d.CommissionID));
+                    var doc =   db.Dossier.Include( d => d.Mails)
+                                            .Include( d => d.Mettings)
+                                            .Include( d => d.Commission)
+                                            .Where(d => d.State == DossierState.Traitement && comm.Contains(d.CommissionID));
 
-                List<DocDetail> re = new List<DocDetail>();
-                foreach( var item in doc)
-                {
-                    var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                    .Where( f => f.DossierID == item.ID)
-                                                    .Select(f => f.Fournisseur)
-                                                    .ToList();
+                    List<DocDetail> re = new List<DocDetail>();
+                    foreach( var item in doc)
+                    {
+                        var four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                        .Where( f => f.DossierID == item.ID)
+                                                        .Select(f => f.Fournisseur)
+                                                        .ToList();
 
-                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                    
-                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                    
-                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                .Include( d => d.Metting)
-                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                        var achteur = db.AchInDossier.Include( a => a.Acheteur)
+                                                            .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                        
+                        var rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                            .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                        
+                        var dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                    .Include( d => d.Metting)
+                                                                    .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
 
-                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                        re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                    }
+                    ViewBag.isboc = true;                            
+                    return View(re);
                 }
-                ViewBag.isboc = true;                            
-                return View(re);
-            }
+                default : {
 
-            if(isadmin || ispresident || isroot)
-            {
-                var doc =   db.Dossier.Include( d => d.Mails)
+                    try{
+
+                        var doc =   db.Dossier.Include( d => d.Mails)
                                         .Include( d => d.Mettings)
                                         .Include( d => d.Commission)
                                         .Where(d => d.State == DossierState.Traitement );
 
-                List<DocDetail> re = new List<DocDetail>();
-                foreach( var item in doc)
-                {
-                    var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                    .Where( f => f.DossierID == item.ID)
-                                                    .Select(f => f.Fournisseur)
-                                                    .ToList();
+                        List<DocDetail> re = new List<DocDetail>();
+                        
+                         foreach( var item in doc)
+                        {
+                            List<Fournisseur> four = new List<Fournisseur>();
+                            Acheteur achteur = new Acheteur();
+                            Agent rapporteur = new Agent();
+                            Dessision dessision = new Dessision();
 
-                    var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                        .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                    
-                    var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                        .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                    
-                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                .Include( d => d.Metting)
-                                                                .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                            try {
+                                     four = db.FourInDossier.Include( f => f.Fournisseur)
+                                                            .Where( f => f.DossierID == item.ID)
+                                                            .Select(f => f.Fournisseur)
+                                                            .ToList();
+                            }
+                            catch(Exception e)
+                            {
+                                _logger.LogError(1,e.Message);
+                            }
 
-                    re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                            try {
+                                achteur = db.AchInDossier.Include( a => a.Acheteur).SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
+                            }
+                            catch(Exception e)
+                            {
+                                _logger.LogError(1,e.Message);
+                            }
+
+                            try {
+                                rapporteur = db.Rapporteur.Include( r => r.Agent)
+                                                                .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                            }
+                            catch(Exception e)
+                            {
+                                _logger.LogError(1,e.Message);
+                            }
+                            try {
+                                dessision = db.DessisionInMetting.Include( d => d.Dessision)
+                                                                        .Include( d => d.Metting)
+                                                                        .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                            }
+                            catch(Exception e)
+                            {
+                                _logger.LogError(1,e.Message);
+                            }
+                            
+                            re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                        }
+                        ViewBag.isroot = true;                            
+                        return View(re);
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.LogError(1,ex.Message);
+                        ViewBag.isroot = true;                            
+                        return View();
+                    }
+                    
+                   
+                    
                 }
-                ViewBag.isroot = true;                            
-                return View(re);
             }
-
-            
-            return View();
 
             
         }
@@ -393,7 +470,7 @@ namespace HAICOP.Controllers
                     
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Select" , new {id = doc.ID});
                 }
                 catch (System.Exception ex)
                 {
@@ -564,37 +641,32 @@ namespace HAICOP.Controllers
 
             string userid = ViewBag.user.Id;
 
-            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
-            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
-            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
-            
+            role = (string) ViewBag.role.ToString();
 
+            switch(role)
+            {
 
-            if (isboc )
-            {
-                var comm = db.UserCommission.Include(a => a.Commission)
-                                        .Where( a => a.UserID == userid)
-					.AsNoTracking()
-                                        .Select( a => a.Commission).ToList();
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
-            }
-            else if(ischef)
-            {
-                var comm = db.UserAgent.Include(a => a.Agent)
+                case "Chef" : {
+                    var comm = db.UserAgent.Include(a => a.Agent)
                                     .Include(a => a.Agent.Commission)
                                     .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
 				    .AsNoTracking()
                                     .Select(a => a.Agent.Commission)
                                     .ToList();
                 ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+                }break;
+                case "BOC" : {
+                    var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where( a => a.UserID == userid)
+					.AsNoTracking()
+                                        .Select( a => a.Commission).ToList();
+                    ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+                }break;
+                default : {
+                    ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);
+                }break;
             }
-            else if(isadmin || ispresident || isroot)
-            {
-              ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);  
-            }
-
+        
             
             NewDossier doc = new NewDossier();
             doc.InitFromAchaInDossier(dossier);
@@ -649,7 +721,7 @@ namespace HAICOP.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Select", new {id = id});
             }
             
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , AcheteurID);
@@ -883,7 +955,7 @@ namespace HAICOP.Controllers
 
             if(doc.Financement == Financement.Foreign || doc.Financement == Financement.Local )
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Select", new {id = id});
             }
 
             return View(new AddFina { DossierID = id.GetValueOrDefault() });
@@ -923,7 +995,7 @@ namespace HAICOP.Controllers
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Fina : { indoc.DossierID} .");
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Select", new {id = indoc.DossierID});
                 }
                 catch (Exception ex)
                 {

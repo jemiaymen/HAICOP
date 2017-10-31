@@ -1,0 +1,132 @@
+@using System.Linq
+@model HAICOP.Models.Dossier
+
+@{
+    ViewData["Title"] = "تحديد ملف";
+    ViewData["SubMenu"] = "التصرف في الملفات";
+}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="ls-editable-table table-responsive ">
+                                        <table class="table table-bordered table-striped ls-table" >
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        التعهد
+                                                    </th>
+                                                    <th>
+                                                        عددالملف
+                                                    </th>
+                                                    <th>
+                                                        الموضوع
+                                                    </th>
+                                                    <th>
+                                                        الهيكل
+                                                    </th>
+                                                    @if(ViewBag.isboc != null){
+                                                            <th>
+                                                                طباعة
+                                                            </th>
+                                                            <th>
+                                                                تحيين
+                                                            </th>
+                                                            <th>
+                                                                اظافة بريد
+                                                            </th>
+                                                        }else if(ViewBag.isadmin != null){
+                                                            <th>
+                                                                التمويل
+                                                            </th>
+                                                            <th>
+                                                                صاحب الصفقة
+                                                            </th>
+                                                            <th>
+                                                                القرار
+                                                            </th>
+                                                            <th>
+                                                                اظافة بريد
+                                                            </th>
+                                                            <th>
+                                                                تحيين
+                                                            </th>
+                                                        }
+                                                </tr>
+                                            </thead>
+                                            <tbody >
+                                                <center>
+
+                                                    <tr >
+                                                        
+                                                        <td >
+                                                            @Html.DisplayFor(modelItem => Model.ProDate)
+                                                        </td>
+                                                        <td >
+                                                            @Html.DisplayFor(modelItem => Model.Num)
+                                                        </td>
+                                                        <td >
+                                                            @Model.Subject.ToString().Substring(0, (Model.Subject.Length > 55) ? 55 : Model.Subject.Length ) ...
+                                                        </td>
+                                                        <td >
+                                                            @Model.Commission.Lbl.ToString().Substring(0, (Model.Commission.Lbl.Length > 30) ? 30 : Model.Commission.Lbl.Length ) ...
+                                                        </td>
+                                                        @if(ViewBag.isboc != null){
+                                                            <td>
+                                                                <a asp-action="Boc"  asp-controller="Print" asp-route-id="@Model.ID"><i class="fa fa-print"></i></a> 
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="Edit" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a> | 
+                                                                <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>  
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
+                                                            </td>
+
+                                                            
+                                                        }else if(ViewBag.isadmin != null){
+                                                            <td >
+                                                                <a asp-action="AddFina" asp-route-id="@Model.ID"><i class="fa fa-money"></i></a>
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@Model.ID"><i class="fa fa-dollar"></i></a>
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="Rep" asp-controller="Avis"  asp-route-id="@Model.ID"><i class="fa fa-check-square"></i></a>
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
+                                                            </td>
+                                                            <td >
+                                                                <a asp-action="EditFina" asp-route-id="@Model.ID"><i class="fa fa-money"></i></a> |
+                                                                <a asp-action="ListEditFour" asp-controller="Avis"  asp-route-id="@Model.ID"><i class="fa fa-dollar"></i></a> |
+                                                                <a asp-action="EditAvis" asp-controller="Avis"  asp-route-id="@Model.ID"><i class="fa fa-check-square"></i></a> | 
+                                                                <a asp-action="Edit" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a> | 
+                                                                <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>  
+                                                                
+                                                            </td> 
+                                                        }
+                                                    </tr>
+                                                    
+                                                </center>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+}
+
+
+
