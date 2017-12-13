@@ -1,182 +1,137 @@
-﻿@using System.Collections.Generic
-@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Http.Authentication
-@model LoginViewModel
-@inject SignInManager<ApplicationUser> SignInManager
+﻿@model LoginViewModel
 
+@{Layout = null; }
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-<html lang="ar">
-
-
+<!doctype html>
+<html lang="ar-AE" dir="rtl">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="HAICOP">
-    <meta name="author" content="jemix">
+    <title>الدخول إلى الحساب</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="" />
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-    <!-- Viewport metatags -->
-    <meta name="HandheldFriendly" content="true" />
-    <meta name="MobileOptimized" content="320" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
-    <!-- iOS webapp metatags -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
-    <!-- iOS webapp icons -->
-    <link rel="apple-touch-icon-precomposed" href="/images/ios/fickle-logo-72.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/ios/fickle-logo-72.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/ios/fickle-logo-114.png" />
-
-    <!-- TODO: Add a favicon -->
-    <link rel="shortcut icon" href="/images/ico/fab.ico">
-
-    <title>HAICOP - Login</title>
-
-    <!--Page loading plugin Start -->
-    <link rel="stylesheet" href="/css/rtl-css/plugins/pace-rtl.css">
-    <script src="/js/pace.min.js"></script>
-    <!--Page loading plugin End   -->
-
-    <!-- Plugin Css Put Here -->
-    <link href="/css/bootstrap-rtl.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/plugins/ladda-themeless.min.css">
-
-    <link href="/css/plugins/humane_themes/bigbox.css" rel="stylesheet">
-    <link href="/css/plugins/humane_themes/jackedup.css" rel="stylesheet">
-
-    <!-- Plugin Css End -->
-    <!-- Custom styles Style -->
-    <link href="/css/rtl-css/style-rtl.css" rel="stylesheet">
-    <!-- Custom styles Style End-->
-
-    <!-- Responsive Style For-->
-    <link href="/css/rtl-css/responsive-rtl.css" rel="stylesheet">
-    <!-- Responsive Style For-->
-
-    <!-- Custom styles for this template -->
+    <link href="~/css/ar/static.ar.b.css" media="all" rel="stylesheet" type="text/css">
+    <link href="~/css/ar/dewa-style.min.css" media="all" rel="stylesheet" type="text/css">
+    <link href="~/css/ar/typography.ar.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="~/css/ar/print.css" media="print" rel="stylesheet" type="text/css" />
+    <link href="~/css/site.css" rel="stylesheet" type="text/css" />
 
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+
+
+    <!--[if lte IE 9]>
+        <link href="content/static.msie_9.css" media="all" rel="stylesheet" type="text/css"/>
+    <![endif]-->
+    <!--[if lte IE 8]>
+      <link href="content/static.msie_8.ar.css" media="all" rel="stylesheet" type="text/css">
+      <script>
+        document.createElement( 'header' );
+        document.createElement( 'footer' );
+        document.createElement( 'nav' );
+        document.createElement( 'section' );
+    </script>
     <![endif]-->
 
-    <style>
-           .login-screen{
-               background: #c0c0c0 !important;
-               color: #ff7878 !important;
-           } 
-           .login-box {
-               background: #fff !important;
-               color: #ff7878 !important;
-           }
+    <link rel="shortcut icon" href="content/images/favicon.ico">
 
-           .login-box .login-form input, .login-box .forgot-pass-box input {
-               background: #fff !important;
-           }
+    <style type="text/css">
+        .ajax-loader-overlay {
+            position: absolute;
+            top: 0;
+            background: url("content/images/roller.gif") no-repeat;
+        }
+
+        .ajax-placeholder {
+            min-height: 100px;
+            position: relative;
+        }
+
+        .validation-summary-errors ul li {
+            padding-bottom: 5px;
+        }
+
+        .bidi-override-ltr {
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
     </style>
 
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+
 </head>
-<body class="login-screen">
-<section>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="login-box">
-                    <div class="login-content">
-                            <img src="/images/logo.png" alt="logo">
+<body id="page">
+    <!--[if lte IE 8]>
+        <div class="browserupgrade">
+            <div class="grid browserupgrade__grid-row">
+                <div class="grid__column grid__column--12">
+                        <p dir="rtl" class="browserupgrade__message">المتصفح قديم. الرجاء القيام بترقية المتصفح للاستخدام الأمثل للموقع.</p>
+                </div>
+            </div>
+        </div>
+    <![endif]-->
 
-                        <h3>HAICOP</h3>
-                        <div class="social-btn-login">
-                            <ul>
-                                <li><a href="javascript:void(0)"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="fa fa-linkedin"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="fa fa-google-plus"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="fa fa-github"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="fa fa-bitbucket"></i></a></li>
-                            </ul>
-                            <!--<button class="btn ls-dark-btn rounded"><i class="fa fa-facebook"></i></button>
-                            <button class="btn ls-dark-btn rounded"><i class="fa fa-twitter"></i></button>
-                            <button class="btn ls-dark-btn rounded"><i class="fa fa-linkedin"></i></button>
-                            <button class="btn ls-dark-btn rounded"><i class="fa fa-google-plus"></i></button>
-                            <button class="btn ls-dark-btn rounded"><i class="fa fa-github"></i></button>
-                            <button class="btn ls-dark-btn rounded"><i class="fa fa-bitbucket"></i></button>-->
+
+
+
+
+    <div id="rs_area" class="grid">
+        <div class="grid__row">
+            <div class="grid__column grid__column--12">
+                <div class="m26-page-title title_message">
+
+                    <h1 class="text__page-title">الدخول إلى حسابي</h1>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="grid">
+
+            <div class="grid__row">
+                <div class="grid__column grid__column--12 grid__column--form">
+                    <form asp-action="Login" asp-controller="Account" class="form" method="post">
+
+                        <fieldset class="fieldset">
+                            <legend class="legend-color">.</legend>
+                            <div class="form-field form-field--text">
+                                <label for="Email" class="form-field__label">
+                                    اسم المستخدم
+
+                                </label>
+                                <span class="form-field__input-wrapper">
+                                    <input asp-for="Email" class="form-field__input form-field__input--text" placeholder="اسم المستخدم" />
+                                </span>
+                                <span class="text-danger" asp-validation-for="Email"></span>
+                            </div>
+                            <div class="form-field form-field--text">
+                                <label for="form-field-login-main-password" class="form-field__label">
+                                    كلمة المرور
+
+                                </label>
+                                <span class="form-field__input-wrapper">
+                                    <input asp-for="Password" class="form-field__input form-field__input--text"  />
+                                </span>
+                                <span class="text-danger" asp-validation-for="Password"></span>
+                            </div>
+                        </fieldset>
+                        <div class="form-field__button">
+                            <button id="loginButton" type="submit" class="button button--primary" data-submission-text="جاري الدخول...">دخول</button>
                         </div>
-                    </div>
-
-                    <div class="login-form">
-                        <form id="form-login" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal ls_form">
-                            <div class="input-group ls-group-input">
-                                <input class="form-control" asp-for="Email" type="text" placeholder="إسم المستخدم">
-                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                
-                            </div>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-
-
-                            <div class="input-group ls-group-input">
-
-                                <input  placeholder="كلمة السر" asp-for="Password" class="form-control" >
-                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                
-                            </div>
-                            <span asp-validation-for="Password" class="text-danger"></span>       
-                            <div class="remember-me">
-                                <input asp-for="RememberMe" >
-                                <span>@Html.DisplayNameFor(m => m.RememberMe)</span>
-                            </div>
-
-                            <div class="input-group ls-group-input login-btn-box">
-                                <button type="submit" class="btn ls-dark-btn ladda-button col-md-12 col-sm-12 col-xs-12" data-style="slide-down">
-                                    <span class="ladda-label"><i class="fa fa-key"></i></span>
-                                </button>
-
-                                <a class="forgot-password" href="javascript:void(0)">نسيت كلمة السر</a>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="forgot-pass-box">
-                        <form action="#" class="form-horizontal ls_form">
-                            <div class="input-group ls-group-input login-btn-box">
-                                <a class="login-view" href="mailto:haicop@pm.gov.tn">يرجى الإتصال بالهيئة العليا للطلب العمومي</a>
-                            </div>
-                            <div class="input-group ls-group-input login-btn-box">
-                                <a class="login-view" href="javascript:void(0)">رجوع</a> 
-                            </div>
-                        </form>
-                    </div>
-
+                    </form>
+                    <ul class="form-links">
+                        <li class="form-links__item"><a href="forgot-password.html" class="form-links__link">نسيت كلمة المرور؟</a></li>
+                        <li class="form-links__item"><a href="forgot-username.html" class="form-links__link">هل فقدت اسم المستخدم؟</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    <p class="copy-right big-screen hidden-xs hidden-sm">
-        <span>&#169;</span> HAICOP <span class="footer-year">2017</span>
-    </p>
-</section>
+
 
 </body>
-<script src="/js/lib/jquery-2.1.1.min.js"></script>
-<script src="/js/lib/jquery.easing.js"></script>
-<!--Script for notification start-->
-<script src="/js/loader/spin.js"></script>
-<script src="/js/loader/ladda.js"></script>
-<script src="/js/humane.min.js"></script>
-<!--Script for notification end-->
-
-<script src="/js/pages/login.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-
 </html>
-

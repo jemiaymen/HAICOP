@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using System.IO;
@@ -24,7 +23,6 @@ namespace HAICOP.Controllers
         private IHostingEnvironment _environment;
         private ILogger _logger;
         private string role ;
-        private string Id;
 
         public DocController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db, 
                             IHostingEnvironment environment , ILoggerFactory loggerFactory ):
@@ -34,410 +32,794 @@ namespace HAICOP.Controllers
             _logger = loggerFactory.CreateLogger<DocController>();
         }
 
+        #region update style
 
-        public async Task<IActionResult> Index()
+        private bool DossierExists(int id)
         {
-            role = (string) ViewBag.role.ToString();
-            Id = ViewBag.user.Id;
-
-            switch(role)
-            {
-
-                case "Chef" : {
-                    var comm = db.UserAgent.Include(a => a.Agent).First( a => a.UserID == Id && a.Agent.IsPresident == true );
-                    var ret = await db.Dossier.Include(d => d.Commission)
-                                            .Include( d => d.Mails)
-                                            .Where( d =>  d.CommissionID == comm.Agent.CommissionID && 
-                                                        (d.State != DossierState.Accept && d.State != DossierState.Refus )  )
-                                            .ToListAsync();
-                    ViewBag.ischef = true;
-                    return View(ret) ;
-                }
-                case "BOC" : {
-                    var comm = db.UserCommission.Where( a => a.UserID == Id ).Select(a => a.CommissionID).ToList();
-                    var ret = await db.Dossier.Include(d => d.Commission)
-                                            .Include( d => d.Mails)
-                                            .Where( d => comm.Contains(d.CommissionID) &&  d.State != DossierState.Accept && d.State != DossierState.Refus )
-                                            .ToListAsync();
-                    ViewBag.isboc = true;
-                    return View(ret) ;
-                }
-                case "Admin": {
-                    ViewBag.isadmin = true;
-                    var re = await db.Dossier.Include(d => d.Commission).Include( d => d.Mails)
-                                             .Where( d =>  d.State != DossierState.Accept && d.State != DossierState.Refus  )
-                                             .ToListAsync();
-                    return View(re);
-                }
-                case "root": {
-                    ViewBag.isadmin = true;
-                    var re = await db.Dossier.Include(d => d.Commission).Include( d => d.Mails)
-                                             .Where( d =>  d.State != DossierState.Accept && d.State != DossierState.Refus  )
-                                             .ToListAsync();
-                    return View(re);
-                }
-                case "President": {
-                    ViewBag.isadmin = true;
-                    var re = await db.Dossier.Include(d => d.Commission).Include( d => d.Mails)
-                                             .Where( d =>  d.State != DossierState.Accept && d.State != DossierState.Refus  )
-                                             .ToListAsync();
-                    return View(re);
-                }
-                case "assistant": {
-                    ViewBag.isadmin = true;
-                    var re = await db.Dossier.Include(d => d.Commission).Include( d => d.Mails)
-                                             .Where( d =>  d.State != DossierState.Accept && d.State != DossierState.Refus  )
-                                             .ToListAsync();
-                    return View(re);
-                }
-                default : {
-                    return View();
-                }
-            }
-            
+            return db.Dossier.Any(e => e.ID == id);
         }
 
-        public IActionResult Select(int? id)
+        private bool CommExists(int id)
         {
+            return db.Commission.Any(e => e.ID == id);
+        }
+
+        private async Task<string> Upload(IFormFile Location)
+        {
+            var fileExt = System.IO.Path.GetExtension(Location.FileName);
+
+            if (fileExt != ".pdf")
+            {
+                return "";
+            }
+            var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), Guid.NewGuid().ToString() + fileExt);
+            try
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Location.CopyToAsync(fileStream);
+                }
+                return Path.GetFileName(filePath);
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        private bool Del(string url)
+        {
+            try
+            {
+                var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), url);
+                _logger.LogInformation(3, filePath);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    _logger.LogInformation(3, "del file");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(1, ex.Message);
+            }
+            return false;
+        }
+
+        private void printError()
+        {
+            foreach (var pair in ModelState)
+            {
+                if (pair.Value.Errors.Count > 0)
+                {
+                    //errors[pair.Key] = pair.Value.Errors.Select(error => error.ErrorMessage).ToList();
+                    _logger.LogError(3, pair.Key);
+                }
+            }
+        }
+
+        public async Task<IActionResult> CommDetail(int? id)
+        {
+            ViewBag.Menu = "الهيكل";
             if (id == null)
             {
                 return NotFound();
             }
-            var dossier =   db.Dossier.Include( c => c.Commission).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
-            if (dossier == null)
+
+            if (!CommExists(id.GetValueOrDefault()))
             {
                 return NotFound();
             }
 
-            role = (string) ViewBag.role.ToString();
+            role = (string)ViewBag.role.ToString();
 
-            switch(role)
+
+            switch (role)
             {
-
-                case "Chef" : {
-                    ViewBag.ischef = true;
-                    return View(dossier) ;
-                }
-                case "BOC" : {
-                    ViewBag.isboc = true;
-                    return View(dossier) ;
-                }
-                case "Admin": {
-                    ViewBag.isadmin = true;
-                    return View(dossier) ;
-                }
-                case "root": {
-                    ViewBag.isadmin = true;
-                    return View(dossier) ;
-                }
-                case "President": {
-                    ViewBag.isadmin = true;
-                    return View(dossier) ;
-                }
-                case "assistant": {
-                    ViewBag.isadmin = true;
-                    return View(dossier) ;
-                }
-                default : {
-                    return View(dossier) ;
-                }
-            }
-
-        }
-
-        [Authorize(Roles = "Chef,Admin,root,assistant")]
-        public async Task<IActionResult> Dashboard()
-        {
-
-            string id = ViewBag.user.Id;
-
-            var comm = db.UserAgent.Include(a => a.Agent)
-                                   .First( a => a.UserID == id && a.Agent.IsPresident == true );
-
-            var docs = await db.AchInDossier.Include( d => d.Dossier)
+                case "BOC":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
-                                            .Where( d =>  d.Dossier.CommissionID == comm.Agent.CommissionID )
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() )
                                             .ToListAsync();
 
-            var rapp = await db.Rapporteur.Include(r => r.Agent)
-                                          .Include( r => r.Dossier)
-                                          .Where( r => r.Dossier.CommissionID == comm.Agent.CommissionID)
-                                          .ToListAsync();
-                                          
-            List<RapporteurView> re = new List<RapporteurView>();
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .Where(r => r.Dossier.CommissionID == id.GetValueOrDefault())
+                                                      .ToListAsync();
 
-            foreach( var d in docs)
-            {
-                re.Add(new RapporteurView { Dossier = d,Rapporteur = rapp.FirstOrDefault( r => r.DossierID == d.DossierID) });
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                case "assistant":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() )
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .Where(r => r.Dossier.CommissionID == id.GetValueOrDefault())
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+
+                    }
+                case "root":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault())
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .Where(r => r.Dossier.CommissionID == id.GetValueOrDefault())
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+
+                    }
+                default:
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault())
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .Where(r => r.Dossier.CommissionID == id.GetValueOrDefault())
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+                    }
 
             }
 
-            ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.CommissionID == comm.Agent.CommissionID ), "ID", "Name" );
 
-            return View(re) ;
-            
         }
 
-        [Authorize(Roles = "root,Admin,BOC,Chef,President,assistant")]
         public async Task<IActionResult> All()
         {
-            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
-            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
-            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
+            ViewBag.Menu = "كل الملفات";
 
+            role = (string)ViewBag.role.ToString();
 
-
-
-            if(ischef)
+            switch (role)
             {
-                string id = ViewBag.user.Id;
+                case "Boc":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .ToListAsync();
 
-                var comm = db.UserAgent.Include(a => a.Agent)
-                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
-                _logger.LogDebug(2,comm.Agent.CommissionID  +"");
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
 
-                var ret = await db.Dossier.Include(d => d.Commission)
-                                         .Include( d => d.Mails)
-                                         .Where( d =>  d.CommissionID == comm.Agent.CommissionID && 
-                                                      (d.State != DossierState.Creation && d.State != DossierState.Accept && d.State != DossierState.Refus )  )
-                                         .ToListAsync();
-                ViewBag.ischef = true;
-                return View(ret) ;
+
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                case "assistant":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                case "root":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+  
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                default:
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+                    }
 
             }
-            if(isboc)
-            {
-                
-                string id = ViewBag.user.Id;
-
-                var comm = db.UserCommission.Where( a => a.UserID == id )
-                                            .Select(a => a.CommissionID).ToList();
-
-                var ret = await db.Dossier.Include(d => d.Commission)
-                                          .Include( d => d.Mails)
-                                          .Where( d => comm.Contains(d.CommissionID) &&  (d.State != DossierState.Creation && d.State != DossierState.Accept && d.State != DossierState.Refus ) )
-                                          .ToListAsync();
-                ViewBag.isboc = true;
-                return View(ret) ;
-
-            }
-
-            if(isadmin || ispresident || isroot) 
-            {
-                ViewBag.isadmin = true;
-
-                var re = await db.Dossier.Include(d => d.Commission)
-                                        .Include( d => d.Mails)
-                                        .Where( d =>  d.State != DossierState.Creation && d.State != DossierState.Accept && d.State != DossierState.Refus )
-                                        .ToListAsync();
-                return View(re);
-            }
-
-            return View();
-            
         }
 
-        public IActionResult Rep()
+        public async Task<IActionResult> Done(int? id)
         {
+            ViewBag.Menu = "الملفات التي تم الإجابة عليها";
 
-            role = (string) ViewBag.role.ToString();
-            string id = ViewBag.user.Id;
+            role = (string)ViewBag.role.ToString();
 
-            switch(role)
+            if(id == null)
             {
-
-                case "Chef" : {
-                    var comm = db.UserAgent.Include(a => a.Agent)
-                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
-
-                    var doc =   db.Dossier.Include( d => d.Mails)
-                                            .Include( d => d.Mettings)
-                                            .Include( d => d.Commission)
-                                            .Where(d => d.State == DossierState.Traitement && d.CommissionID == comm.Agent.CommissionID);
-                    List<DocDetail> re = new List<DocDetail>();
-                    foreach( var item in doc)
-                    {
-                        var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                        .Where( f => f.DossierID == item.ID)
-                                                        .Select(f => f.Fournisseur)
-                                                        .ToList();
-
-                        var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                            .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                        
-                        var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                            .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                        
-                        var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                    .Include( d => d.Metting)
-                                                                    .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
-
-                        re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
-                    }
-
-                    ViewBag.ischef = true;                            
-                    return View(re);
-                }
-                case "BOC" : {
-                    var comm = db.UserCommission.Where( a => a.UserID == id )
-                                            .Select(a => a.CommissionID).ToList();
-
-                    var doc =   db.Dossier.Include( d => d.Mails)
-                                            .Include( d => d.Mettings)
-                                            .Include( d => d.Commission)
-                                            .Where(d => d.State == DossierState.Traitement && comm.Contains(d.CommissionID));
-
-                    List<DocDetail> re = new List<DocDetail>();
-                    foreach( var item in doc)
-                    {
-                        var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                        .Where( f => f.DossierID == item.ID)
-                                                        .Select(f => f.Fournisseur)
-                                                        .ToList();
-
-                        var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                            .SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                        
-                        var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                            .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                        
-                        var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                    .Include( d => d.Metting)
-                                                                    .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
-
-                        re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
-                    }
-                    ViewBag.isboc = true;                            
-                    return View(re);
-                }
-                default : {
-
-                    try{
-
-                        var doc =   db.Dossier.Include( d => d.Mails)
-                                        .Include( d => d.Mettings)
-                                        .Include( d => d.Commission)
-                                        .Where(d => d.State == DossierState.Traitement );
-
-                        List<DocDetail> re = new List<DocDetail>();
-                        
-                         foreach( var item in doc)
+                switch (role)
+                {
+                    case "Boc":
                         {
-                            List<Fournisseur> four = new List<Fournisseur>();
-                            Acheteur achteur = new Acheteur();
-                            Agent rapporteur = new Agent();
-                            Dessision dessision = new Dessision();
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
+                                                .ToListAsync();
 
-                            try {
-                                     four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                            .Where( f => f.DossierID == item.ID)
-                                                            .Select(f => f.Fournisseur)
-                                                            .ToList();
-                            }
-                            catch(Exception e)
-                            {
-                                _logger.LogError(1,e.Message);
-                            }
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
 
-                            try {
-                                achteur = db.AchInDossier.Include( a => a.Acheteur).SingleOrDefault( a => a.DossierID == item.ID).Acheteur ;
-                            }
-                            catch(Exception e)
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
                             {
-                                _logger.LogError(1,e.Message);
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
-                            try {
-                                rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                                .SingleOrDefault(a => a.DossierID == item.ID).Agent;
-                            }
-                            catch(Exception e)
-                            {
-                                _logger.LogError(1,e.Message);
-                            }
-                            try {
-                                dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                                        .Include( d => d.Metting)
-                                                                        .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
-                            }
-                            catch(Exception e)
-                            {
-                                _logger.LogError(1,e.Message);
-                            }
-                            
-                            re.Add(new DocDetail { Dossier = item , Fournisseurs = four, Acheteur = achteur , Rapporteur = rapporteur , Dessision = dessision });
+                            return View("_ListComm", re);
+
                         }
-                        ViewBag.isroot = true;                            
-                        return View(re);
-                    }
-                    catch(Exception ex)
-                    {
-                        _logger.LogError(1,ex.Message);
-                        ViewBag.isroot = true;                            
-                        return View();
-                    }
-                    
-                   
-                    
+                    case "assistant":
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+
+                        }
+                    case "root":
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+
+                        }
+                    default:
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+                        }
+
                 }
             }
 
-            
+            if (!CommExists(id.GetValueOrDefault()))
+            {
+                return NotFound();
+            }
+
+            switch (role)
+            {
+                case "Boc":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus ))
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+
+                    }
+                case "assistant":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+
+                    }
+                case "root":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+
+                    }
+                default:
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm", re);
+                    }
+
+            }
+        }
+
+        public async Task<IActionResult> Index(int? id)
+        {
+            ViewBag.Menu = "الملفات الجارية";
+
+            role = (string)ViewBag.role.ToString();
+
+            if(id == null)
+            {
+                switch (role)
+                {
+                    case "Boc":
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+
+                        }
+                    case "assistant":
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+
+                        }
+                    case "root":
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+                            ViewBag.Auth = true;
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+
+                        }
+                    default:
+                        {
+                            var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                                .Include(d => d.Dossier.Commission)
+                                                .Include(d => d.Acheteur)
+                                                .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                                .ToListAsync();
+
+                            var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                          .Include(r => r.Dossier)
+                                                          .ToListAsync();
+
+
+                            List<DetailCommView> re = new List<DetailCommView>();
+
+                            foreach (var d in docs)
+                            {
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            }
+
+                            return View("_ListComm", re);
+                        }
+
+                }
+            }
+
+            if (!CommExists(id.GetValueOrDefault()))
+            {
+                return NotFound();
+            }
+
+           
+
+            switch (role)
+            {
+                case "Boc":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                case "assistant":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                case "root":
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+                        ViewBag.Auth = true;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+
+                    }
+                default:
+                    {
+                        var docs = await db.AchInDossier.Include(d => d.Dossier)
+                                            .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Acheteur)
+                                            .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
+                                            .ToListAsync();
+
+                        var rapp = await db.Rapporteur.Include(r => r.Agent)
+                                                      .Include(r => r.Dossier)
+                                                      .ToListAsync();
+
+                        ViewBag.CommLbl = docs.First().Dossier.Commission.Lbl;
+
+                        List<DetailCommView> re = new List<DetailCommView>();
+
+                        foreach (var d in docs)
+                        {
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                        }
+
+                        return View("_ListComm",re);
+                    }
+
+            }
         }
 
         [Authorize(Roles = "BOC,Admin,root,assistant")]
         public IActionResult New()
         {
+            ViewBag.Menu = "تسجيل ملف";
+
             string id = ViewBag.user.Id;
             var comm = db.UserCommission.Include(a => a.Commission)
-                                        .Where( a => a.UserID == id)
-                                        .Select( a => a.Commission).ToList();
-            if(comm == null)
+                                        .Where(a => a.UserID == id)
+                                        .Select(a => a.Commission).ToList();
+            if (comm.Count() < 1)
             {
-                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" );
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
             }
-            else 
+            else
             {
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
-            }                            
-            
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" );
-            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl"); 
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl");
+            }
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
 
             NewDossier model = new NewDossier();
-            model.Num = ViewBag.user.Num + 1;
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="root,Admin,BOC,assistant")]
-        public async Task<IActionResult> New(int? FournisseurID, [Bind("ID,CommissionID,Subject,Num,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] NewDossier dossier)
+        public async Task<IActionResult> New(int? FournisseurID, [Bind("ID,CommissionID,Subject,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] NewDossier dossier)
         {
-            if( (dossier.DocDate > dossier.ProDate) || (dossier.DocDate > dossier.EnterDate) )
+            ViewBag.Menu = "تسجيل ملف";
+
+            if ((dossier.DocDate > dossier.ProDate) || (dossier.DocDate > dossier.EnterDate))
             {
                 ModelState.AddModelError("DocDate", "يجب أن يكون تاريخ الملف أقل من تاريخ التعهد");
             }
 
-            if(dossier.DocDate.DayOfWeek == DayOfWeek.Sunday || dossier.DocDate.DayOfWeek == DayOfWeek.Saturday)
+            if (dossier.DocDate.DayOfWeek == DayOfWeek.Sunday || dossier.DocDate.DayOfWeek == DayOfWeek.Saturday)
             {
-                ModelState.AddModelError("DocDate","يجب أن يكون تاريخ الملف داخل أوقات العمل ");
+                ModelState.AddModelError("DocDate", "يجب أن يكون تاريخ الملف داخل أوقات العمل ");
             }
 
-            if(dossier.ProDate.DayOfWeek == DayOfWeek.Sunday || dossier.ProDate.DayOfWeek == DayOfWeek.Saturday)
+            if (dossier.ProDate.DayOfWeek == DayOfWeek.Sunday || dossier.ProDate.DayOfWeek == DayOfWeek.Saturday)
             {
-                ModelState.AddModelError("ProDate","يجب أن يكون تاريخ التعهد داخل أوقات العمل ");
+                ModelState.AddModelError("ProDate", "يجب أن يكون تاريخ التعهد داخل أوقات العمل ");
             }
 
-            if(dossier.EnterDate.DayOfWeek == DayOfWeek.Sunday || dossier.EnterDate.DayOfWeek == DayOfWeek.Saturday)
+            if (dossier.EnterDate.DayOfWeek == DayOfWeek.Sunday || dossier.EnterDate.DayOfWeek == DayOfWeek.Saturday)
             {
-                ModelState.AddModelError("EnterDate","يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
+                ModelState.AddModelError("EnterDate", "يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
             }
 
-            
+
 
             ModelState.Remove("Url");
 
@@ -448,29 +830,47 @@ namespace HAICOP.Controllers
 
                 try
                 {
-                    Dossier doc = new Dossier{ CommissionID = dossier.CommissionID , Subject = dossier.Subject ,
-                                            Num = dossier.Num , Type = dossier.Type , Nature = dossier.Nature,
-                                            DocDate = dossier.DocDate , EnterDate = dossier.EnterDate , ProDate = dossier.ProDate  };
+                    var num = await db.NextNum.FirstOrDefaultAsync(a => a.CommissionID == dossier.CommissionID);
+
+                    Dossier doc = new Dossier
+                    {
+                        CommissionID = dossier.CommissionID,
+                        Subject = dossier.Subject,
+                        Num = num.Next,
+                        Type = dossier.Type,
+                        Nature = dossier.Nature,
+                        DocDate = dossier.DocDate,
+                        EnterDate = dossier.EnterDate,
+                        ProDate = dossier.ProDate
+                    };
                     db.Add(doc);
-                    Mail mail = new Mail { Dossier = doc , Ref = dossier.Ref , OriginRef = dossier.OriginRef , From = dossier.From , 
-                                                MailType = dossier.MailType , MailNature = dossier.MailNature , MailDate = dossier.MailDate ,
-                                                Desc = dossier.Desc };
-                        
+                    Mail mail = new Mail
+                    {
+                        Dossier = doc,
+                        Ref = dossier.Ref,
+                        OriginRef = dossier.OriginRef,
+                        From = dossier.From,
+                        MailType = dossier.MailType,
+                        MailNature = dossier.MailNature,
+                        MailDate = dossier.MailDate,
+                        Desc = dossier.Desc
+                    };
+
                     await db.SaveChangesAsync();
-                    AchInDossier ach = new AchInDossier { Dossier = doc , AcheteurID = dossier.AcheteurID};
+                    AchInDossier ach = new AchInDossier { Dossier = doc, AcheteurID = dossier.AcheteurID };
                     db.Add(ach);
                     db.Add(mail);
-                    ViewBag.user.Num += 1;
-                    db.Update(ViewBag.user);
-                    if(FournisseurID != null )
+                    num.Next += 1;
+                    db.Update(num);
+                    if (FournisseurID != null)
                     {
-                        var rap = new FourInDossier{ Dossier = doc, FournisseurID = FournisseurID.GetValueOrDefault()};
+                        var rap = new FourInDossier { Dossier = doc, FournisseurID = FournisseurID.GetValueOrDefault() };
                         await db.AddAsync(rap);
                     }
-                    
+
                     await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
-                    return RedirectToAction("Select" , new {id = doc.ID});
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
+                    return RedirectToAction("Select", new { id = doc.ID });
                 }
                 catch (System.Exception ex)
                 {
@@ -478,196 +878,198 @@ namespace HAICOP.Controllers
                     throw;
                 }
 
-                
+
             }
 
             string id = ViewBag.user.Id;
             var comm = db.UserCommission.Include(a => a.Commission)
-                                        .Where( a => a.UserID == id)
-                                        .Select( a => a.Commission).ToList();
-            if(comm == null)
+                                        .Where(a => a.UserID == id)
+                                        .Select(a => a.Commission).ToList();
+            if (comm == null)
             {
-                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" , dossier.CommissionID);
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);
             }
-            else 
+            else
             {
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" , dossier.CommissionID);
-            }  
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
 
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
-            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl"); 
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", dossier.AcheteurID);
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
 
             return View(dossier);
         }
 
-        [Authorize(Roles ="root,Admin,Chef,President,assistant")]
-        public IActionResult Rapp()
+        public IActionResult Select(int? id)
         {
-            bool ischef = _userManager.IsInRoleAsync(ViewBag.user, "Chef").Result;
-            bool isadmin =  _userManager.IsInRoleAsync(ViewBag.user , "Admin").Result;
-            bool ispresident = _userManager.IsInRoleAsync(ViewBag.user , "President").Result;
-            bool isroot = _userManager.IsInRoleAsync(ViewBag.user , "root").Result;
 
-            string id = ViewBag.user.Id;
-
-
-            if(ischef)
+            if (id == null)
             {
-                var comm = db.UserAgent.Include(a => a.Agent)
-                                    .Include(a => a.Agent.Commission)
-                                    .Where( a => a.UserID == id && a.Agent.IsPresident == true)
-                                    .Select(a => a.Agent.Commission)
-                                    .ToList();
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl" );
+                return NotFound();
             }
-            else if(isadmin || isroot || ispresident)
+            var dossier = db.Dossier.Include(c => c.Commission).Include( c => c.Mails).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
+            if (dossier == null)
             {
-                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl" );
+                return NotFound();
             }
 
+            role = (string)ViewBag.role.ToString();
 
+            ViewBag.Menu = "ملف عدد : " + dossier.Num;
 
+            ViewBag.Fournisseur = db.FourInDossier.Include(f => f.Fournisseur).Where(f => f.DossierID == id.GetValueOrDefault());
 
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" );
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles ="root,Admin,Chef,President,assistant")]
-        public async Task<bool> Rapp(int DossierID , int AgentID , int OldAgentId )
-        {
+            ViewBag.Avis = db.DessisionInMetting.Include(m => m.Metting)
+                                                .Include(d => d.Dessision)
+                                                .Where(c => c.Metting.DossierID == id.GetValueOrDefault());
 
             try
             {
-                if( AgentID != OldAgentId)
-                {
-                    try
-                    {
-                        var old = await db.Rapporteur.AsNoTracking().FirstOrDefaultAsync( r => r.DossierID == DossierID);
-                        db.Remove(old);
-                    }
-                    catch(Exception)
-                    {
-
-                    }
-
-                    Rapporteur rapporteur = new Rapporteur {AgentID = AgentID , DossierID = DossierID};
-                    db.Add(rapporteur);
-                    var dossier = await db.Dossier.SingleOrDefaultAsync(m => m.ID == DossierID);
-                    dossier.State = DossierState.Encour ;
-                    db.Update(dossier);
-                    await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Rapporteur  RapporteurID : { AgentID}  DossierID : {DossierID}.");                    
-                }
-                
-                return true;
+                ViewBag.Ach = db.AchInDossier.Include(a => a.Acheteur).FirstOrDefault(a => a.DossierID == id.GetValueOrDefault()).Acheteur;
             }
             catch (Exception)
             {
-                return false;
+
             }
-        }
 
-        [Authorize(Roles = "root,Admin,Chef,President,assistant")]
-        public async Task<IActionResult> EditRapp()
-        {
-            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
-            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
-
-            if(ischef)
+            try
             {
-                string id = ViewBag.user.Id;
-                var comm = db.UserAgent.Include(a => a.Agent)
-                                       .First( a => a.UserID == id && a.Agent.IsPresident == true );
-                return View(await db.Rapporteur.Include(d => d.Dossier).Include(a => a.Agent).Include(c => c.Dossier.Commission).Where(a => a.Dossier.CommissionID == comm.Agent.CommissionID).ToListAsync() );
+                ViewBag.Rapporteur = db.Rapporteur.Include(a => a.Agent).SingleOrDefault(c => c.DossierID == id.GetValueOrDefault()).Agent;
             }
-            else if(isadmin || ispresident || isroot)
-            {
-                return View(await db.Rapporteur.Include(d => d.Dossier).Include(a => a.Agent).Include(c => c.Dossier.Commission).ToListAsync() );
-            }
-
-            return View();
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "root,Admin,Chef,President,assistant")]
-        public async Task<bool> EditRapp(int DossierID , int AgentID , int OldAgentID)
-        {
-             _logger.LogInformation(3, string.Format( " dossier id {0} oldagent id {1} agentid {2}", DossierID,OldAgentID,AgentID ) );
-                try
-                {
-                    var rapp = await db.Rapporteur.SingleAsync(m => m.DossierID == DossierID && m.AgentID == OldAgentID);
-                    db.Remove(rapp);
-                    db.Add(new Rapporteur { AgentID = AgentID , DossierID = DossierID});
-                    await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Rapporteur  DossierID : {DossierID}.");
-                    return true;
-                }
-                catch (Exception ex)
-                { 
-                    _logger.LogInformation(3, ex.Message);
-                }
-
-            return false;
+            catch(Exception){}
             
+
+            switch (role)
+            {
+
+                case "Chef":
+                    {
+                        ViewBag.ischef = true;
+                        return View(dossier);
+                    }
+                case "BOC":
+                    {
+                        ViewBag.isboc = true;
+                        return View(dossier);
+                    }
+                case "Admin":
+                    {
+                        ViewBag.isadmin = true;
+                        return View(dossier);
+                    }
+                case "root":
+                    {
+                        ViewBag.isadmin = true;
+                        return View(dossier);
+                    }
+                case "President":
+                    {
+                        ViewBag.isadmin = true;
+                        return View(dossier);
+                    }
+                case "assistant":
+                    {
+                        ViewBag.isadmin = true;
+                        return View(dossier);
+                    }
+                default:
+                    {
+                        return View(dossier);
+                    }
+            }
+
         }
 
-
-        public async Task<IActionResult> Edit(int? id)
+        [Authorize(Roles = "Admin,root,assistant")]
+        public async Task<IActionResult> Rapporteur(int? id)
         {
+            ViewBag.Menu = "تكليف مقرر";
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var dossier =    await db.AchInDossier.Include( d => d.Dossier)
-                                                        .Include( d => d.Acheteur)
-                                                        .Include( c => c.Dossier.Commission)
-							.AsNoTracking()
+            if (!DossierExists(id.GetValueOrDefault()))
+            {
+                return NotFound();
+            }
+
+            Dossier doc = await db.Dossier.Include(d => d.Commission).FirstAsync(d => d.ID == id.GetValueOrDefault());
+
+            ViewData["AgentID"] = new SelectList(db.Agent.Where(c => c.CommissionID == doc.CommissionID && c.IsPresident == false), "ID", "Name");
+
+            return View(doc);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rapporteur( [Bind("DossierID,AgentID")] Rapporteur rapporteur)
+        {
+            ViewBag.Menu = "تكليف مقرر";
+            if (ModelState.IsValid)
+            {
+                var rap = await db.Rapporteur.FirstOrDefaultAsync(r => r.DossierID == rapporteur.DossierID);
+
+                if (rap != null)
+                db.Remove(rap);
+
+                await db.AddAsync(rapporteur);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Select", new { id = rapporteur.DossierID });
+            }
+
+            return View(rapporteur.DossierID);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            ViewBag.Menu = "تحيين ملف";
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var dossier = await db.AchInDossier.Include(d => d.Dossier)
+                                                        .Include(d => d.Acheteur)
+                                                        .Include(c => c.Dossier.Commission)
+                                                        .AsNoTracking()
                                                         .SingleOrDefaultAsync(m => m.DossierID == id);
             if (dossier == null)
             {
                 return NotFound();
             }
 
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , dossier.AcheteurID);
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", dossier.AcheteurID);
             ViewData["OldAcheteurID"] = dossier.AcheteurID;
 
 
             string userid = ViewBag.user.Id;
 
-            role = (string) ViewBag.role.ToString();
+            role = (string)ViewBag.role.ToString();
 
-            switch(role)
+            switch (role)
             {
-
-                case "Chef" : {
-                    var comm = db.UserAgent.Include(a => a.Agent)
-                                    .Include(a => a.Agent.Commission)
-                                    .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
-				    .AsNoTracking()
-                                    .Select(a => a.Agent.Commission)
-                                    .ToList();
-                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
-                }break;
-                case "BOC" : {
-                    var comm = db.UserCommission.Include(a => a.Commission)
-                                        .Where( a => a.UserID == userid)
-					.AsNoTracking()
-                                        .Select( a => a.Commission).ToList();
-                    ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
-                }break;
-                default : {
-                    ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);
-                }break;
+                case "BOC":
+                    {
+                        var comm = db.UserCommission.Include(a => a.Commission)
+                                            .Where(a => a.UserID == userid)
+                        .AsNoTracking()
+                                            .Select(a => a.Commission).ToList();
+                        ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+                    }
+                    break;
+                default:
+                    {
+                        ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);
+                    }
+                    break;
             }
-        
-            
+
+
             NewDossier doc = new NewDossier();
             doc.InitFromAchaInDossier(dossier);
             return View(doc);
@@ -675,8 +1077,9 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,int AcheteurID,int OldAcheteurID, [Bind("ID,CommissionID,Subject,Num,Type,Nature,DocDate,EnterDate,ProDate")] Dossier dossier )
+        public async Task<IActionResult> Edit(int id, int AcheteurID, int OldAcheteurID, [Bind("ID,CommissionID,Subject,Type,Nature,DocDate,EnterDate,ProDate")] Dossier dossier)
         {
+            ViewBag.Menu = "تحيين ملف";
             if (id != dossier.ID)
             {
                 return NotFound();
@@ -690,7 +1093,6 @@ namespace HAICOP.Controllers
 
                     d.CommissionID = dossier.CommissionID;
                     d.Subject = dossier.Subject;
-                    d.Num = dossier.Num ;
                     d.Type = dossier.Type;
                     d.Nature = dossier.Nature;
                     d.DocDate = dossier.DocDate;
@@ -699,13 +1101,13 @@ namespace HAICOP.Controllers
 
                     db.Update(d);
 
-                    if(AcheteurID != OldAcheteurID)
+                    if (AcheteurID != OldAcheteurID)
                     {
                         var ach = await db.AchInDossier.SingleAsync(m => m.DossierID == dossier.ID && m.AcheteurID == OldAcheteurID);
                         db.Remove(ach);
-                        db.Add(new AchInDossier { AcheteurID = AcheteurID  , DossierID = dossier.ID});
+                        db.Add(new AchInDossier { AcheteurID = AcheteurID, DossierID = dossier.ID });
 
-                        _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit DossierID : { id} .");
+                        _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Edit DossierID : { id} .");
                     }
 
                     await db.SaveChangesAsync();
@@ -721,66 +1123,68 @@ namespace HAICOP.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Select", new {id = id});
+                return RedirectToAction("Select", new { id = id });
             }
-            
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl" , AcheteurID);
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", AcheteurID);
 
             string userid = ViewBag.user.Id;
 
             bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
             bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
-            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user , "Admin");
-            bool ispresident = await     _userManager.IsInRoleAsync(ViewBag.user , "President");
-            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user , "root");
-            
-            if (isboc )
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user, "Admin");
+            bool ispresident = await _userManager.IsInRoleAsync(ViewBag.user, "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user, "root");
+
+            if (isboc)
             {
                 var comm = db.UserCommission.Include(a => a.Commission)
-                                        .Where( a => a.UserID == userid)
-                                        .Select( a => a.Commission).ToList();
+                                        .Where(a => a.UserID == userid)
+                                        .Select(a => a.Commission).ToList();
                 ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
             }
-            else if(ischef)
+            else if (ischef)
             {
                 var comm = db.UserAgent.Include(a => a.Agent)
                                     .Include(a => a.Agent.Commission)
-                                    .Where( a => a.UserID == userid && a.Agent.IsPresident == true)
+                                    .Where(a => a.UserID == userid && a.Agent.IsPresident == true)
                                     .Select(a => a.Agent.Commission)
                                     .ToList();
                 ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
             }
-            else if(isadmin || isroot || ispresident)
+            else if (isadmin || isroot || ispresident)
             {
-              ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);  
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);
             }
 
             NewDossier doc = new NewDossier();
-            doc.InitFromDossier(dossier,AcheteurID);
+            doc.InitFromDossier(dossier, AcheteurID);
             return View(doc);
         }
 
         public async Task<IActionResult> Mail(int? id)
         {
+            ViewBag.Menu = "تحيين بريد";
             if (id == null)
             {
                 return NotFound();
             }
 
-            var mails =  db.Mail.Include( d => d.Dossier)
-                                            .Include( c => c.Dossier.Commission)
+            var mails = db.Mail.Include(d => d.Dossier)
+                                            .Include(c => c.Dossier.Commission)
                                             .Where(m => m.DossierID == id);
             if (mails == null)
             {
                 return NotFound();
             }
 
-            
+
             return View(await mails.ToListAsync());
         }
 
         public IActionResult EditMail(int? id)
         {
+            ViewBag.Menu = "تحيين بريد";
             if (id == null)
             {
                 return NotFound();
@@ -799,8 +1203,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public async Task<IActionResult> EditMail(int id,IFormFile Location, [Bind("ID,DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
+        public async Task<IActionResult> EditMail(int id, IFormFile Location, [Bind("ID,DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail)
         {
             if (id != mail.ID)
             {
@@ -812,10 +1215,10 @@ namespace HAICOP.Controllers
                 try
                 {
                     var tmpmail = db.Mail.AsNoTracking().SingleOrDefault(m => m.ID == id);
-                    if(Location != null)
+                    if (Location != null)
                     {
-                         _logger.LogInformation(5, "houni location not null");
-                        Del(tmpmail.Url) ;
+                        _logger.LogInformation(5, "houni location not null");
+                        Del(tmpmail.Url);
                         mail.Url = Upload(Location).Result;
 
                     }
@@ -823,17 +1226,17 @@ namespace HAICOP.Controllers
                     {
                         mail.Url = tmpmail.Url;
                     }
-                    
+
                     db.Update(mail);
                     await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit MailID {mail.ID} DossierID : { mail.DossierID} .");
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Edit MailID {mail.ID} DossierID : { mail.DossierID} .");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogInformation(5, ex.Message);
                     throw;
                 }
-                return RedirectToAction("Mail", new {id = mail.DossierID});
+                return RedirectToAction("Mail", new { id = mail.DossierID });
             }
 
             EditMail ma = new EditMail();
@@ -841,57 +1244,58 @@ namespace HAICOP.Controllers
             ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
             return View(ma);
         }
-        
+
         public IActionResult AddMail(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "إضافة بريد";
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var doc = db.Dossier.FirstOrDefault( a => a.ID == id.GetValueOrDefault() );
+            var doc = db.Dossier.FirstOrDefault(a => a.ID == id.GetValueOrDefault());
 
-            if(doc == null )
+            if (doc == null)
             {
                 return NotFound();
             }
-            ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.CommissionID == doc.CommissionID), "ID", "Name" );
-            var rap = db.Rapporteur.FirstOrDefaultAsync( a => a.DossierID == id).Result;
+            ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.CommissionID == doc.CommissionID && a.IsPresident == false), "ID", "Name");
+            var rap = db.Rapporteur.FirstOrDefaultAsync(a => a.DossierID == id).Result;
 
-            
 
-            if(rap != null)
+
+            if (rap != null)
             {
                 ViewBag.OldAgentID = rap.AgentID;
             }
-            else 
+            else
             {
                 ViewBag.OldAgentID = 0;
             }
-             
+
             return View(new AddMail { DossierID = id.GetValueOrDefault() });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddMail(int id,int AgentID ,int OldAgentID, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
+        public async Task<IActionResult> AddMail(int id, int AgentID, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail)
         {
-
+            ViewBag.Menu = "إضافة بريد";
             if (ModelState.IsValid)
             {
                 try
                 {
                     db.Add(mail);
                     await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Mail : { mail.ID}  DossierID : {mail.DossierID}.");
-                    await Rapp(id ,AgentID , OldAgentID  );
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Add Mail : { mail.ID}  DossierID : {mail.DossierID}.");
+                    await Rapporteur(new Rapporteur { DossierID = id, AgentID = AgentID });
                 }
                 catch (Exception ex)
                 {
                     _logger.LogInformation(5, ex.Message);
                     throw;
                 }
-                return RedirectToAction("Mail", new {id = mail.DossierID});
+                return RedirectToAction("Mail", new { id = mail.DossierID });
             }
 
             AddMail ma = new AddMail();
@@ -899,46 +1303,50 @@ namespace HAICOP.Controllers
             return View(ma);
         }
 
+
+
         [Authorize(Roles = "root,Admin,President,assistant")]
         public IActionResult EditFina(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "تحيين التمويل";
+            if (id == null)
             {
                 return NotFound();
             }
 
             var finan = db.InvInDossier.Include(d => d.Dossier)
-                                             .SingleOrDefault( e => e.DossierID == id);
+                                             .SingleOrDefault(e => e.DossierID == id);
 
-            if(finan == null)
+            if (finan == null)
             {
-                var doc = db.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
-                return View(new AddFina {Financement = doc.Financement , DossierID = doc.ID  });
+                var doc = db.Dossier.FirstOrDefault(d => d.ID == id.GetValueOrDefault());
+                return View(new AddFina { Financement = doc.Financement, DossierID = doc.ID });
             }
 
-            ViewData["ForeignInvestisseur"] = new SelectList(db.ForeignInvestisseur, "ID", "Name" );
+            ViewData["ForeignInvestisseur"] = new SelectList(db.ForeignInvestisseur, "ID", "Name");
 
-            return View(new AddFina {Foreign = finan.Dossier.Foreign , Financement = finan.Dossier.Financement , DossierID = id.GetValueOrDefault() , ForeignInvestisseurID = finan.ForeignInvestisseurID});
+            return View(new AddFina { Foreign = finan.Dossier.Foreign, Financement = finan.Dossier.Financement, DossierID = id.GetValueOrDefault(), ForeignInvestisseurID = finan.ForeignInvestisseurID });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "root,Admin,President,assistant")]
-        public async Task<IActionResult> EditFina(string Foreign,int DossierID,Financement Financement,[Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
+        public async Task<IActionResult> EditFina(string Foreign, int DossierID, Financement Financement, [Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
         {
+            ViewBag.Menu = "تحيين التمويل";
             try
             {
                 var inv = db.InvInDossier.AsNoTracking().FirstOrDefault(s => s.DossierID == DossierID);
-                if(inv != null)
+                if (inv != null)
                 {
                     db.Remove(inv);
                 }
-                return await AddFina(Foreign , Financement , indoc);
+                return await AddFina(Foreign, Financement, indoc);
             }
             catch (System.Exception ex)
             {
-                _logger.LogError(3,ex.Message);
-                return View(new AddFina {Foreign = Foreign , Financement = Financement , DossierID = indoc.DossierID , ForeignInvestisseurID = indoc.ForeignInvestisseurID});
+                _logger.LogError(3, ex.Message);
+                return View(new AddFina { Foreign = Foreign, Financement = Financement, DossierID = indoc.DossierID, ForeignInvestisseurID = indoc.ForeignInvestisseurID });
             }
 
         }
@@ -946,16 +1354,17 @@ namespace HAICOP.Controllers
         [Authorize(Roles = "root,Admin,President,assistant")]
         public IActionResult AddFina(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "إضافة التمويل";
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var doc = db.Dossier.FirstOrDefault( d => d.ID == id.GetValueOrDefault());
+            var doc = db.Dossier.FirstOrDefault(d => d.ID == id.GetValueOrDefault());
 
-            if(doc.Financement == Financement.Foreign || doc.Financement == Financement.Local )
+            if (doc.Financement == Financement.Foreign || doc.Financement == Financement.Local)
             {
-                return RedirectToAction("Select", new {id = id});
+                return RedirectToAction("Select", new { id = id });
             }
 
             return View(new AddFina { DossierID = id.GetValueOrDefault() });
@@ -965,106 +1374,49 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "root,Admin,President,assistant")]
-        public async Task<IActionResult> AddFina(string Foreign,Financement Financement,[Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
+        public async Task<IActionResult> AddFina(string Foreign, Financement Financement, [Bind("DossierID,ForeignInvestisseurID")] InvInDossier indoc)
         {
+            ViewBag.Menu = "إضافة التمويل";
             if (ModelState.IsValid)
             {
                 try
                 {
-                   
 
-                    if(indoc.ForeignInvestisseurID != 0)
+
+                    if (indoc.ForeignInvestisseurID != 0)
                     {
                         try
                         {
-                             db.Remove(db.InvInDossier.AsNoTracking().SingleOrDefault( e => e.DossierID == indoc.DossierID));
+                            db.Remove(db.InvInDossier.AsNoTracking().SingleOrDefault(e => e.DossierID == indoc.DossierID));
                         }
-                        catch (Exception e ) 
-                        { 
-                             _logger.LogError(2 , e.Message);
+                        catch (Exception e)
+                        {
+                            _logger.LogError(2, e.Message);
                         }
-                       
+
                         db.Add(indoc);
                     }
-                    
-                    var dossier = db.Dossier.SingleOrDefault(m => m.ID == indoc.DossierID );
+
+                    var dossier = db.Dossier.SingleOrDefault(m => m.ID == indoc.DossierID);
                     dossier.Financement = Financement;
                     dossier.Foreign = Foreign;
                     db.Update(dossier);
 
                     await db.SaveChangesAsync();
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Fina : { indoc.DossierID} .");
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Edit Fina : { indoc.DossierID} .");
 
-                    return RedirectToAction("Select", new {id = indoc.DossierID});
+                    return RedirectToAction("Select", new { id = indoc.DossierID });
                 }
                 catch (Exception ex)
                 {
                     _logger.LogInformation(5, ex.Message);
                 }
             }
-            return View(new AddFina {Foreign = Foreign , Financement = Financement , DossierID = indoc.DossierID , ForeignInvestisseurID = indoc.ForeignInvestisseurID});
-        }
-
-        private bool DossierExists(int id)
-        {
-            return db.Dossier.Any(e => e.ID == id);
-        }
-
-        private async Task<string> Upload(IFormFile Location)
-        {
-            var fileExt = System.IO.Path.GetExtension(Location.FileName);
-
-            if(fileExt != ".pdf")
-            {
-                return "";
-            }
-            var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), Guid.NewGuid().ToString() + fileExt) ;
-            try 
-            {
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await Location.CopyToAsync(fileStream);
-                }
-                return Path.GetFileName(filePath);
-            }
-            catch(Exception )
-            {
-                return "";
-            }    
-        }
-
-        private bool Del(string url)
-        {
-            try
-            {
-                var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), url ) ; 
-                _logger.LogInformation(3,filePath);
-
-                if(System.IO.File.Exists(filePath)) 
-                {
-                    System.IO.File.Delete(filePath);
-                    _logger.LogInformation(3, "del file");
-                    return true;
-                }
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(1,ex.Message);
-            }
-            return false;
+            return View(new AddFina { Foreign = Foreign, Financement = Financement, DossierID = indoc.DossierID, ForeignInvestisseurID = indoc.ForeignInvestisseurID });
         }
 
 
-        private void printError()
-        {
-            foreach (var pair in ModelState)
-            {
-                if (pair.Value.Errors.Count > 0)
-                {
-                    //errors[pair.Key] = pair.Value.Errors.Select(error => error.ErrorMessage).ToList();
-                    _logger.LogError(3 , pair.Key);
-                }
-            }
-        }
+        #endregion
+
     }
 }

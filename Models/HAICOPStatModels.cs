@@ -52,6 +52,7 @@ namespace HAICOP.Models
 		public int PetitionOk { get ; set;}
 		public int PetitionNotOk { get ; set;}
 
+        public int CommissionID { get; set; }
 		public DashboardComm()
 		{
 			Trait = 0;

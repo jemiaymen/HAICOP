@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <UserSecretsId>aspnet-HAICOP-DD3C8ED6-EF82-46BD-8F9F-1CAC8A20A47E</UserSecretsId>
+    <StartupObject>HAICOP.Program</StartupObject>
   </PropertyGroup>
 
 
@@ -19,7 +20,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="1.1.2"/>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="1.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.27" ExcludeAssets="All" />
     <PackageReference Include="System.Composition" Version="1.0.31" />
@@ -32,6 +33,10 @@
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

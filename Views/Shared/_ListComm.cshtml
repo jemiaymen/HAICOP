@@ -1,0 +1,172 @@
+@using System.Linq
+@model IEnumerable<HAICOP.Models.DetailCommView>
+
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                <h3 class="m17-sectiontitle__title  text__section-title">@ViewBag.CommLbl</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-size: 13px; font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        تاريخ قبول الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الموضوع
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        المقرر
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        صاحب الصفقة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        تاريخ الإجتماع
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الإجابة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        تاريخ الإجابة
+                    </th>
+                    @if (ViewBag.Auth != null && ViewBag.Auth)
+                    {
+                        <th class="m23-table__content-table-cell--header ">
+                            تحديد
+                        </th>
+
+                    }
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                @foreach (var item in Model)
+                {  
+                    @if (item.Dossier.Dossier.State == DossierState.Accept || item.Dossier.Dossier.State == DossierState.Refus)
+                    {
+
+                        <tr class="m23-table__content-table-row " >
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.ProDate)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.Num)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.Subject)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @foreach (var i in item.Fournisseur)
+                                {
+                                    @Html.DisplayFor(modelItem => i.Lbl)
+                                }
+
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Metting.MettDate)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Dessision.Lbl)
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Metting.NotifDate)
+                            </td>
+                            @if (ViewBag.Auth != null && ViewBag.Auth)
+                            {
+                                <td class="text-danger m23-table__content-table-cell">
+                                    <a asp-action="Select" asp-controller="Doc" asp-route-id="@item.Dossier.DossierID"><i class="fa fa-check"></i></a>
+                                </td>
+
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="m23-table__content-table-row" >
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.ProDate)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.Num)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Dossier.Subject)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @foreach (var i in item.Fournisseur)
+                                {
+                                    @Html.DisplayFor(modelItem => i.Lbl)
+                                }
+
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Metting.MettDate)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Dessision.Lbl)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Metting.Metting.NotifDate)
+                            </td>
+                            @if (ViewBag.Auth != null && ViewBag.Auth)
+                            {
+                                <td class="text-danger m23-table__content-table-cell">
+                                    <a asp-action="Select" asp-controller="Doc" asp-route-id="@item.Dossier.DossierID"><i class="fa fa-check"></i></a>
+                                </td>
+
+                            }
+                        </tr>
+                    }
+                   
+                        
+                                
+
+
+                    }
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
+}
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_TableScript");
+    }
+}
+
+
+
+

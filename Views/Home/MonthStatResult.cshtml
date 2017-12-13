@@ -1,177 +1,135 @@
-@using System.Linq
 @model IEnumerable<HAICOP.Models.TestMonth>
 
-@{
-    ViewData["Title"] = " إحصائيات شهرية";
-    ViewData["SubMenu"] = "إحصائيات";
-}
+<div class="grid">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading hidden-print">
-                                    <h3 class="panel-title">@ViewData["Title"]</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="ls-editable-table table-responsive ">
-                                        <table class="table table-bordered table-striped ls-table" >
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                       اللجنة المختصة لمراقبة و تدقيق صفقات
-                                                    </th>
-                                                    <th>
-                                                        عدد الجلسات
-                                                    </th>
-                                                    <th>
-                                                        عدد الصفقات
-                                                    </th>
-                                                    <th>
-                                                         قيمة 
-                                                    </th>
-                                                    <th>
-                                                        النسبة المأوية
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model) {
-                                                    if(item.Montant > 0){
-                                                        <tr>
-                                                        
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Lbl)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Nbr)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Count)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Montant )
-                                                            </td>
-                                                            <td>
-                                                                % @Html.DisplayFor(modelItem => item.Poucentage) 
-                                                            </td>
-                                                        </tr>
-                                                    } 
-                                                }
-                                                <tr>
-                                                    <td>
-                                                        @ViewBag.Total.Lbl
-                                                    </td>
-                                                    <td>
-                                                        @ViewBag.Total.Nbr
-                                                    </td>
-                                                    <td>
-                                                        @ViewBag.Total.Count
-                                                    </td>
-                                                    <td>
-                                                        @ViewBag.Total.Montant.ToString("N3")
-                                                    </td>
-                                                    <td>
-                                                       % @ViewBag.Total.Poucentage.ToString("F2") 
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading hidden-print">
-                                    <h3 class="panel-title">معطايات أخرى</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                                        <div class="ls-wizard label-lightBlue" style="margin-top:15px">
-                                            <h2>تمويل أجنبي</h2>
-                                            <div class="icon">
-                                                % @ViewBag.fp.ToString("F2")  
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                                        <div class="ls-wizard label-red" style="margin-top:15px">
-                                            <h2> عدم الموافقة</h2>
-                                            <div class="icon">
-                                                % @ViewBag.nok.ToString("F2")
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" >
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="col-md-6 control-label">الإختيار </label>
-                                    <div class="col-md-6">
-                                        <select name="choice" id="choice" class="form-control" >
-                                            <option value="pie">Pie</option>
-                                            <option value="doughnut">Doughnut</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-
-                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <canvas id="chart-montant" ></canvas>                       
-                                </div>
-                            </div>
-                        </div>
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
 
 
-                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">التوزيع حسب العدد</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <canvas id="chart-typenbr" ></canvas>                       
-                                </div>
-                            </div>
-                        </div>
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        اللجنة المختصة لمراقبة و تدقيق صفقات
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الجلسات
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الصفقات
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        قيمة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        النسبة المأوية
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                @foreach (var item in Model)
+                {
+                    <tr class="m23-table__content-table-row ">
 
-                        <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">التوزيع حسب المبلغ</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <canvas id="chart-typemontant" ></canvas>                       
-                                </div>
-                            </div>
-                        </div>
-                        
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Nbr)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Montant)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            % @Html.DisplayFor(modelItem => item.Poucentage)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-                    </div>
-@section Styles {
-    @{ await Html.RenderPartialAsync("_TableStylePartial");}
-}
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        تمويل أجنبي
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدم الموافقة
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                <tr class="m23-table__content-table-row ">
+                    <td class="m23-table__content-table-cell">
+                        % @ViewBag.fp.ToString("F2")
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        % @ViewBag.nok.ToString("F2")
+                    </td>
+               </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--2">
+                <label class="form-field__label">الإختيار</label>
+        </div>
+        <div class="grid__column grid__column--4">
+            <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                <select name="choice" id="choice" class="form-field__input form-field__input--select">
+                    <option value="pie">Pie</option>
+                    <option value="doughnut">Doughnut</option>
+                </select>
+            </span>
+        </div>
+     </div>
+        <div class="grid__row">
+            
+            <div class="grid__column grid__column--6">
+                <div class="panel-heading">
+                    <h3 class="panel-title">التوزيع حسب العدد</h3>
+                </div>
+                <div class="panel-body">
+                    <canvas id="chart-typenbr"></canvas>
+                </div>
+            </div>
+            <div class="grid__column grid__column--6">
+
+                <h3 class="panel-title">التوزيع حسب المبلغ</h3>
+                <div class="panel-body">
+                    <canvas id="chart-typemontant"></canvas>
+                </div>
+            </div>
+            <div class="grid__column grid__column--8">
+                <div class="panel-heading">
+                    <h3 class="panel-title">الإحصائيات (قيمة الصفقات)</h3>
+                </div>
+                <div class="panel-body">
+                    <canvas id="chart-montant"></canvas>
+                </div>
+            </div>
+        </div>
+</div>
+
+
 
 @section Scripts {
     @{ 
-        await Html.RenderPartialAsync("_TableScriptPatialWithout"); 
         await Html.RenderPartialAsync("_StatScriptPartial"); 
-
         <script>
 
                 var backgroundColor = ["#3e95cd", "#8e5ea2","#3cba9f","#fd5308","#fb9902","#e8c3b9", "#3e01a4","#0392ce","#a7194b","#c45850" ];
@@ -247,11 +205,6 @@
                             }]   
                         }
                     });
-
-                
-
-                
-
                 
         </script>
     }

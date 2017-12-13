@@ -1,110 +1,119 @@
 @model HAICOP.Models.NewDossier
 
 
-@{
-    ViewData["Title"] = "تحيين ملف";
-    ViewData["SubMenu"] = "التصرف في الملفات";
-}
-
-<div class="panel panel-default">
-    <div class="panel-heading">
-         <h3 class="panel-title">@ViewData["Title"]</h3>
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <form asp-controller="Doc" asp-action="Edit"  method="post" >
-            <div class="form-horizontal">
-               
-               <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <h2>التفاصيل بالنسبة الملف</h2> 
-                <hr />
+    <form class="form" asp-controller="Doc" asp-action="Edit" method="post" novalidate="" data-form="true" data-parsley-focus="none">
 
-                <input type="hidden" asp-for="ID" />
-                <input type="hidden" name="OldAcheteurID" id="OldAcheteurID" value="@ViewData["OldAcheteurID"]" />
-                <div class="form-group">
-                    <label asp-for="CommissionID" class="col-md-2 control-label"></label>
-                    <div class="col-md-6">
-                        <select asp-for="CommissionID" class ="form-control" asp-items="ViewBag.CommissionID">
-                            <option value=""></option>
-                        </select>
-                    </div>
-                    <label asp-for="Num" class="col-md-2 control-label"></label>
-                    <div class="col-md-2">
-                        <input asp-for="Num" class="form-control"/>
-                        <span asp-validation-for="Num" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Subject" class="col-md-2 control-label"></label>
-                    <div class="col-md-5">
-                        <textarea asp-for="Subject" class="form-control"></textarea>
-                        <span asp-validation-for="Subject" class="text-danger"></span>
-                    </div>
-                    <label asp-for="DocDate" class="col-md-2 control-label"></label>
-                    <div class="col-md-3">
-                        <input asp-for="DocDate"  class="form-control" placeholder="dd/mm/yyyy" />
-                        <span asp-validation-for="DocDate" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    
-                    <label asp-for="ProDate" class="col-md-2 control-label"></label>
-                    <div class="col-md-4">
-                        <input asp-for="ProDate"  class="form-control" placeholder="dd/mm/yyyy" />
-                        <span asp-validation-for="ProDate" class="text-danger" ></span>
-                    </div>
-                    <label asp-for="EnterDate" class="col-md-2 control-label"></label>
-                    <div class="col-md-4">
-                        <input asp-for="EnterDate" class="form-control" placeholder="dd/mm/yyyy" />
-                        <span asp-validation-for="EnterDate" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Type" class="col-md-2 control-label"></label>
-                    <div class="col-md-4">
-                        <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()">
-                            <option value=""></option>
-                        </select>
-                        <span asp-validation-for="Type" class="text-danger"></span>
-                    </div>
-                    <label asp-for="Nature" class="col-md-2 control-label"></label>
-                    <div class="col-md-4">
-                        <select asp-for="Nature" asp-items="Html.GetEnumSelectList<DossierNature>()">
-                            <option value=""></option>
-                        </select>
-                        <span asp-validation-for="Nature" class="text-danger"></span>
-                    </div>
-                    
-                </div>
-                 
-                <div class="form-group">
-                    <label asp-for="AcheteurID" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <select asp-for="AcheteurID" asp-items="ViewBag.AcheteurID">
-                            <option value=""></option>
-                        </select>
-                        <span asp-validation-for="AcheteurID" class="text-danger"></span>
-                    </div>
-                </div>
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" name="OldAcheteurID" id="OldAcheteurID" value="@ViewData["OldAcheteurID"]" />
 
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-9">
-                        <button type="submit" class="btn ls-light-green-btn">تحيين</button>
-                    </div>
-                </div>
-            </div>  
-        </form>                            
-    </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="CommissionID" class="form-field__label">الهيكل</label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="CommissionID" asp-items="ViewBag.CommissionID" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Subject" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--5">
+                <textarea asp-for="Subject" class="form-field__input form-field__input--text"></textarea>
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="DocDate" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="DocDate" class="form-field__input form-field__input--text" placeholder="dd/mm/yyyy" />
+                <span asp-validation-for="DocDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="ProDate" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="ProDate" class="form-field__input form-field__input--text" placeholder="dd/mm/yyyy" />
+                <span asp-validation-for="ProDate" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="EnterDate" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="EnterDate" class="form-field__input form-field__input--text" placeholder="dd/mm/yyyy" />
+                <span asp-validation-for="EnterDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Type" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Nature" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="Nature" asp-items="Html.GetEnumSelectList<DossierNature>()" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+                <span asp-validation-for="Nature" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="AcheteurID" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <select asp-for="AcheteurID" asp-items="ViewBag.AcheteurID">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="AcheteurID" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-field__button">
+            <button class="button button--secondary" type="submit">تحيين</button>
+        </div>
+
+
+    </form>
+
 </div>
 
 @section Scripts {
-    @{ 
-        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
-        await Html.RenderPartialAsync("_SelectizeScript"); 
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
         <script>
-            $("#CommissionID").selectize();
-            $("#Type").selectize();
-            $("#Nature").selectize();
             $("#AcheteurID").selectize();
         </script>
     }
@@ -113,4 +122,5 @@
 @section Styles {
     @{ await Html.RenderPartialAsync("_SelectizeStyle");}
 }
+
 

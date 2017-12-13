@@ -1,46 +1,49 @@
 @model HAICOP.Models.Acheteur
 
-@{
-    ViewData["Title"] = "اظافة مشتري العمومي";
-    ViewData["SubMenu"] = "التصرف فالثوابت";
-}
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-         <h3 class="panel-title">@ViewData["Title"]</h3>
-    </div>
-    <div class="panel-body">
-        <form asp-controller="Acheteur" asp-action="Create"  method="post" >
-            <div class="form-horizontal">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Lbl" class="col-md-3 control-label"></label>
-                    <div class="col-md-9">
-                        <input asp-for="Lbl" class="form-control" />
-                        <span asp-validation-for="Lbl" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="LblLong" class="col-md-3 control-label"></label>
-                    <div class="col-md-9">
-                        <input asp-for="LblLong" class="form-control" />
-                        <span asp-validation-for="LblLong" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button type="submit" class="btn ls-light-blue-btn">اظافة</button>
-                    </div>
-                </div>
-            </div>  
-        </form>                            
-    </div>
+    <form class="form" asp-controller="Acheteur" asp-action="Create" method="post">
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--3">
+                <label asp-for="Lbl" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--9">
+                <input asp-for="Lbl" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Lbl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--3">
+                <label asp-for="LblLong" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--9">
+                <input asp-for="LblLong" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="LblLong" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">إضافة</button>
+        </div>
+
+
+    </form>
+
 </div>
 
 
 @section Scripts {
-    @{ 
-        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
 

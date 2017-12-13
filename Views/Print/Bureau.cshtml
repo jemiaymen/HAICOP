@@ -12,7 +12,7 @@
 <head>
 
     <title>@ViewData["Title"] - HAICOP</title>
-    <link href="/css/bootstrap-rtl.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 <body dir="rtl">
@@ -39,7 +39,7 @@
     </style>
 
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-xs-4 col-xs-offset-8">
             <center>
                 <h3>الجمهورية التونسية</h3>
                 <h2>رئاسة الحكومة</h2>
@@ -47,33 +47,29 @@
             </center>
         </div>
     </div>
-
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
-            <center><h1>@Html.DisplayFor(model => Model.Commission.Lbl) </h1><center>
+            <center><h1>@Html.DisplayFor(model => Model.Commission.Lbl) </h1></center>
         </div>
     </div>
-
     <div class="row">
         <div class="col-xs-4 col-xs-offset-4">
             <h1>تسجيل و تعهد</h1>
         </div>
     </div>
-
     <br />
     <div class="row">
-        <div class="col-xs-6">
-            <h3>عدد الملف :  @Html.DisplayFor(model => Model.Num)/@Html.DisplayFor(model => Model.Commission.Code)/@Html.DisplayFor(model => Model.DocDate.Year) </h3>
-
-        </div>
 
         <div class="col-xs-6">
             <h3>تاريخ قبول الملف :  @ViewBag.Mail.MailDate.ToString("yyyy/MM/dd") </h3>
         </div>
-
+        <div class="col-xs-6">
+            <h3>عدد الملف :  @Html.DisplayFor(model => Model.Num)/@Html.DisplayFor(model => Model.Commission.Code)/@Html.DisplayFor(model => Model.DocDate.Year) </h3>
+        </div>
     </div>
+
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-xs-4 col-xs-offset-8">
             <h3>طبيعة الملف :  @if(ViewBag.Mail.MailNature == MailNature.New) { <span>جديد</span> }else if(ViewBag.Mail.MailNature == MailNature.Rep){ <span>عناصر إجابة</span> }</h3>
         </div>
     </div>
@@ -108,17 +104,18 @@
                     <h3 >المرجع : @ViewBag.Mail.Ref </h3>
                 </div>
             </div>
+            
             <div class="col-xs-6 p-not">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 >رئيس الهيكل : السيد(ة)   @ViewBag.Chef</h3>
+                        <h3 >المقرر : @ViewBag.Rapporteur</h3>
                     </div>
                 </div>
             </div>
             <div class="col-xs-6 p-not">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 >المقرر : @ViewBag.Rapporteur</h3>
+                        <h3>رئيس الهيكل : السيد(ة)   @ViewBag.Chef</h3>
                     </div>
                 </div>
             </div>

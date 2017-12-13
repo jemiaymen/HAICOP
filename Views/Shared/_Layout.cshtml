@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html >
+﻿<html lang="ar-TN" >
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,159 +11,58 @@
     <meta name="MobileOptimized" content="320" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
-    <link rel="apple-touch-icon-precomposed" href="/images/ios/fickle-logo-72.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/ios/fickle-logo-72.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/ios/fickle-logo-114.png" />
-
-    <link rel="shortcut icon" href="/images/ico/fab3860.ico?v=1">
-
-    <title>@ViewData["Title"] - HAICOP</title>
-
-    <link rel="stylesheet" href="/css/rtl-css/plugins/pace-rtl.css">
-    <script src="/js/pace.min.js"></script>
-    <link href="/css/bootstrap-rtl.css" rel="stylesheet">
-    <link href="/css/rtl-css/style-rtl.css" rel="stylesheet">
-    <link href="/css/rtl-css/responsive-rtl.css" rel="stylesheet">
 
 
-    <link href="~/css/rtl-css/plugins/amaranjs/jquery.amaran-rtl.css" rel="stylesheet">
-    <link href="~/css/rtl-css/plugins/amaranjs/theme/all-themes-rtl.css" rel="stylesheet">
-    <link href="~/css/rtl-css/plugins/amaranjs/theme/default-rtl.css" rel="stylesheet">
+    <title>@ViewBag.Menu - HAICOP</title>
+
+    <link href="~/css/ar/static.ar.b.css" media="all" rel="stylesheet" type="text/css">
+    <link href="~/css/ar/dewa-style.min.css" media="all" rel="stylesheet" type="text/css">
+    <link href="~/css/ar/typography.ar.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="~/css/ar/print.css" media="print" rel="stylesheet" type="text/css" />
+    <link href="~/lib/fancybox/dist/jquery.fancybox.css" rel=" stylesheet" type="text/css" media="screen" />
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="~/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="~/lib/eventie/eventie.js" type="text/javascript"></script>
+    <script src="~/lib/doc-ready/doc-ready.js" type="text/javascript"></script>
+
+    
+    <script src="~/lib/fancybox/dist/jquery.fancybox.min.js" type="text/javascript"></script>
 
     @RenderSection("Styles", required: false)
 
-    <link href="/css/site.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
-<body >
-    <nav class="navigation hidden-print">
-        <div class="container-fluid">
-            <div class="header-logo">
-                <a href="/" title="">
-                    <h1>HAICOP</h1>
-                </a>
-            </div>
-            <div class="top-navigation">
-                <div class="menu-control hidden-xs">
-                    <a href="javascript:void(0)">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                </div>
-                <div class="search-box">
-                    <ul>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-                                <span class="fa fa-search"></span>
-                            </a>
-                            <div class="dropdown-menu  top-dropDown-1">
-                                <h4>بحث</h4>
-                                <form asp-controller="Search" asp-action="Index" method="get">
-                                    <input type="search" placeholder="اكتب ما تريد البحث عنه؟" name="q" id="q">
-                                </form>
-                            </div>
 
-                        </li>
-                    </ul>
+<body id="page">
+    <!--[if lte IE 8]>
+        <div class="browserupgrade">
+            <div class="grid browserupgrade__grid-row">
+                <div class="grid__column grid__column--12">
+                        <p dir="rtl" class="browserupgrade__message">المتصفح قديم. <a class="browserupgrade__link" href="/compatibility.html">الرجاء القيام بترقية المتصفح</a> للاستخدام الأمثل للموقع.</p>
                 </div>
-                @await Html.PartialAsync("_MenuPartial")
             </div>
         </div>
-    </nav>
+    <![endif]-->
 
-    <section id="main-container">
-        <section id="left-navigation" class="hidden-print">
-
-            <div class="phone-nav-box visible-xs">
-                <a class="phone-logo" href="/" title="">
-                    <h1>HAICOP</h1>
-                </a>
-                <a class="phone-nav-control" href="javascript:void(0)">
-                    <span class="fa fa-bars"></span>
-                </a>
-            </div>
-            @await Html.PartialAsync("_MainNav")
-        </section>
-
-        <section id="min-wrapper">
-            <div id="main-content">
-                <div class="container-fluid">
-                    @await Html.PartialAsync("_Breadcrumb")
-                    @RenderBody()
-                </div>
-            </div>
-        </section>
-
-        <section id="right-wrapper" class="hidden-print">
-            <!--Right hidden  section close icon start-->
-            <div class="close-right-wrapper">
-                <a href="javascript:void(0)"><i class="fa fa-times"></i></a>
-            </div>
-            <!--Right hidden  section close icon end-->
-
-            <!--Tab navigation start-->
-            <ul class="nav nav-tabs" id="setting-tab">
-                <li><a href="#passwordTab" data-toggle="tab"><i class="fa fa-key"></i> كلمة السر</a></li>
-                <li><a href="#profileTab" data-toggle="tab"><i class="fa fa-user"></i> المعطيات الشخصية</a></li>
-            </ul>
-            <!--Tab navigation end -->
-
-            <!--Tab content start-->
-            <div class="tab-content">        
-                @await Html.PartialAsync("_Profile")
-                @await Html.PartialAsync("_Password")
-            </div>
-            <!--Tab content -->
-        </section>
-
-        <div id="change-color" class="hidden-print">
-            <div id="change-color-control">
-                <a href="javascript:void(0)"><i class="fa fa-magic"></i></a>
-            </div>
-            <div class="change-color-box">
-                <ul>
-                    <li class="default active"></li>
-                    <li class="red-color"></li>
-                    <li class="blue-color"></li>
-                    <li class="light-green-color"></li>
-                    <li class="black-color"></li>
-                    <li class="deep-blue-color"></li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
     
 
+    @await Html.PartialAsync("_Header")
 
-    <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/color.js"></script>
-        <script src="~/js/multipleAccordion.js"></script>
-        <script src="~/js/pages/layout.js"></script>
-        <script src="~/js/jquery.amaran.js"></script>
-        <script src="~/lib/Account/user.js"></script>
-        @RenderSection("Scripts", required: false)
-    </environment>
-    <environment names="Staging,Production">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/color.js"></script>
-        <script src="~/js/multipleAccordion.js"></script>
-        <script src="~/js/pages/layout.js"></script>
-        <script src="~/js/jquery.amaran.js"></script>
-        <script src="~/lib/Account/user.js"></script>
-        @RenderSection("Scripts", required: false)
-    </environment>
 
-    
+    <div id="rs_area">
+        @RenderBody()
+    </div>
+
+    @await Html.PartialAsync("_Footer")
+
+
+    @RenderSection("Scripts", required: false)
+
+    <script src="~/js/staticc3db.js" type="text/javascript"></script>
+
 </body>
 </html>

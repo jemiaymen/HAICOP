@@ -1,0 +1,125 @@
+﻿
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m12-search" role="search" data-search="true">
+                <div class="m12-search__launcher">
+                    <button class="m12-search__submit"><span class="aria-only">Search</span></button>
+                </div>
+                <form asp-action="Index" asp-controller="Search" class="m12-search__item" method="get">
+                    <div class="m12-search__panel">
+                        <div role="button" class="m12-search__panel--close"></div>
+                        <label for="q" class="aria-only">بحث</label>
+                        <input id="q" class="m12-search__input" type="search" placeholder="بحث" aria-label="Search" data-search-field="true" name="q" />
+                        <button type="submit" class="m12-search__submit" title="إرسال البحث" aria-label="Submit search">
+                            <span class="aria-only">بحث</span>
+                        </button>
+                    </div>
+                
+                <div class="grid__column grid__column--12 p0">
+                    <div class="m31-search--quick">
+                        <div class="m31-search--quick-title">بحث سريع</div>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="1" class='button button--text m31-search--quick-button' target='_self' title='البناءات والهندسة المدنية'>البناءات والهندسة المدنية</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="2" class='button button--text m31-search--quick-button' target='_self' title='تكنولوجيات الإتصال'>تكنولوجيات الإتصال</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="3" class='button button--text m31-search--quick-button' target='_self' title='هيئة المتابعة والمراجعة'>هيئة المتابعة والمراجعة</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="4" class='button button--text m31-search--quick-button' target='_self' title='إقصاء المتعاملين الاقتصاديين'>إقصاء المتعاملين الاقتصاديين</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="5" class='button button--text m31-search--quick-button' target='_self' title='المواد الأولية'>المواد الأولية</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="6" class='button button--text m31-search--quick-button' target='_self' title='الطلبات المختلفة'>الطلبات المختلفة</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="7" class='button button--text m31-search--quick-button' target='_self' title='نيابة المحامين'>نيابة المحامين</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="8" class='button button--text m31-search--quick-button' target='_self' title='فض النزاعات بالحسنى'>فض النزاعات بالحسنى</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="9" class='button button--text m31-search--quick-button' target='_self' title='المرصد الوطني للصفقات'>المرصد الوطني للصفقات</a>
+                        <a asp-controller="Doc" asp-action="CommDetail" asp-route-id="11" class='button button--text m31-search--quick-button' target='_self' title='المجلس الوطني للطلب العمومي'>المجلس الوطني للطلب العمومي</a>
+                    </div>
+                </div>
+
+
+                <div class="grid__column grid__column--12 p0">
+                    <div class="m31-search--filter">
+                        <div class="m31-search--filter-title">مصنف بواسطة</div>
+
+                        <div class="fieldset">
+                            <div class="desktop--searchcategory searchcategory" id="searchcategory">
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="ID" value="18" data-text="عدد الملف">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            عدد الملف
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Date" value="19" data-text="تاريخ قبول الملف">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            تاريخ قبول الملف
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Subject" value="20" data-text="الموضوع">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            الموضوع
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Rapporteur" value="21" data-text="المقرر">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            المقرر
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Fournisseur" value="22" data-text="صاحب الصفقة">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            صاحب الصفقة
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Acheteur" value="23" data-text="المشتري العمومي">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            المشتري العمومي
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Financement" value="24" data-text="التمويل">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            التمويل
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="DateRen" value="25" data-text="تاريخ الجلسة">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            تاريخ الجلسة
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-field__checkbox m31-search--filter-checkbox m31-search--filter-checkbox-item">
+                                    <label>
+                                        <input class="form-field__input form-field__input--checkbox" type="checkbox" name="Dessision" value="26" data-text="رأي اللجنة">
+                                        <span class="form-field__fakecheckbox focus-enabled m31-search--filter-checkbox-label">
+                                            رأي اللجنة
+                                        </span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

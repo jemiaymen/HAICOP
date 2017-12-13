@@ -1,0 +1,54 @@
+﻿<header class="m12-masthead theme--a" data-component="m12-masthead" data-theme="a" data-labels='{"menu":"القائمة","close":"القائمة"}'>
+
+
+    <div class="m12-main__navs">
+        <div class="m12-main__navs--inner">
+            <div class="m12-main__navs--content">
+                <ul class="m12-tools">
+                    <li class="m12-tools__item">
+                        <div class="m31-search" data-component="m31-search">
+                            <a href="#" role="button" aria-haspopup="true" class="m31-search__button button"></a>
+                            <div class="m31-search__panel" aria-expanded="false">
+                                <div class="gray-bg"></div>
+                                @await Html.PartialAsync("_Search")
+
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="m12-bar nav-down" data-m12-bar="true">
+
+        @await  Html.PartialAsync("_Menu")
+
+        <div class="m12-bar__breadcrumbs clearfix" data-m12-breadcrumbs="true">
+            <div class="m12-bar__breadcrumbs-wrapper">
+                <nav aria-label="You are here:" role="navigation">
+                    <ul>
+                        @await Html.PartialAsync("_Breadcrumb")
+                    </ul>
+
+                    <p class="m13-back-to-top" role="presentation" aria-hidden="true">
+                        <a href="#page" class="button button--text button--up m13-footer-back-to-top__link" data-m13-back-to-top="true">العودة إلى الأعلى</a>
+                    </p>
+
+                    <ul class="m12-bar__breadcrumb--tools">
+                        <li>
+                            الحجم <input class="m12-bar__breadcrumb--tools__fontSizeRange" type="range">
+                        </li>
+                        <li class="m12-bar__breadcrumb--toolsPrint">
+                            <a href=#>اطبع الصفحة </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+
+</header>

@@ -1,0 +1,156 @@
+@model IEnumerable<HAICOP.Models.FourInDossier>
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                <h3 class="m17-sectiontitle__title  text__section-title">دون إعتبار الملاحق</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الموضوع
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الهيكل
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        القسط
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        صاحب الصفقة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        المبلغ
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                @foreach (var item in Model)
+                {
+                    <tr class="m23-table__content-table-row ">
+
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Num)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Commission.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Fournisseur.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Montant)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                <h3 class="m17-sectiontitle__title  text__section-title">الملاحق</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الموضوع
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الهيكل
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        القسط
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        صاحب الصفقة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        المبلغ
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                @foreach (var item in ViewBag.Avenant)
+                {
+                    <tr class="m23-table__content-table-row ">
+
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Num
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Subject
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Commission.Lbl
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Lbl
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Fournisseur.Lbl
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Montant.ToString("N3")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+    }
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScript"); }
+}
+
+
+
+
+
+

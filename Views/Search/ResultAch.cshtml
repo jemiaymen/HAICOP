@@ -1,88 +1,91 @@
 @using System.Linq
 @model IEnumerable<HAICOP.Models.AchInDossier>
 
-@{
-    ViewData["Title"] = "نتيجة البحث";
-    ViewData["SubMenu"] = "البحث";
-}
+<div class="grid">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">@ViewData["Title"]</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="ls-editable-table table-responsive ">
-                                        <table class="table table-bordered table-striped ls-table" >
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                         التعهد
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Num)
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Subject)
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Commission.Lbl)
-                                                    </th>
-                                                    <th>
-                                                         المشتري العمومي
-                                                    </th>
-                                                    <th>
-                                                        عدد الجلسات
-                                                    </th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model) {
-                                                   var ID = item.Dossier.ID ;
-                                                    <tr>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.ProDate)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Num)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
-                                                        </td>
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
 
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Commission.Lbl)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Mettings.FirstOrDefault().MettNbr)
-                                                        </td>
-                                                        <td>
-                                                            @Html.ActionLink("كل العطيات", "Detail", "Search",  new { id = item.Dossier.ID}) 
-                                                        </td>
 
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+
+                    <th class="m23-table__content-table-cell--header ">
+                        التعهد
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        @Html.DisplayNameFor(model => model.Dossier.Num)
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        @Html.DisplayNameFor(model => model.Dossier.Subject)
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الهيكل
+                    </th>
+
+                    <th class="m23-table__content-table-cell--header ">
+                        المشتري العمومي
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الجلسات
+                    </th>
+                    <th class="m23-table__content-table-cell--header "></th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+
+                @foreach (var item in Model)
+                {
+                    var ID = item.Dossier.ID;
+                    <tr class="m23-table__content-table-row ">
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.ProDate)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Num)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Subject
+                        </td>
+
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Commission.Lbl
+                        </td>
+
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Mettings.FirstOrDefault().MettNbr)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Select" asp-controller="Doc" asp-route-id="@item.Dossier.ID"><i class="fa fa-check"></i></a>
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 @section Styles {
-    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
 }
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+    @{ await Html.RenderPartialAsync("_TableScript"); }
 }
-
-
 

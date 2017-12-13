@@ -1,0 +1,39 @@
+﻿@using System.Linq
+@model IEnumerable<HAICOP.Models.DashboardComm>
+
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="grid__row">
+
+           @foreach(var item in Model ){
+                <div class="grid__column grid__column--3">
+                    <div class="m60-teaser">
+                        <a asp-controller="Doc" asp-action="Index" asp-route-id="@item.CommissionID" class="teaser__link">
+                            <div class="m60-teaser-image" style="background-image: url('/images/@item.CommissionID-.jpg')"></div>
+                            <div class="teaser__content">
+                                <h2 class="teaser__title">@item.Lbl</h2>
+                                <p class="teaser__copy">عدد الملفات التي لم يتم الإجابة عليها : @item.NonTrait </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+           }
+
+    </div>
+
+
+
+
+</div>

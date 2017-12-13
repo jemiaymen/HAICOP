@@ -27,11 +27,13 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "تحيين هيكل";
             return View(await db.Commission.Include(a => a.Agents).ToListAsync());
         }
 
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة هيكل";
             return View();
         }
 
@@ -40,7 +42,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Lbl,LblFr,HavePresident,Code")] Commission commission)
         {
-            if(CommissionExists(commission.Lbl , commission.LblFr)){
+            ViewBag.Menu = "إضافة هيكل";
+            if (CommissionExists(commission.Lbl , commission.LblFr)){
                 ModelState.AddModelError("Lbl", " موجود");
                 ModelState.AddModelError("LblFr", " موجود");
                 return View(commission);
@@ -59,6 +62,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Menu = "تحيين هيكل";
             if (id == null)
             {
                 return NotFound();
@@ -77,6 +81,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblFr,HavePresident,Code")] Commission commission)
         {
+            ViewBag.Menu = "تحيين هيكل";
             if (id != commission.ID)
             {
                 return NotFound();

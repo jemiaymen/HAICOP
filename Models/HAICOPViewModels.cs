@@ -419,6 +419,12 @@ namespace HAICOP.Models
 		public Rapporteur Rapporteur { get ; set; }
 	}
 
+    public class DetailCommView : RapporteurView
+    {
+        public List<Fournisseur> Fournisseur { get; set; }
+        public DessisionInMetting Metting { get; set; }
+    }
+
 	public class BulletinView
 	{
 		[Required(ErrorMessage = "اجباري")]

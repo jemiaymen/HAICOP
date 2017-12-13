@@ -6,30 +6,32 @@
     ViewData["SubMenu"] = "التصرف فالثوابت";
 }
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-         <h3 class="panel-title">تحيين  حقوق المستعملين </h3>
-    </div>
-    <div class="panel-body">
-        <form asp-action="Edit" asp-controller="Invest" method="post" >
-            <div class="form-horizontal">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label" asp-for="Name"> الإسم</label>
-                    <div class="col-md-9">
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                </div>
-                <input type="hidden" asp-for="ID" />
-                <div class="form-group">
-                        <div class="col-md-offset-3 col-md-8">
-                            <button type="submit" class="btn ls-light-green-btn">تحيين</button>
-                        </div>
-                    </div>
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
             </div>
-        </form>                          
+        </div>
     </div>
+
+    <form class="form" asp-controller="Invest" asp-action="Edit" method="post">
+        <div class="grid__row">
+
+            <input type="hidden" asp-for="ID" />
+            <div class="grid__column grid__column--3">
+                <label asp-for="Name" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--9">
+                <input asp-for="Name" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--secondary" type="submit">تحيين</button>
+        </div>
+    </form>
 </div>
 
 

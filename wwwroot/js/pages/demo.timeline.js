@@ -1,1 +1,0 @@
-jQuery(document).ready(function(a){light_Gallery()});function light_Gallery(){$("#ls-timeline-project").lightGallery()};

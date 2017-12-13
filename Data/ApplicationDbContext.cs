@@ -114,7 +114,11 @@ namespace HAICOP.Data
 
             builder.Entity<UserCommission>()
                     .HasKey(c => new {c.UserID, c.CommissionID});
-            
+
+            builder.Entity<Dossier>()
+                    .HasIndex(c => new { c.ProDate , c.Num , c.CommissionID})
+                    .IsUnique();
+
 
         }
 
@@ -130,13 +134,14 @@ namespace HAICOP.Data
         public DbSet<Rapporteur> Rapporteur {get ; set;}
         public DbSet<ForeignInvestisseur> ForeignInvestisseur { get ; set; }
         public DbSet<InvInDossier> InvInDossier { get ; set; }
-        public DbSet<HAICOP.Models.ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<AchInDossier> AchInDossier { get; set; }
         public DbSet<FourInDossier> FourInDossier { get; set; }
         public DbSet<DessisionInMetting> DessisionInMetting { get; set; }
 
         public DbSet<UserAgent> UserAgent {get ; set;}
         public DbSet<UserCommission> UserCommission {get ; set;}
+        public DbSet<NextNum> NextNum { get; set; }
         
     }
 }

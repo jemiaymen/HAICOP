@@ -1,60 +1,60 @@
 @model IEnumerable<HAICOP.Models.ApplicationRole>
 
-@{
-    ViewData["Title"] = "القائمة الجملية";
-    ViewData["SubMenu"] = "التصرف في حقوق المستعملين";
-}
+<div class="grid">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">@ViewData["Title"]</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="ls-editable-table table-responsive ">
-                                        <table class="table table-bordered table-striped ls-table" >
-                                            <thead>
-                                                <tr>
-                                                        <th>
-                                                            الإسم 
-                                                        </th>
-                                                        <th>
-                                                            توضيح عام 
-                                                        </th>
-                                                        <th>
-                                                            تحيين
-                                                        </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model) {
-                                                        <tr>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Name)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.Description)
-                                                            </td>
-                                                            <td>
-                                                                 <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        الإسم
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        توضيح عام
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        تحيين
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                @foreach (var item in Model)
+                {
+                    <tr class="m23-table__content-table-row ">
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 @section Styles {
-    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
 }
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+    @{ await Html.RenderPartialAsync("_TableScript"); }
 }
 

@@ -1,0 +1,101 @@
+@model HAICOP.Models.Dossier
+
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="grid__row">
+        <table class="m23-table__content-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        تاريخ قبول الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        عدد الملف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الموضوع
+                    </th>
+
+                    <th class="m23-table__content-table-cell--header ">
+                        الهيكل
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+                <tr class="m23-table__content-table-row ">
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => Model.ProDate)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => Model.Num)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => Model.Subject)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => Model.Commission.Lbl)
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <form class="form" asp-controller="Doc" asp-action="Rapporteur" method="post" novalidate="" data-form="true" data-parsley-focus="none">
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--12">
+                <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                    <h4 class="m17-sectiontitle__title  text__section-title">تكليف مقرر</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label for="AgentID" class="form-field__label">المقرر</label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select id="AgentID" name="AgentID" asp-items="ViewBag.AgentID" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+            </div>
+        </div>
+
+        <input type="hidden" name="DossierID" id="DossierID" value="@Model.ID" />
+
+        <div class="form-field__button">
+            <button class="button button--secondary" type="submit">تكليف</button>
+        </div>
+
+
+    </form>
+
+    
+
+</div>
+
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
+}
+
+
+

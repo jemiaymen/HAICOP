@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +28,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "التصرف في حقوق المستعملين";
             return View(await db.ApplicationRole.ToListAsync());
         }
 
@@ -50,6 +51,8 @@ namespace HAICOP.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة حق مستعمل";
+
             return View();
         }
 
@@ -58,6 +61,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
         {
+            ViewBag.Menu = "إضافة حق مستعمل";
             applicationRole.NormalizedName = applicationRole.Name.ToUpper();
             if (ModelState.IsValid)
             {
@@ -72,6 +76,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
+            ViewBag.Menu = "تحيين حق مستعمل";
             if (id == null)
             {
                 return NotFound();
@@ -89,6 +94,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Description,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
         {
+            ViewBag.Menu = "تحيين حق مستعمل";
             if (id != applicationRole.Id)
             {
                 return NotFound();

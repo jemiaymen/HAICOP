@@ -32,6 +32,10 @@ namespace HAICOP.Controllers
     
         }
 
+        #region update style
+
+        
+
         [Authorize(Roles ="root,Admin,President,Chef")]
         public async Task<IActionResult> Index()
         {
@@ -70,7 +74,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President")]
         public IActionResult Accept(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "قبول الملف";
+            if (id == null)
             {
                 return NotFound();
             }
@@ -93,7 +98,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> Accept(int ID,int Num)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "قبول الملف";
+            if (ModelState.IsValid)
             {
                 var doc = db.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
 
@@ -106,7 +112,7 @@ namespace HAICOP.Controllers
                         await db.SaveChangesAsync();
 
                          _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Accept DossierID : {ID} .");
-                        return RedirectToAction("Rep","Doc");
+                        return RedirectToAction("Select","Doc" , new { id = ID });
                     }
                     catch (System.Exception ex)
                     {
@@ -123,7 +129,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President")]
         public IActionResult Ref(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "رفض الملف";
+            if (id == null)
             {
                 return NotFound();
             }
@@ -145,7 +152,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President")]
         public async Task<IActionResult> Ref(int ID,int Num)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "رفض الملف";
+            if (ModelState.IsValid)
             {
                 var doc = db.Dossier.FirstOrDefault(d => d.ID == ID && d.Num == Num);
 
@@ -173,27 +181,10 @@ namespace HAICOP.Controllers
 
 
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public IActionResult ListEditFour(int? id)
-        {
-            if(id == null)
-            {
-                return NotFound();
-            }
-
-            var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                             .Include(f => f.Dossier)
-                                             .Include(f => f.Dossier.Commission)
-                                             .Where( f => f.DossierID == id.GetValueOrDefault())
-                                             .ToList();
-
- 
-            return View(four);
-        }
-
-        [Authorize(Roles ="root,Admin,President,assistant")]
         public IActionResult EditFour(int? fid , int? did)
         {
-            if( fid ==  null || did == null)
+            ViewBag.Menu = "تحيين صاحب الصفقة";
+            if ( fid ==  null || did == null)
             {
                 return NotFound();
             }
@@ -220,7 +211,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President,assistant")]
         public async Task<IActionResult> EditFour(int DossierID,int tmpFournisseurID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign")] FourInDossier four )
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "تحيين صاحب الصفقة";
+            if (ModelState.IsValid)
             {
 
                 try
@@ -261,7 +253,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President,assistant")]
         public IActionResult AddFour(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "إضافة صاحب الصفقة";
+            if (id == null)
             {
                 return NotFound();
             }
@@ -280,7 +273,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President,assistant")]
         public async Task<IActionResult> AddFour(int DossierID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign")] FourInDossier four  )
         {
-            if(!DossierExists(DossierID) )
+            ViewBag.Menu = "إضافة صاحب الصفقة";
+            if (!DossierExists(DossierID) )
             {
                 return NotFound();
             }
@@ -312,7 +306,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President,assistant")]
         public IActionResult Rep(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "إضافة قرار";
+            if (id == null)
             {
                 return NotFound();
             }
@@ -322,15 +317,9 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var met = db.Metting.AsNoTracking().SingleOrDefault( m => m.DossierID == id.GetValueOrDefault());
+            ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
+            return View( new AddAvis { DossierID = id.GetValueOrDefault() , MettNbr = 1  });
 
-            if(met == null)
-            {
-                ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
-                return View( new AddAvis { DossierID = id.GetValueOrDefault() , MettNbr = 1  });
-            }
-            return RedirectToAction("Index","Doc");
-            
         }
 
         [HttpPost]
@@ -338,7 +327,8 @@ namespace HAICOP.Controllers
         [Authorize(Roles ="root,Admin,President,assistant")]
         public async Task<IActionResult> Rep(int DessisionID ,int DossierID,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting , IFormFile Location, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail  )
         {
-            if(!DossierExists( DossierID))
+            ViewBag.Menu = "إضافة قرار";
+            if (!DossierExists( DossierID))
             {
                 return NotFound();
             }
@@ -360,9 +350,12 @@ namespace HAICOP.Controllers
                         ModelState.AddModelError("Location", "يقبل ملفات  (pdf)");
                         return View(model);
                     }
-                    
-                    db.Add(mail);
+
                     db.Add(metting);
+                    await db.SaveChangesAsync();
+                    mail.MettingID = metting.ID;
+                    db.Add(mail);
+                    
                     db.Add(new DessisionInMetting { DessisionID = DessisionID , Metting = metting});
                     var doc = await db.Dossier.FindAsync(DossierID);
                     doc.State = DossierState.Traitement;
@@ -390,16 +383,17 @@ namespace HAICOP.Controllers
 
         public IActionResult EditAvis(int? id)
         {
-            if(id == null)
+            ViewBag.Menu = "تحيين قرار";
+            if (id == null)
             {
                 return NotFound();
             }
 
 
-            var doc = db.Dossier.Include(d => d.Mails)
-                                      .Include(d => d.Mettings)
-                                      .FirstOrDefault(d => d.ID == id.GetValueOrDefault());
-            if(doc == null)
+            var metting = db.DessisionInMetting.Include(m => m.Metting)
+                                               .Include(d => d.Dessision)
+                                               .FirstOrDefault(m => m.MettingID == id.GetValueOrDefault());
+            if(metting == null)
             {
                 return NotFound();
             }
@@ -408,16 +402,14 @@ namespace HAICOP.Controllers
 
             EditAvis model = new EditAvis();
 
-            var mail = doc.Mails.LastOrDefault();
-            var metting = doc.Mettings.LastOrDefault();
-            var des = db.DessisionInMetting.FirstOrDefault( m => m.MettingID == metting.ID);
+            var mail = db.Mail.FirstOrDefault(a => a.MettingID == id.GetValueOrDefault());
 
             model.InitFromMail(mail);
-            model.InitFromMetting(metting);
+            model.InitFromMetting(metting.Metting);
 
             model.MailID = mail.ID;
-            model.MettingID = metting.ID;
-            model.DessisionID = des.DessisionID;
+            model.MettingID = metting.MettingID;
+            model.DessisionID = metting.DessisionID;
 
             ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
             return View(model);
@@ -426,8 +418,9 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
+        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID, IFormFile Location,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
         {
+            ViewBag.Menu = "تحيين قرار";
             if (ModelState.IsValid)
             {
 
@@ -437,6 +430,11 @@ namespace HAICOP.Controllers
 
                 try
                 {
+                    if (Location != null)
+                    {
+                        mail.Url = Upload(Location).Result;
+                    }
+
                     db.Update(mail);
                     db.Update(metting);
                     db.Remove( await db.DessisionInMetting.AsNoTracking().SingleOrDefaultAsync(s => s.MettingID == MettingID));
@@ -500,5 +498,7 @@ namespace HAICOP.Controllers
             }    
         }
 
+
+        #endregion
     }
 }

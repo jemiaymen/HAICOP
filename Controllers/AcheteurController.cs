@@ -27,6 +27,7 @@ namespace HAICOP.Controllers
         // GET: Acheteur
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "تحيين مشتري عمومي";
             return View(await db.Acheteur.ToListAsync());
         }
 
@@ -34,6 +35,7 @@ namespace HAICOP.Controllers
         // GET: Acheteur/Create
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة مشتري عمومي";
             return View();
         }
 
@@ -44,6 +46,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Lbl,LblLong")] Acheteur acheteur)
         {
+            ViewBag.Menu = "إضافة مشتري عمومي";
             if (AcheteurExists(acheteur.Lbl,acheteur.LblLong))
             {
                 ModelState.AddModelError("Lbl", "المشتري العمومي موجود");
@@ -64,6 +67,7 @@ namespace HAICOP.Controllers
         // GET: Acheteur/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Menu = "تحيين مشتري عمومي";
             if (id == null)
             {
                 return NotFound();
@@ -84,6 +88,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblLong")] Acheteur acheteur)
         {
+            ViewBag.Menu = "تحيين مشتري عمومي";
             if (id != acheteur.ID)
             {
                 return NotFound();

@@ -1,108 +1,111 @@
 @using System.Linq
 @model IEnumerable<HAICOP.Models.DocDetail>
 
-@{
-    ViewData["Title"] = "البحث";
-    ViewData["SubMenu"] = "البحث";
-}
+<div class="grid">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">@ViewData["Title"]</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="ls-editable-table table-responsive ">
-                                        <table class="table table-bordered table-striped ls-table" >
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        التعهد
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Num)
-                                                    </th>
-                                                    <th>
-                                                        المشتري العمومي
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayNameFor(model => model.Dossier.Subject)
-                                                    </th>
-                                                    <th>
-                                                        الهيكل
-                                                    </th>
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
 
-                                                    <th>
-                                                        المقرر
-                                                    </th>
 
-                                                    
-                                                    <th>
-                                                        صاحب الصفقة
-                                                    </th>
-                                                    <th>
-                                                        اجابة
-                                                    </th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model) {
-                                                   var ID = item.Dossier.ID ;
-                                                    <tr>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.ProDate)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dossier.Num)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
-                                                        </td>
-                                                        <td>
-                                                            @item.Dossier.Subject.ToString().Substring(0, (item.Dossier.Subject.Length > 50) ? 50 : item.Dossier.Subject.Length ) ...
-                                                        </td>
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                        التعهد
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        @Html.DisplayNameFor(model => model.Dossier.Num)
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        المشتري العمومي
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        @Html.DisplayNameFor(model => model.Dossier.Subject)
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الهيكل
+                    </th>
 
-                                                        <td>
-                                                            @item.Commission.Lbl.ToString().Substring(0, (item.Commission.Lbl.Length > 25) ? 25 : item.Commission.Lbl.Length ) ...
-                                                        </td>
+                    <th class="m23-table__content-table-cell--header ">
+                        المقرر
+                    </th>
 
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Rapporteur.Name)
-                                                        </td>
 
-                                                        
+                    <th class="m23-table__content-table-cell--header ">
+                        صاحب الصفقة
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        اجابة
+                    </th>
+                    <th class="m23-table__content-table-cell--header "></th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
 
-                                                        <td>
-                                                            @foreach(var f in item.Fournisseurs){
-                                                                <p> @f.Lbl </p>
-                                                            }
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Dessision.Lbl)
-                                                        </td>
-                                                        <td>
-                                                            @Html.ActionLink("كل العطيات", "Detail", "Search",  new { id = item.Dossier.ID}) 
-                                                        </td>
+                @foreach (var item in Model)
+                {
+                    var ID = item.Dossier.ID;
+                    <tr class="m23-table__content-table-row ">
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.ProDate)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Num)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @item.Dossier.Subject
+                        </td>
 
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <td class="m23-table__content-table-cell">
+                            @item.Commission.Lbl
+                        </td>
+
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Rapporteur.Name)
+                        </td>
+
+
+
+                        <td class="m23-table__content-table-cell">
+                            @foreach (var f in item.Fournisseurs)
+                            {
+                                <p> @f.Lbl </p>
+                            }
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dessision.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Select" asp-controller="Doc" asp-route-id="@item.Dossier.ID"><i class="fa fa-check"></i></a>
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 @section Styles {
-    @{ await Html.RenderPartialAsync("_TableStylePartial");}
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
 }
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_TableScriptPatialWithout"); }
+    @{ await Html.RenderPartialAsync("_TableScript"); }
 }
-
 
 

@@ -28,12 +28,14 @@ namespace HAICOP.Controllers
         // GET: Invest
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "تحيين ممول";
             return View(await db.ForeignInvestisseur.ToListAsync());
         }
 
         // GET: Invest/Create
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة ممول";
             return View();
         }
 
@@ -42,6 +44,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name")] ForeignInvestisseur foreignInvestisseur)
         {
+            ViewBag.Menu = "إضافة ممول";
             if (ForeignInvestisseurExists(foreignInvestisseur.Name))
             {
                 ModelState.AddModelError("Name", "الممول موجود");
@@ -61,6 +64,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Menu = "تحيين ممول";
             if (id == null)
             {
                 return NotFound();
@@ -78,6 +82,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] ForeignInvestisseur foreignInvestisseur)
         {
+            ViewBag.Menu = "تحيين ممول";
             if (id != foreignInvestisseur.ID)
             {
                 return NotFound();

@@ -50,6 +50,9 @@ namespace HAICOP.Controllers
         }
 
 
+        #region update style 
+
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
@@ -74,12 +77,12 @@ namespace HAICOP.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogDebug(1,$"User : {model.Email} Login .");
+                    _logger.LogDebug(1, $"User : {model.Email} Login .");
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogDebug(2,$"User : {model.Email} Locked.");
+                    _logger.LogDebug(2, $"User : {model.Email} Locked.");
                     return View("Lockout");
                 }
                 else
@@ -97,8 +100,10 @@ namespace HAICOP.Controllers
         [Authorize(Roles = "root,Admin")]
         public IActionResult Register(string returnUrl = null)
         {
+            ViewBag.Menu = "إضافة مستعمل";
+
             ViewData["ReturnUrl"] = returnUrl;
-            RegisterViewModel model = new RegisterViewModel { Roles =  _roleManager.Roles.ToList() };
+            var model = new RegisterViewModel { Roles = _roleManager.Roles.ToList() };
             return View(model);
         }
 
@@ -107,17 +112,19 @@ namespace HAICOP.Controllers
         [Authorize(Roles = "root,Admin")]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
+            ViewBag.Menu = "إضافة مستعمل";
+
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email , FirstLastName = model.FirstLastName  };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, FirstLastName = model.FirstLastName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
                     //await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Create User : {model.UserName} .");
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Create User : {model.UserName} .");
                     return RedirectToAction("Index");
                 }
                 AddErrors(result);
@@ -132,16 +139,122 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            _logger.LogDebug(2,$"User :  {ViewBag.user.Email} Login Out.");
+            _logger.LogDebug(2, $"User :  {ViewBag.user.Email} Login Out.");
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpGet]
-        public IActionResult Logout(string returnUrl ="") 
+        public IActionResult Logout(string returnUrl = "")
         {
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
+
+        [HttpGet]
+        [Authorize(Roles = "root,Admin")]
+        public async Task<IActionResult> Edit(string Id)
+        {
+            ViewBag.Menu = "تحيين مستعملين";
+            if (Id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditProfileViewModel
+            {
+                UserId = user.Id,
+                FirstLastName = user.FirstLastName,
+                UserName = user.UserName,
+                Email = user.Email,
+                StringRoles = await _userManager.GetRolesAsync(user)
+            };
+
+            ViewData["Role"] = new SelectList(_roleManager.Roles, "NormalizedName", "Name", model.StringRoles[0]);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "root,Admin")]
+        public async Task<IActionResult> Edit(string Id, string UserId, string UserName, string FirstLastName, string Email, string Role)
+        {
+            ViewBag.Menu = "تحيين مستعملين";
+            if (Id != UserId)
+            {
+                return NotFound();
+            }
+
+
+            var user = await _userManager.FindByIdAsync(UserId);
+            user.Email = Email;
+            user.UserName = UserName;
+            user.FirstLastName = FirstLastName;
+
+
+            string existingRole = _userManager.GetRolesAsync(user).Result.Single();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Update(user);
+                    await db.SaveChangesAsync();
+                    var isInRole = await _userManager.IsInRoleAsync(user, Role);
+                    if (!isInRole)
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, existingRole);
+                        await _userManager.AddToRoleAsync(user, Role);
+                    }
+
+                    _logger.LogDebug(1, $"Admin :  {ViewBag.user.UserName} edit User : {user.UserName}.");
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                return RedirectToAction("Index");
+            }
+
+            return View(user);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "root,Admin")]
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.Menu = "تحيين المستعملين";
+            List<RegisterViewModel> list = new List<RegisterViewModel>();
+
+            foreach (var user in _userManager.Users.ToList())
+            {
+                list.Add(new RegisterViewModel()
+                {
+                    UserId = user.Id,
+                    FirstLastName = user.FirstLastName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    StringRoles = await _userManager.GetRolesAsync(user)
+
+                });
+            }
+
+            return View(list);
+        }
+
+        #endregion
+
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -185,98 +298,9 @@ namespace HAICOP.Controllers
             return false;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "root,Admin")]
-        public async Task<IActionResult> Index()
-        {
-            List<RegisterViewModel> list = new List<RegisterViewModel>();
+        
 
-            foreach (var user in _userManager.Users.ToList())
-            {              
-                list.Add(new RegisterViewModel() {
-                    UserId = user.Id, 
-                    FirstLastName = user.FirstLastName,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    StringRoles = await _userManager.GetRolesAsync(user)
-                   
-                });
-            }
-
-            return View(list);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "root,Admin")]
-        public async Task<IActionResult> Edit(string Id)
-        {
-            if (Id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _userManager.FindByIdAsync(Id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var model = new EditProfileViewModel {
-                UserId = user.Id, 
-                FirstLastName = user.FirstLastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                StringRoles = await _userManager.GetRolesAsync(user)
-            };
-
-            ViewData["Role"] = new SelectList(_roleManager.Roles, "NormalizedName", "Name" , model.StringRoles[0] );
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "root,Admin")]
-        public async Task<IActionResult> Edit(string Id,string UserId,string UserName , string FirstLastName , string Email,string Role)
-        {
-             if (Id != UserId)
-            {
-                return NotFound();
-            }
-
-            
-            var user = await _userManager.FindByIdAsync(UserId);
-            user.Email = Email;
-            user.UserName = UserName;
-            user.FirstLastName = FirstLastName;
-
-
-            string existingRole = _userManager.GetRolesAsync(user).Result.Single(); 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    db.Update(user);
-                    await db.SaveChangesAsync();
-                    var isInRole = await _userManager.IsInRoleAsync(user, Role);
-                    if(!isInRole)
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, existingRole);  
-                        await _userManager.AddToRoleAsync(user,Role);
-                    }
-
-                    _logger.LogDebug(1,$"Admin :  {ViewBag.user.UserName} edit User : {user.UserName}.");
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                return RedirectToAction("Index");
-            }
-
-            return View(user);
-        }
-
+        
 
         [HttpGet]
         public async Task<IActionResult> ResetPassword(string Id)

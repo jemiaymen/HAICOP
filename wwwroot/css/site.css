@@ -7,3 +7,16 @@
     }
 }
 
+
+.text-danger {
+    color: #EA4335;
+}
+
+/*body {
+    background-color: #e9ebee;
+}*/
+
+
+form.m12-search__item button.m12-search__submit {
+    margin-top: -40px;
+}

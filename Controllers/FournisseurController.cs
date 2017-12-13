@@ -27,12 +27,14 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "تحيين صاحب الصفقة";
             return View(await db.Fournisseur.ToListAsync());
         }
 
 
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة صاحب الصفقة";
             return View();
         }
 
@@ -40,6 +42,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Lbl")] Fournisseur fournisseur)
         {
+            ViewBag.Menu = "إضافة صاحب الصفقة";
             if (FournisseurExists(fournisseur.Lbl))
             {
                 ModelState.AddModelError("Lbl", "المزود موجود");
@@ -58,6 +61,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Menu = "تحيين صاحب الصفقة";
             if (id == null)
             {
                 return NotFound();
@@ -75,6 +79,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl")] Fournisseur fournisseur)
         {
+            ViewBag.Menu = "تحيين صاحب الصفقة";
             if (id != fournisseur.ID)
             {
                 return NotFound();

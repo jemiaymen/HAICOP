@@ -137,7 +137,7 @@ namespace HAICOP.Models
 		[Display(Name = "إستشارة")]
 		Consultation = 2,
 		[Display(Name = "ملحق")]
-		Extension = 3,
+		Avenant = 3,
 		[Display(Name = "تقرير فرز العروض")]
 		Rapport = 4,
 		[Display(Name = "صفقة إطارية")]
@@ -306,10 +306,11 @@ namespace HAICOP.Models
 		[Display(Name = "الوثيقة")]
 		[Url(ErrorMessage="الرجاء التثبت من الرابط")]
 		public string Url {get ; set;}
-		
-		
-		
-	}
+
+        [Display(Name = "الجلسة")]
+        public int MettingID { get; set; }
+
+    }
 	
 	public class Dessision
 	{
@@ -387,6 +388,8 @@ namespace HAICOP.Models
 		public virtual ICollection<Dossier> Dossiers { get; set; }
 		
 		public virtual ICollection<Agent> Agents { get; set; }
+
+        public virtual NextNum NextNum { get; set; }
 		
 		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "إسم اللجنة")]
@@ -554,4 +557,17 @@ namespace HAICOP.Models
         public string UserID { get; set; }
         public virtual ApplicationUser User { get; set; }
 	}
+
+
+    public class NextNum
+    {
+        [Key]
+        [Column(Order = 0)]
+        public int CommissionID { get; set; }
+        public virtual Commission Commission { get; set; }
+
+        [Display(Name = "العدد")]
+        public int Next { get; set; }
+
+    }
 }

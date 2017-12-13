@@ -26,11 +26,13 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Menu = "تحيين قرار";
             return View(await db.Dessision.ToListAsync());
         }
 
         public IActionResult Create()
         {
+            ViewBag.Menu = "إضافة قرار";
             return View();
         }
 
@@ -38,7 +40,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Lbl")] Dessision dessision)
         {
-            if(DessisionExists(dessision.Lbl))
+            ViewBag.Menu = "إضافة قرار";
+            if (DessisionExists(dessision.Lbl))
             {
                 ModelState.AddModelError("Lbl", " موجود");
                 return View(dessision);
@@ -56,6 +59,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Menu = "تحيين قرار";
             if (id == null)
             {
                 return NotFound();
@@ -73,6 +77,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl")] Dessision dessision)
         {
+            ViewBag.Menu = "تحيين قرار";
             if (id != dessision.ID)
             {
                 return NotFound();

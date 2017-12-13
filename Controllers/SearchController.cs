@@ -31,25 +31,104 @@ namespace HAICOP.Controllers
     
         }
 
-        public IActionResult Index(string q)
+        public IActionResult Index(string q,int? ID,int? Date,int? Subject,int? Rapporteur,int? Fournisseur,int? Acheteur,Financement? Financement,int? DateRen,int? Dessision)
         {
+
+            ViewBag.Menu = "نتيجة بحث";
+
+            List<Dossier> doc = new List<Dossier>();
             int num = 0;
-            Int32.TryParse(q, out num);
+            DateTime d = new DateTime();
 
-            var doc = db.AchInDossier.Include(d => d.Acheteur)
-                                     .Include(d => d.Dossier)
-                                     .Include(d => d.Dossier.Commission)
-                                     .Where( d => d.Acheteur.Lbl.Contains(q) || d.Acheteur.LblLong.Contains(q))
-                                     .Select(d => d.Dossier);
-
-            if(doc.Count() == 0)
+            if (ID != null)
             {
-                doc = db.Dossier.Include( d => d.Commission)
-                                .Where(d => d.Subject.Contains(q) || d.Commission.Lbl.Contains(q) || d.Num == num );
-                
+                Int32.TryParse(q, out num);
+                doc = db.Dossier.Include(c => c.Commission).Where(c => c.Num == num).ToList();
             }
 
+
+            if(Subject != null)
+            {
+                if(doc.Count == 0)
+                {
+                    doc = db.Dossier.Include(c => c.Commission).Where(c => c.Subject.Contains(q)).ToList();
+                }
+            }
+
+            if(Date != null)
+            {
+                if(doc.Count == 0)
+                {
+                    DateTime.TryParse(q, out d);
+                    doc = db.Dossier.Include(c => c.Commission).Where(c => c.ProDate == d).ToList();
+                }
+            }
+
+
             
+            
+            if(Rapporteur != null)
+            {
+                if(doc.Count == 0)
+                {
+                    doc = db.Rapporteur.Include(c => c.Dossier)
+                                       .Include(c => c.Agent)
+                                       .Where(a => a.Agent.Name.Contains(q)).Select(c => c.Dossier).ToList();
+                }
+            }
+
+
+            if(Fournisseur != null)
+            {
+                if(doc.Count == 0)
+                {
+                    doc = db.FourInDossier.Include(c => c.Fournisseur)
+                                          .Include(c => c.Dossier)
+                                          .Where(c => c.Fournisseur.Lbl.Contains(q)).Select(c => c.Dossier).ToList();
+                }
+            }
+
+
+            if (Acheteur != null)
+            {
+                if (doc.Count == 0)
+                {
+                    doc = db.AchInDossier.Include(c => c.Acheteur)
+                                          .Include(c => c.Dossier)
+                                          .Where(c => c.Acheteur.Lbl.Contains(q)).Select(c => c.Dossier).ToList();
+                }
+            }
+
+            if (Financement != null)
+            {
+                if (doc.Count == 0)
+                {
+                    doc = db.Dossier.Include(c => c.Commission).Where(c => c.Financement == Financement).ToList();
+                }
+            }
+
+            if (DateRen != null)
+            {
+                if (doc.Count == 0)
+                {
+                    DateTime.TryParse(q, out d);
+                    doc = db.Metting.Include(c => c.Dossier)
+                                    .Include(c => c.Dossier.Commission)
+                                    .Where(c => c.MettDate == d).Select(c => c.Dossier).ToList();
+                }
+            }
+
+            if (Dessision != null)
+            {
+                if (doc.Count == 0)
+                {
+                    doc = db.DessisionInMetting.Include(c => c.Metting)
+                                               .Include(c => c.Dessision)
+                                               .Include(c => c.Metting.Dossier)
+                                               .Include(c => c.Metting.Dossier.Commission)
+                                               .Where(c => c.Dessision.Lbl.Contains(q)).Select(c => c.Metting.Dossier).ToList();
+                }
+            }
 
             List<DocDetail> re = new List<DocDetail>();
             foreach( var item in doc)
@@ -87,9 +166,9 @@ namespace HAICOP.Controllers
                 
                 try 
                 {
-                    var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                            .Include( d => d.Metting)
-                                                            .SingleOrDefault( d => d.Metting.DossierID == item.ID).Dessision;
+                    var dessision = db.DessisionInMetting.Include( c => c.Dessision)
+                                                            .Include( c => c.Metting)
+                                                            .SingleOrDefault( c => c.Metting.DossierID == item.ID).Dessision;
                     tmp.Dessision = dessision;
                 }
                 catch(Exception)
@@ -110,84 +189,13 @@ namespace HAICOP.Controllers
             return View(re);
         }
 
-        public IActionResult Detail(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var doc =   db.Dossier.Include( d => d.Mails)
-                                        .Include( d => d.Mettings)
-                                        .Include( d => d.Commission)
-                                        .FirstOrDefault(d => d.ID == id.GetValueOrDefault() );
-
-            if(doc == null)
-            {
-                return NotFound();
-            }
-
-            DocDetail re = new DocDetail {Dossier = doc};
-
-            try
-            {
-                var four = db.FourInDossier.Include( f => f.Fournisseur)
-                                                 .Where( f => f.DossierID == doc.ID)
-                                                 .ToList();
-                re.FinD = four;
-            }
-            catch(Exception)
-            {
-
-            }
-
-                
-            try 
-            {
-                var achteur = db.AchInDossier.Include( a => a.Acheteur)
-                                                    .SingleOrDefault( a => a.DossierID == doc.ID).Acheteur ;
-                re.Acheteur = achteur;
-            }
-            catch(Exception)
-            {
-
-            }   
-
-            try
-            {
-                var rapporteur = db.Rapporteur.Include( r => r.Agent)
-                                                    .SingleOrDefault(a => a.DossierID == doc.ID).Agent;
-                re.Rapporteur = rapporteur;
-            }
-            catch(Exception)
-            {
-
-            }
-
-            try
-            {
-                var dessision = db.DessisionInMetting.Include( d => d.Dessision)
-                                                            .Include( d => d.Metting)
-                                                            .SingleOrDefault( d => d.Metting.DossierID == doc.ID).Dessision;
-                re.Dessision = dessision;
-            }
-            catch(Exception)
-            {
-
-            }
-                
-                
-                
-
-
-            return View(re);
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Rapporteur(SearchRapp search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (المقرر)";
+            if (ModelState.IsValid)
             {
                 if(search.From != null && search.To != null)
                 {
@@ -252,7 +260,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Commission(SearchStruct search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (الهيكل)";
+            if (ModelState.IsValid)
             {
                 if(search.From != null && search.To != null)
                 {
@@ -302,18 +311,21 @@ namespace HAICOP.Controllers
         }
         public IActionResult Rapp()
         {
+            ViewBag.Menu = "بحث مقرر";
             ViewData["AgentID"] = new SelectList(db.Agent.Where(a => a.IsPresident == false).ToList(), "ID", "Name");
             return View();
         }
 
         public IActionResult Struct()
         {
+            ViewBag.Menu = "بحث هيكل";
             ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
             return View();
         }
 
         public IActionResult Acheteur()
         {
+            ViewBag.Menu = "بحث مشتري عمومي";
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
             return View();
         }
@@ -322,7 +334,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Acheteur(SearchAcheteur search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (المشتري العمومي)";
+            if (ModelState.IsValid)
             {
                 if(search.From != null && search.To != null)
                 {
@@ -389,6 +402,7 @@ namespace HAICOP.Controllers
 
         public IActionResult Fournisseur()
         {
+            ViewBag.Menu = "بحث صاحب الصفقة";
             ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
             return View();
         }
@@ -397,7 +411,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Fournisseur(SearchFournisseur search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (صاحب الصفقة)";
+            if (ModelState.IsValid)
             {
                 if(search.From != null && search.To != null)
                 {
@@ -464,6 +479,7 @@ namespace HAICOP.Controllers
 
         public IActionResult TypeFinancement()
         {
+            ViewBag.Menu = "بحث طريقة التمويل";
             return View();
         }
 
@@ -471,7 +487,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult TypeFinancement(SearchFina search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (التمويل)";
+            if (ModelState.IsValid)
             {
                 
                 if(search.From != null && search.To != null)
@@ -530,6 +547,7 @@ namespace HAICOP.Controllers
 
         public IActionResult ForeignInv()
         {
+            ViewBag.Menu = "بحث الممول";
             ViewData["Foreign"] = new SelectList(db.ForeignInvestisseur, "Name", "Name");
             return View();
         }
@@ -538,7 +556,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ForeignInv(SearchForeign search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (الممول)";
+            if (ModelState.IsValid)
             {
                 
                 if(search.From != null && search.To != null)
@@ -599,6 +618,7 @@ namespace HAICOP.Controllers
 
         public IActionResult TypeDoc()
         {
+            ViewBag.Menu = "بحث طبيعة الملف";
             return View();
         }
         
@@ -606,7 +626,8 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult TypeDoc(SearchTypeDoc search)
         {
-            if(ModelState.IsValid)
+            ViewBag.Menu = "نتيجة بحث (طبيعة الملف)";
+            if (ModelState.IsValid)
             {
                 
                 if(search.From != null && search.To != null)

@@ -225,6 +225,9 @@ namespace HAICOP.Migrations
 
                     b.HasIndex("CommissionID");
 
+                    b.HasIndex("ProDate", "Num", "CommissionID")
+                        .IsUnique();
+
                     b.ToTable("Dossier");
                 });
 
@@ -315,6 +318,8 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("MailType");
 
+                    b.Property<int>("MettingID");
+
                     b.Property<string>("OriginRef")
                         .HasMaxLength(20);
 
@@ -352,6 +357,17 @@ namespace HAICOP.Migrations
                     b.HasIndex("DossierID");
 
                     b.ToTable("Metting");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.NextNum", b =>
+                {
+                    b.Property<int>("CommissionID");
+
+                    b.Property<int>("Next");
+
+                    b.HasKey("CommissionID");
+
+                    b.ToTable("NextNum");
                 });
 
             modelBuilder.Entity("HAICOP.Models.Rapporteur", b =>
@@ -611,6 +627,14 @@ namespace HAICOP.Migrations
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
                         .WithMany("Mettings")
                         .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.NextNum", b =>
+                {
+                    b.HasOne("HAICOP.Models.Commission", "Commission")
+                        .WithOne("NextNum")
+                        .HasForeignKey("HAICOP.Models.NextNum", "CommissionID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,47 +1,53 @@
 @model HAICOP.Models.MonthStat
 
-@{
-    ViewData["Title"] = " إحصائيات شهرية";
-    ViewData["SubMenu"] = "إحصائيات";
-}
 
-
-<div class="panel panel-default">
-    <div class="panel-heading">
-         <h3 class="panel-title">@ViewData["Title"]</h3>
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <form asp-controller="Home" asp-action="MonthStat"  method="post" >
-            <div class="form-horizontal">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label" asp-for="From"> </label>
-                    <div class="col-md-4">
-                        <input asp-for="From" class="form-control" />
-                        <span asp-validation-for="From" class="text-danger"></span>
-                    </div>
 
-                    <label class="col-md-2 control-label" asp-for="To"> </label>
-                    <div class="col-md-4">
-                        <input asp-for="To" class="form-control" />
-                        <span asp-validation-for="To" class="text-danger"></span>
-                    </div>
-                </div>
+    <form class="form" asp-controller="Home" asp-action="MonthStat" method="post">
 
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn ls-red-btn">بحث</button>
-                    </div>
-                </div>
-            </div>  
-        </form>                            
-    </div>
+
+
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="From" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="From" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="From" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="To" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="To" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="To" class="text-danger"></span>
+            </div>
+        </div>
+
+
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">بحث</button>
+        </div>
+
+
+    </form>
+
 </div>
 
 
-
 @section Scripts {
-    @{  await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
 
