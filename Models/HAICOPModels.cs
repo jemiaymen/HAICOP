@@ -78,45 +78,49 @@ namespace HAICOP.Models
 		In = 1
 	}
 
-	public enum MailNature 
-	{
-		[Display(Name = "جديد")]
-		New = 1,
-		[Display(Name = "عناصر إجابة")]
-		Rep = 2,
-		[Display(Name = "وثائق تكميلية")]
-		Compl = 3,
-		[Display(Name = "الموافقة")]
-		Accept = 4,
-		[Display(Name = "إطلعت")]
-		Vue = 5,
-		[Display(Name = "موافاة")]
-		Mouwafat = 6,
-		[Display(Name = "إرجاء")]
-		ReVue = 7,
-		[Display(Name = "عدم الموافقة")]
-		Refu = 8,
-		[Display(Name = "عدم الإختصاص")]
-		NotSpeciality = 9,
-		[Display(Name = "الإجابة")]
-		Repense = 10,
-		[Display(Name = "إرجاع الملف")]
-		SendBack = 11,
-		[Display(Name = "عدم وجاهة")]
-		RefuTwo = 12,
-		[Display(Name = "يلغي ويعوض")]
-		RefuAndChangement = 13,
-		[Display(Name = "غير مثمر")]
-		NonComform = 14,
-		[Display(Name = "تذكير")]
-		Rappel = 15
-	}
+    public enum MailNature
+    {
+        [Display(Name = "جديد")]
+        New = 1,
+        [Display(Name = "عناصر إجابة")]
+        Rep = 2,
+        [Display(Name = "وثائق تكميلية")]
+        Compl = 3,
+        [Display(Name = "الموافقة")]
+        Accept = 4,
+        [Display(Name = "إطلعت")]
+        Vue = 5,
+        [Display(Name = "موافاة")]
+        Mouwafat = 6,
+        [Display(Name = "إرجاء")]
+        ReVue = 7,
+        [Display(Name = "عدم الموافقة")]
+        Refu = 8,
+        [Display(Name = "عدم الإختصاص")]
+        NotSpeciality = 9,
+        [Display(Name = "الإجابة")]
+        Repense = 10,
+        [Display(Name = "إرجاع الملف")]
+        SendBack = 11,
+        [Display(Name = "عدم وجاهة")]
+        RefuTwo = 12,
+        [Display(Name = "يلغي ويعوض")]
+        RefuAndChangement = 13,
+        [Display(Name = "غير مثمر")]
+        NonComform = 14,
+        [Display(Name = "تذكير")]
+        Rappel = 15,
+        [Display(Name = "إعادة إعلان")]
+        ReAnnonce = 16,
+        [Display(Name = "إمضاء عقد")]
+        Signature = 17
+    }
 
 
 
 
 
-	public enum DossierType 
+    public enum DossierType 
 	{
 		[Display(Name = "أشغال")]
 		Traveaux = 1,
