@@ -1,0 +1,44 @@
+@model HAICOP.Models.SearchAcheteur
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <form class="form" asp-controller="Search" asp-action="Index"  method="post">
+
+
+
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="To" class="form-field__label">التاريخ</label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="To" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="To" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">بحث</button>
+        </div>
+
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+

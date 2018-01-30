@@ -1,0 +1,20 @@
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title"> <a href="@ViewBag.F">File</a></h1>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_DocxScript"); 
+     }
+}

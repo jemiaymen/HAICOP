@@ -1,1 +1,150 @@
-.sitemap__categories li+li,.sitemap__subsections li+li{margin-top:4px}.sitemap__item>ul>.sitemap__item>.sitemap__subsections{margin-bottom:14px;padding-left:0}.sitemap__item{margin-bottom:24px}.sitemap__link{color:#6D6E71}.sitemap__link:hover{text-decoration:underline}[dir="rtl"] .sitemap__link--segment{text-align:left;} .sitemap__link--segment{display:block;margin-bottom:14px;clear:both;padding-top:10px;border-top:1px solid;width:100%;margin-top:110px;font-size:18px;text-align:right;float:left;}.sitemap__link--section{font-size:3rem;padding-bottom:12px;display:block;color:#6D6E71;padding-top:120px;font-weight:700;clear:both;/* width:520px; */margin-left:0}.sitemap__subsection{font-size:1em;float:none;display:block;clear:both;padding-bottom:0;padding-top:24px;color:#37AA33}.sitemap__subsections{margin-bottom:36px}.sitemap__item .sitemap__subsections{padding: 0;list-style:none;clear:both}.sitemap__subsections li:before{color:#37AA33;font-size:20px;content:none}.sitemap__link--subsection{font-size:.9em;display:block}.sitemap__categories{margin-bottom:0;font-size:13px;display:none}.sitemap__categories li{margin-top:12px}.sitemap__categories li:before{content:'\2012'} .legend-color {color:#ffffff;}.ExternalLink{display:none;}.m39-modal__header_v2{background-color:#34B233;color:#fff;font-weight:700;min-height:50px!important;height:50px!important;padding:20px 15px 10px!important;text-align:center!important}.m39-modal__content_v2{top:55px!important;bottom:5px!important;min-height:200px!important;height:200px!important;padding-top:20px;padding-left:20px;text-align:center!important} .align-radio-desc { padding: 5px 40px 0px 40px; display:block;} .form-field__fakeradio focus-enabled {font-weight:bold !important;} .js-hayak-popupy {cursor: pointer;cursor: hand;}.rammasbutton{height:30px;cursor:pointer;}#CaptchaInputText{margin-top:12px;}.mapfields{max-width:50%;}
+.sitemap__categories li + li,
+.sitemap__subsections li + li {
+    margin-top: 4px
+}
+
+.sitemap__item > ul > .sitemap__item > .sitemap__subsections {
+    margin-bottom: 14px;
+    padding-left: 0
+}
+
+.sitemap__item {
+    margin-bottom: 24px
+}
+
+.sitemap__link {
+    color: #6D6E71
+}
+
+    .sitemap__link:hover {
+        text-decoration: underline
+    }
+
+[dir="rtl"] .sitemap__link--segment {
+    text-align: left;
+}
+
+.sitemap__link--segment {
+    display: block;
+    margin-bottom: 14px;
+    clear: both;
+    padding-top: 10px;
+    border-top: 1px solid;
+    width: 100%;
+    margin-top: 110px;
+    font-size: 18px;
+    text-align: right;
+    float: left;
+}
+
+.sitemap__link--section {
+    font-size: 3rem;
+    padding-bottom: 12px;
+    display: block;
+    color: #6D6E71;
+    padding-top: 120px;
+    font-weight: 700;
+    clear: both;
+    /* width:520px; */
+    margin-left: 0
+}
+
+.sitemap__subsection {
+    font-size: 1em;
+    float: none;
+    display: block;
+    clear: both;
+    padding-bottom: 0;
+    padding-top: 24px;
+    color: #37AA33
+}
+
+.sitemap__subsections {
+    margin-bottom: 36px
+}
+
+.sitemap__item .sitemap__subsections {
+    padding: 0;
+    list-style: none;
+    clear: both
+}
+
+.sitemap__subsections li:before {
+    color: #37AA33;
+    font-size: 20px;
+    content: none
+}
+
+.sitemap__link--subsection {
+    font-size: .9em;
+    display: block
+}
+
+.sitemap__categories {
+    margin-bottom: 0;
+    font-size: 13px;
+    display: none
+}
+
+    .sitemap__categories li {
+        margin-top: 12px
+    }
+
+        .sitemap__categories li:before {
+            content: '\2012'
+        }
+
+.legend-color {
+    color: #ffffff;
+}
+
+.ExternalLink {
+    display: none;
+}
+
+.m39-modal__header_v2 {
+    background-color: #34B233;
+    color: #fff;
+    font-weight: 700;
+    min-height: 50px !important;
+    height: 50px !important;
+    padding: 20px 15px 10px !important;
+    text-align: center !important
+}
+
+.m39-modal__content_v2 {
+    top: 55px !important;
+    bottom: 5px !important;
+    min-height: 200px !important;
+    height: 200px !important;
+    padding-top: 20px;
+    padding-left: 20px;
+    text-align: center !important
+}
+
+.align-radio-desc {
+    padding: 5px 40px 0px 40px;
+    display: block;
+}
+
+.form-field__fakeradio focus-enabled {
+    font-weight: bold !important;
+}
+
+.js-hayak-popupy {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.rammasbutton {
+    height: 30px;
+    cursor: pointer;
+}
+
+#CaptchaInputText {
+    margin-top: 12px;
+}
+
+.mapfields {
+    max-width: 50%;
+}

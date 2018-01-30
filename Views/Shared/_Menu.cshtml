@@ -72,6 +72,7 @@
                                                         <h2 class="m12-subsection__title"> التصرف في الملفات</h2>
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="New" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="NewWithNum" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف حالات خاصة</a></li>
                                                         </ul>
                                                     </div>
                                                     <div class="m12-subsection__column">
@@ -128,6 +129,26 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" class="m12-subsection-menu__link"> الملخص</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" class="m12-subsection-menu__link"> التفصيل</a></li>
+                                                       
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">الملخص (جديد)</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">التفصيل (جديد)</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -217,6 +238,7 @@
                                                         <h2 class="m12-subsection__title"> التصرف في الملفات</h2>
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="New" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="NewWithNum" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف حالات خاصة</a></li>
                                                         </ul>
                                                     </div>
                                                     <div class="m12-subsection__column">
@@ -273,6 +295,26 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" class="m12-subsection-menu__link"> الملخص</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" class="m12-subsection-menu__link"> التفصيل</a></li>
+                                                        
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">الملخص (جديد)</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">التفصيل (جديد)</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -362,6 +404,8 @@
                                                         <h2 class="m12-subsection__title"> التصرف في الملفات</h2>
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="New" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="NewWithNum" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف حالات خاصة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Delete" asp-controller="Doc" class="m12-subsection-menu__link">حذف ملف</a></li>
                                                         </ul>
                                                     </div>
                                                     <div class="m12-subsection__column">
@@ -418,6 +462,26 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" class="m12-subsection-menu__link"> الملخص</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" class="m12-subsection-menu__link"> التفصيل</a></li>
+
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStat" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">الملخص (جديد)</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="MonthStatDetail" asp-controller="Home" asp-route-New="true" class="m12-subsection-menu__link">التفصيل (جديد)</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -439,81 +503,191 @@
                         </ul>
                     </div>
                 </div>
-        }break;
-        default : {
-            <div class="m12-bar__wrapper">
-                <div class="m12-bar__content" data-m12-bar-content="true">
-                    <div class="m12-section-navs">
-                        <nav aria-label="" data-section-nav="true" class="m12-section-nav--active">
-                            <ul>
-                                <li data-section="true" class="m12-section-nav__item">
-                                    <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الثوابت" class="m12-section-nav__link ">لوحة القيادة</a>
-                                </li>
-                                <li data-section="true" class="m12-section-nav__item">
-                                    <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الملفات" class="m12-section-nav__link ">الملفات</a>
+            }
+            break;
+        case "Chef":
+            {
+                <div class="m12-bar__wrapper">
+                    <div class="m12-bar__content" data-m12-bar-content="true">
+                        <div class="m12-section-navs">
+                            <nav aria-label="" data-section-nav="true" class="m12-section-nav--active">
+                                <ul>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true" class="m12-section-nav__link ">لوحة القيادة</a>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
 
-                                    <div class="m12-subsection" data-subsection="true">
-                                        <div class="m12-subsection__wrapper">
-                                            <div class="m12-subsection__content">
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
 
-                                                <div class="m12-subsection__column">
-                                                    <h2 class="m12-subsection__title"> التصرف في الملفات</h2>
-                                                    <ul class="m12-subsection-menu">
-                                                        <li class="m12-subsection-menu__item"><a asp-action="New" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف</a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="m12-subsection__column">
-                                                    <h2 class="m12-subsection__title">البحث في الملفات</h2>
-
-                                                    <ul class="m12-subsection-menu">
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Doc" class="m12-subsection-menu__link">الملفات الجارية</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Done" asp-controller="Doc" class="m12-subsection-menu__link">الملفات التي تم إنجازها</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="All" asp-controller="Doc" class="m12-subsection-menu__link">كل الملفات</a></li>
-                                                    </ul>
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li data-section="true" class="m12-section-nav__item">
-                                    <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="البحث المعمق" class="m12-section-nav__link ">البحث المعمق</a>
+                                    </li>
+                                </ul>
 
-                                    <div class="m12-subsection" data-subsection="true">
-                                        <div class="m12-subsection__wrapper">
-                                            <div class="m12-subsection__content">
+                            </nav>
+                        </div>
 
-                                                <div class="m12-subsection__column">
-                                                    <ul class="m12-subsection-menu">
-                                                        <li class="m12-subsection-menu__item"><a asp-action="TypeDoc" asp-controller="Search" class="m12-subsection-menu__link">طبيعة الملف</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Rapp" asp-controller="Search" class="m12-subsection-menu__link">المقرر</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Struct" asp-controller="Search" class="m12-subsection-menu__link">اللجنة</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Acheteur" asp-controller="Search" class="m12-subsection-menu__link">المشتري العمومي</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="Fournisseur" asp-controller="Search" class="m12-subsection-menu__link"> صاحب الصفقة</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="TypeFinancement" asp-controller="Search" class="m12-subsection-menu__link">نوع التمويل</a></li>
-                                                        <li class="m12-subsection-menu__item"><a asp-action="ForeignInv" asp-controller="Search" class="m12-subsection-menu__link">الممول</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+                        <ul class="m12-myaccount">
+                            <li class="m12-myaccount__item" data-section="true" data-myaccount-section="true">
+                                <form asp-action="Logout" asp-controller="Account" method="post" id="frmlogout">
+                                    <a class="m12-myaccount__link icon-new-move-out" aria-expanded="false" aria-haspopup="true" href="#" onclick="$('#frmlogout').submit();" data-section-link="true" data-m12-myaccount-link="true">@ViewBag.user.FirstLastName</a>
+                                    <button class="m12-section__toggle"></button>
+                                </form>
 
-                            </ul>
-                        </nav>
+                            </li>
+                        </ul>
                     </div>
-
-                    <ul class="m12-myaccount">
-                        <li class="m12-myaccount__item" data-section="true" data-myaccount-section="true">
-                            <form asp-action="Logout" asp-controller="Account" method="post" id="frmlogout">
-                                <a class="m12-myaccount__link icon-new-move-out" aria-expanded="false" aria-haspopup="true" href="#" onclick="$('#frmlogout').submit();" data-section-link="true" data-m12-myaccount-link="true">@ViewBag.user.FirstLastName</a>
-                                <button class="m12-section__toggle"></button>
-                            </form>
-
-                        </li>
-                    </ul>
                 </div>
-            </div>
-        }break;
+            }
+            break;
+        case "Rapporteur":
+            {
+                <div class="m12-bar__wrapper">
+                    <div class="m12-bar__content" data-m12-bar-content="true">
+                        <div class="m12-section-navs">
+                            <nav aria-label="" data-section-nav="true" class="m12-section-nav--active">
+                                <ul>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true"  class="m12-section-nav__link ">لوحة القيادة</a>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <ul class="m12-myaccount">
+                            <li class="m12-myaccount__item" data-section="true" data-myaccount-section="true">
+                                <form asp-action="Logout" asp-controller="Account" method="post" id="frmlogout">
+                                    <a class="m12-myaccount__link icon-new-move-out" aria-expanded="false" aria-haspopup="true" href="#" onclick="$('#frmlogout').submit();" data-section-link="true" data-m12-myaccount-link="true">@ViewBag.user.FirstLastName</a>
+                                    <button class="m12-section__toggle"></button>
+                                </form>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            break;
+        default:
+            {
+                <div class="m12-bar__wrapper">
+                    <div class="m12-bar__content" data-m12-bar-content="true">
+                        <div class="m12-section-navs">
+                            <nav aria-label="" data-section-nav="true" class="m12-section-nav--active">
+                                <ul>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الثوابت" class="m12-section-nav__link ">لوحة القيادة</a>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الملفات" class="m12-section-nav__link ">الملفات</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title"> التصرف في الملفات</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="New" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="NewWithNum" asp-controller="Doc" class="m12-subsection-menu__link">تسجيل ملف حالات خاصة</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">البحث في الملفات</h2>
+
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Doc" class="m12-subsection-menu__link">الملفات الجارية</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Done" asp-controller="Doc" class="m12-subsection-menu__link">الملفات التي تم إنجازها</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="All" asp-controller="Doc" class="m12-subsection-menu__link">كل الملفات</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="البحث المعمق" class="m12-section-nav__link ">البحث المعمق</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Get" asp-controller="Search" class="m12-subsection-menu__link">الملفات اليومية</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="TypeDoc" asp-controller="Search" class="m12-subsection-menu__link">طبيعة الملف</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Rapp" asp-controller="Search" class="m12-subsection-menu__link">المقرر</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Struct" asp-controller="Search" class="m12-subsection-menu__link">اللجنة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Acheteur" asp-controller="Search" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="Fournisseur" asp-controller="Search" class="m12-subsection-menu__link"> صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="TypeFinancement" asp-controller="Search" class="m12-subsection-menu__link">نوع التمويل</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ForeignInv" asp-controller="Search" class="m12-subsection-menu__link">الممول</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li data-section="true" class="m12-section-nav__item">
+                                        <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
+
+                                        <div class="m12-subsection" data-subsection="true">
+                                            <div class="m12-subsection__wrapper">
+                                                <div class="m12-subsection__content">
+
+                                                    <div class="m12-subsection__column">
+                                                        <h2 class="m12-subsection__title">المعطيات الشخصية</h2>
+                                                        <ul class="m12-subsection-menu">
+                                                            <li class="m12-subsection-menu__item"><a asp-action="ChangePassword" asp-controller="Account" class="m12-subsection-menu__link"> تحيين كامة السر</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <ul class="m12-myaccount">
+                            <li class="m12-myaccount__item" data-section="true" data-myaccount-section="true">
+                                <form asp-action="Logout" asp-controller="Account" method="post" id="frmlogout">
+                                    <a class="m12-myaccount__link icon-new-move-out" aria-expanded="false" aria-haspopup="true" href="#" onclick="$('#frmlogout').submit();" data-section-link="true" data-m12-myaccount-link="true">@ViewBag.user.FirstLastName</a>
+                                    <button class="m12-section__toggle"></button>
+                                </form>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }break;
     }
 
 }

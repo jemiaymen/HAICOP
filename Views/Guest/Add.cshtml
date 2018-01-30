@@ -1,0 +1,106 @@
+@model HAICOP.Models.Guest
+
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <form class="form" asp-controller="Guest" asp-action="Add" method="post">
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="FirstLastName" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="FirstLastName" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="FirstLastName" class="text-danger"></span>
+            </div>
+
+            <div class="grid__column grid__column--2">
+                <label asp-for="Type" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="Type" asp-items="Html.GetEnumSelectList<GuestType>()" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+        </div>
+
+        
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label for="AcheteurID" class="form-field__label">المشتري العمومي</label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <select id="AcheteurID" name="AcheteurID" asp-items="ViewBag.AcheteurID">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Email" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="Email" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Tel" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="Tel" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Tel" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Fix" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="Fix" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Fix" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Desc" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <textarea asp-for="Desc" class="form-field__input form-field__input--text"> </textarea>
+                <span asp-validation-for="Desc" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">إضافة</button>
+        </div>
+
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
+        <script>
+            $("#AcheteurID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}

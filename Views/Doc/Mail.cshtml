@@ -44,6 +44,7 @@
                     <th class="m23-table__content-table-cell--header ">
                         طباعة
                     </th>
+                    <th class="m23-table__content-table-cell--header "></th>
                 </tr>
             </thead>
             <tbody class="m23-table__content-table-body">
@@ -66,11 +67,15 @@
                         <td class="m23-table__content-table-cell">
                             @Html.DisplayFor(modelItem => item.MailDate)
                         </td>
+                        
                         <td class="m23-table__content-table-cell">
                             <a asp-action="EditMail" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
                         </td>
                         <td class="m23-table__content-table-cell">
                             <a asp-action="Bureau" asp-controller="Print" asp-route-id="@item.DossierID" asp-route-mid="@item.ID"><i class="fa fa-print"></i></a>
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a href="~/uploads/@item.Url" target="_blank"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>
                 }

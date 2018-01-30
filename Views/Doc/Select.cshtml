@@ -86,6 +86,11 @@
                     </td>
                     <td class="m23-table__content-table-cell">
                         @Model.Subject
+                        <br />
+                        @foreach (var des in Model.Descriptions)
+                        {
+                            <p class="text-green">- @Html.DisplayFor(modelItem => des.Description)</p>
+                        }
                     </td>
                     <td class="m23-table__content-table-cell">
                         @Model.Commission.Lbl
@@ -126,7 +131,7 @@
                             <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
                         </td>
                         <td class="m23-table__content-table-cell">
-                            <a asp-action="Edit" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a> 
+                            <a asp-action="EditWithNum" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a> 
                         </td>
                         <td class="m23-table__content-table-cell">
                             <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
@@ -197,7 +202,7 @@
         <div class="grid__row">
             <div class="grid__column grid__column--12">
                 <div class="m17-sectiontitle" data-component="m17-sectiontitle">
-                    <h3 class="m17-sectiontitle__title  text__section-title">صاحب الصفقة</h3>
+                    <h3 class="m17-sectiontitle__title  text__section-title"> </h3>
                 </div>
             </div>
         </div>
@@ -207,7 +212,7 @@
                 <thead class="m23-table__content-table-header">
                     <tr class="m23-table__content-table-row">
                         <th class="m23-table__content-table-cell--header ">
-                            صاحب الصفقة
+                            مقترح الإسناد
                         </th>
                         <th class="m23-table__content-table-cell--header ">
                             المبلغ
@@ -253,7 +258,7 @@
         <div class="grid__row">
             <div class="grid__column grid__column--12">
                 <div class="m17-sectiontitle" data-component="m17-sectiontitle">
-                    <h3 class="m17-sectiontitle__title  text__section-title">القرار</h3>
+                    <h3 class="m17-sectiontitle__title  text__section-title">رأي</h3>
                 </div>
             </div>
         </div>
@@ -271,8 +276,18 @@
                     رأي اللجنة : @d.Dessision.Lbl
                 </div>
                 <div class="grid__column grid__column--1">
+                @if (ViewBag.role.ToString().Contains("root") || ViewBag.role.ToString().Contains("assistant"))
+                {
                     <a asp-action="EditAvis" asp-controller="Avis" asp-route-id="@d.MettingID"><i class="fa fa-pencil-square"></i></a>
-                    <a href="~/uploads/@Model.Mails.FirstOrDefault(a => a.MailType == MailType.In && a.MettingID == d.MettingID).Url" target="_blank"><i class="fa fa-eye"></i></a>
+                }
+                    
+
+                    @try
+                    {
+                        <a href="~/uploads/@Model.Mails.FirstOrDefault(a => a.MailType == MailType.In && a.MettingID == d.MettingID).Url" target="_blank"><i class="fa fa-eye"></i></a>
+                    }
+                    catch (Exception) { }
+                    
                 </div>
 
             </div>
@@ -310,6 +325,34 @@
             </div>
         </div>
     }
+
+
+    @if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Contains("Rapporteur") || ViewBag.role.ToString().Contains("assistant"))
+    {
+        <div class="grid__row">
+            <div class="grid__column grid__column--12">
+                <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                    <h3 class="m17-sectiontitle__title  text__section-title">إضافة معطيات</h3>
+                </div>
+            </div>
+        </div>
+
+        <form class="form" asp-controller="Doc" asp-action="AddDescription" method="post">
+
+            <input type="hidden" id="DossierID" name="DossierID" value="@Model.ID"/>
+
+            <div class="grid__row">
+                <div class="grid__column grid__column--12">
+                    <textarea id="Descripton" name="Description" class="form-field__input form-field__input--text" required="required"></textarea>
+                </div>
+            </div>
+
+            <div class="form-field__button">
+                <button class="button button--primary" type="submit">إضافة</button>
+            </div>
+        </form>
+    }
+
 
 
 </div>

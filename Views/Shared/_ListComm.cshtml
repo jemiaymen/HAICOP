@@ -22,7 +22,25 @@
     </div>
 
     <div class="grid__row">
-        <table class="m23-table__content-table ls-table" style="font-size: 13px; font-weight: lighter;">
+        <div class="grid__column grid__column--3">
+            <label class="form-field__label">حدد السنة</label>
+        </div>
+        <div class="grid__column grid__column--3">
+            <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                <select id="minmax" name="minmax" class="form-field__input form-field__input--select">
+                    <option value=""></option>
+                    <option value="2018/01/01|2018/12/31">2018</option>
+                    <option value="2017/01/01|2017/12/31">2017</option>
+                    <option value="2016/01/01|2016/12/31">2016</option>
+                    <option value="2015/01/01|2015/12/31">2015</option>
+                    <option value="2014/01/01|2014/12/31">2014</option>
+                </select>
+            </span>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
             <thead class="m23-table__content-table-header">
                 <tr class="m23-table__content-table-row">
                     <th class="m23-table__content-table-cell--header ">
@@ -35,16 +53,19 @@
                         الموضوع
                     </th>
                     <th class="m23-table__content-table-cell--header ">
+                        المشتري العمومي
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
                         المقرر
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        صاحب الصفقة
+                        مقترح الإسناد
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        تاريخ الإجتماع
+                        تاريخ الجلسة
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        الإجابة
+                        رأي اللجنة
                     </th>
                     <th class="m23-table__content-table-cell--header ">
                         تاريخ الإجابة
@@ -73,6 +94,14 @@
                             </td>
                             <td class="text-danger m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Dossier.Dossier.Subject)
+                                <br />
+                                @foreach(var des in item.Dossier.Dossier.Descriptions)
+                                {
+                                    <span class="">@Html.DisplayFor(modelItem => des.Description)</span>
+                                }
+                            </td>
+                            <td class="text-danger m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.LblLong)
                             </td>
                             <td class="text-danger m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
@@ -113,6 +142,14 @@
                             </td>
                             <td class="m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Dossier.Dossier.Subject)
+                                <br />
+                                @foreach (var des in item.Dossier.Dossier.Descriptions)
+                                {
+                                    <p class="text-green">- @Html.DisplayFor(modelItem => des.Description)</p>
+                                }
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.LblLong)
                             </td>
                             <td class="m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
@@ -163,7 +200,7 @@
 
 @section Scripts {
     @{
-    await Html.RenderPartialAsync("_TableScript");
+        await Html.RenderPartialAsync("_ScriptFilter");
     }
 }
 

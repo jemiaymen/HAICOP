@@ -64,13 +64,15 @@
             <h3>تاريخ قبول الملف :  @ViewBag.Mail.MailDate.ToString("yyyy/MM/dd") </h3>
         </div>
         <div class="col-xs-6">
-            <h3>عدد الملف :  @Html.DisplayFor(model => Model.Num)/@Html.DisplayFor(model => Model.Commission.Code)/@Html.DisplayFor(model => Model.DocDate.Year) </h3>
+            <h3>عدد الملف :  @Html.DisplayFor(model => Model.Num)/@Html.DisplayFor(model => Model.Commission.Code)/@Html.DisplayFor(model => Model.ProDate.Year) </h3>
         </div>
     </div>
 
     <div class="row">
         <div class="col-xs-4 col-xs-offset-8">
-            <h3>طبيعة الملف :  @if(ViewBag.Mail.MailNature == MailNature.New) { <span>جديد</span> }else if(ViewBag.Mail.MailNature == MailNature.Rep){ <span>عناصر إجابة</span> }</h3>
+            <h3>طبيعة الملف : @if (ViewBag.Mail.MailNature == MailNature.New) { <span>جديد</span> } else if (ViewBag.Mail.MailNature == MailNature.Rep) { <span>عناصر إجابة</span> }
+            else if (ViewBag.Mail.MailNature == MailNature.Compl) { <span>وثائق تكملية</span> }
+            </h3>
         </div>
     </div>
 

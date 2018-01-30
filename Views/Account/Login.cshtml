@@ -60,7 +60,6 @@
         }
     </style>
 
-    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
 
 </head>
 <body id="page">
@@ -116,9 +115,23 @@
                                 <span class="form-field__input-wrapper">
                                     <input asp-for="Password" class="form-field__input form-field__input--text"  />
                                 </span>
-                                <span class="text-danger" asp-validation-for="Password"></span>
                             </div>
                         </fieldset>
+                        <div class="form-field form-field--toggles">
+                            <fieldset class="fieldset">
+                                <legend class="legend-color">.</legend>
+                                <div class="form-field__checkbox  last  first">
+                                    <label>
+                                        <input asp-for="RememberMe"  class="form-field__input form-field__input--checkbox"   data-j40-pledge="j40_checkbox_1_1"    type="checkbox">
+
+                                        <span class="form-field__fakecheckbox focus-enabled">
+                                            تذكرني
+                                        </span>
+                                    </label>
+                                </div>
+
+                            </fieldset>
+                        </div>
                         <div class="form-field__button">
                             <button id="loginButton" type="submit" class="button button--primary" data-submission-text="جاري الدخول...">دخول</button>
                         </div>

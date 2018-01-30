@@ -119,6 +119,12 @@ namespace HAICOP.Data
                     .HasIndex(c => new { c.ProDate , c.Num , c.CommissionID})
                     .IsUnique();
 
+            builder.Entity<Member>()
+                    .HasKey(c => new { c.CommissionID, c.GuestID });
+
+            builder.Entity<GuestInAcheteur>()
+                    .HasKey(c => new { c.AcheteurID, c.GuestID });
+
 
         }
 
@@ -142,6 +148,12 @@ namespace HAICOP.Data
         public DbSet<UserAgent> UserAgent {get ; set;}
         public DbSet<UserCommission> UserCommission {get ; set;}
         public DbSet<NextNum> NextNum { get; set; }
-        
+        public DbSet<Desc> Desc { get; set; }
+
+        public DbSet<Guest> Guest { get; set; }
+        public DbSet<Member> Member { get; set; }
+        public DbSet<GuestInAcheteur> GuestInAcheteur { get; set; }
+        public DbSet<Document> Document { get; set; }
+        public DbSet<Encour> Encour { get; set; }
     }
 }

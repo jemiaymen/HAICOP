@@ -35,24 +35,28 @@
             <tbody class="m23-table__content-table-body">
                 @foreach (var item in Model)
                 {
-                    <tr class="m23-table__content-table-row ">
+                    @if (item.Count != 0 && item.Montant != 0)
+                    {
+                        <tr class="m23-table__content-table-row ">
 
-                        <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Lbl)
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Nbr)
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Count)
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Montant)
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            % @Html.DisplayFor(modelItem => item.Poucentage)
-                        </td>
-                    </tr>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Lbl)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Nbr)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Count)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                @Html.DisplayFor(modelItem => item.Montant)
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                % @Html.DisplayFor(modelItem => item.Poucentage)
+                            </td>
+                        </tr>
+                    }
+
                 }
             </tbody>
         </table>
@@ -62,21 +66,36 @@
         <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
             <thead class="m23-table__content-table-header">
                 <tr class="m23-table__content-table-row">
-                    <th class="m23-table__content-table-cell--header ">
-                        تمويل أجنبي
+                    <th class="m23-table__content-table-cell--header " colspan="2">
+                        <center>   تمويل أجنبي </center>
                     </th>
-                    <th class="m23-table__content-table-cell--header ">
-                        عدم الموافقة
+                    <th class="m23-table__content-table-cell--header " colspan="2">
+                        <center>  عدم الموافقة </center>
+                    </th>
+                    <th class="m23-table__content-table-cell--header " colspan="2">
+                        <center> غير مثمر </center>
                     </th>
                 </tr>
             </thead>
             <tbody class="m23-table__content-table-body">
                 <tr class="m23-table__content-table-row ">
                     <td class="m23-table__content-table-cell">
-                        % @ViewBag.fp.ToString("F2")
+                        @ViewBag.fp.ToString("F2") % 
                     </td>
                     <td class="m23-table__content-table-cell">
-                        % @ViewBag.nok.ToString("F2")
+                        @ViewBag.foreign.ToString("N3")
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                         @ViewBag.nok.ToString("F2") % 
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                         @ViewBag.notok.ToString("N0")
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                         @ViewBag.nnot.ToString("F2") % 
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @ViewBag.not.ToString("N0") 
                     </td>
                </tr>
             </tbody>

@@ -3,64 +3,223 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-
+using Microsoft.AspNetCore.Http;
 
 namespace HAICOP.Models
 {
-	public enum NaturePrice
-	{
-		[Display(Name = "أسعار ثابتة")]
-        Fixe = 1,
-		[Display(Name = "أسعار قابلة للمراجعة")]
-		Review = 2
-	}
 
-	public enum MethodPrice
-	{
-		[Display(Name = "أسعار فردية")]
-        Alone = 1,
-		[Display(Name = "أسعار جزافية")]
-		Excessif = 2
-	}
-
-	public enum Method
+    #region marsed 
+    public enum NaturePrice
     {
-		[Display(Name = "مسبوق بانتقاء")]
-        First = 1,
-		[Display(Name = "طلب عروض مفتوح")]
-        Open = 2,
-		[Display(Name = "طلب عروض مضيق")]
-		Close = 3,
-		[Display(Name = "طلب عروض دولي")]
-		International = 4,
-		[Display(Name = "طلب عروض بتمويل")]
-		WithFinancement = 5,
-		[Display(Name = "إستشارة")]
-		Consultation = 6,
-		[Display(Name = "مناظرة")]
-		Concour = 7,
-		[Display(Name = "إتفاق مباشر")]
-		AgreeDirect = 8,
-		[Display(Name = "استشارة دولية")]
-		ConsultationInternational = 9,
-		[Display(Name = "طلب ترشحات")]
-		DemandeSelection = 10,
-		[Display(Name = "عقد")]
-		Contra = 11,
-		[Display(Name = "مناقصة")]
-		Tender = 12
+        [Display(Name = "أسعار ثابتة")]
+        Fixe = 1,
+        [Display(Name = "أسعار قابلة للمراجعة")]
+        Review = 2
     }
 
-	public enum MethodTri
-	{
-		[Display(Name = "طلبات عادية")]
-        Normal = 1,
-		[Display(Name = "طلبات معقدة")]
-		Complex = 2
-	}
+    public enum MethodPrice
+    {
+        [Display(Name = "أسعار فردية")]
+        Alone = 1,
+        [Display(Name = "أسعار جزافية")]
+        Excessif = 2
+    }
 
-	public enum Financement
+    public enum Method
+    {
+        [Display(Name = "مسبوق بانتقاء")]
+        First = 1,
+        [Display(Name = "طلب عروض مفتوح")]
+        Open = 2,
+        [Display(Name = "طلب عروض مضيق")]
+        Close = 3,
+        [Display(Name = "طلب عروض دولي")]
+        International = 4,
+        [Display(Name = "طلب عروض بتمويل")]
+        WithFinancement = 5,
+        [Display(Name = "إستشارة")]
+        Consultation = 6,
+        [Display(Name = "مناظرة")]
+        Concour = 7,
+        [Display(Name = "إتفاق مباشر")]
+        AgreeDirect = 8,
+        [Display(Name = "استشارة دولية")]
+        ConsultationInternational = 9,
+        [Display(Name = "طلب ترشحات")]
+        DemandeSelection = 10,
+        [Display(Name = "عقد")]
+        Contra = 11,
+        [Display(Name = "مناقصة")]
+        Tender = 12
+    }
+
+    public enum MethodTri
+    {
+        [Display(Name = "طلبات عادية")]
+        Normal = 1,
+        [Display(Name = "طلبات معقدة")]
+        Complex = 2
+    }
+    #endregion
+
+
+    #region O.J
+    public enum GuestType
+    {
+        [Display(Name = "مراقب دولة")]
+        Etat = 1,
+        [Display(Name = "مراقب مصاريف")]
+        Depense = 2,
+        [Display(Name = "عضو قار")]
+        Membre = 3,
+        [Display(Name = "رئيس مدير عام")]
+        PDG = 4,
+        [Display(Name = "مدير عام")]
+        DG = 5
+    }
+
+    public enum NatureDocument
+    {
+        [Display(Name = "إستدعاء")]
+        Invitation = 1,
+        [Display(Name = "جدول أعمال")]
+        OJ = 2,
+        [Display(Name = "جدول أعمال ملحق")]
+        OJA = 3,
+        [Display(Name = "مذكرة عمل")]
+        FicheInstruction = 4,
+        [Display(Name = "رأي الهيكل")]
+        Avis = 5
+    }
+
+    public class Guest
+    {
+        public int ID { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الإسم واللقب")]
+        [StringLength(20, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        public string FirstLastName { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الصفة")]
+        public GuestType Type { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "البريد الإلكتروني")]
+        [DataType(DataType.EmailAddress,ErrorMessage ="الرجاء إدخال بريد الكتروني صحيح")]
+        public string Email { get; set; }
+
+        [Display(Name = "الهاتف الجوال")]
+        [DataType(DataType.PhoneNumber)]
+        public string Tel { get; set; }
+
+        [Display(Name = "الهاتف القار")]
+        [DataType(DataType.PhoneNumber)]
+        public string Fix { get; set; }
+
+        [Display(Name = "معطيات أخرى")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        public string Desc { get; set; }
+
+    }
+
+    public class Member
+    {
+        [Key]
+        [Column(Order = 0)]
+        public int CommissionID { get; set; }
+        public virtual Commission Commission { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public int GuestID { get; set; }
+        public virtual Guest Guest { get; set; }
+    }
+
+    public class GuestInAcheteur
+    {
+        [Key]
+        [Column(Order = 0)]
+        public int AcheteurID { get; set; }
+        public virtual Acheteur Acheteur { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public int GuestID { get; set; }
+        public virtual Guest Guest { get; set; }
+    }
+
+    public class Document
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Dossier")]
+        [Display(Name = "الملف")]
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
+
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الصفة")]
+        public NatureDocument Nature { get; set; }
+
+        [Display(Name = "الوثيقة")]
+        [Url(ErrorMessage = "الرجاء التثبت من الرابط")]
+        public string Url { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المكان الأصلي")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
+        public string RealPath { get; set; }
+
+        [Display(Name = "تاريخ الملف")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+    }
+
+    public class Encour
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Commission")]
+        [Display(Name = "اللجنة")]
+        public int CommissionID { get; set; }
+        public virtual Commission Commission { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تقرير تقييم العروض الفنية والمالية")]
+        public int  RapportFinanceTechnique { get; set; }
+
+        [Display(Name = "انتقاء أولي")]
+        public int Fouillement { get; set; }
+
+        [Display(Name = "استشارة")]
+        public int Consultation { get; set; }
+
+        [Display(Name = "نزاع")]
+        public int Debat { get; set; }
+
+        [Display(Name = "التفاوض المباشر")]
+        public int NegociationDirect { get; set; }
+
+        [Display(Name = "صفقة إطارية")]
+        public int AccordCadre { get; set; }
+
+        [Display(Name = "ملحق")]
+        public int Avenant { get; set; }
+
+        [Display(Name = "ختم نهائي")]
+        public int Final { get; set; }
+
+    }
+
+    #endregion
+
+
+    public enum Financement
     {
 		[Display(Name = "التمويل ذاتي")]
         Local = 1,
@@ -69,8 +228,22 @@ namespace HAICOP.Models
 		[Display(Name = "التمويل الأجنبي")]
 		Foreign = 2
     }
-	
-	public enum MailType 
+
+    public enum ModePassation
+    {
+        [Display(Name = "صفقة إطارية")]
+        AO = 1,
+        [Display(Name = "التفاوض المباشر")]
+        AR = 2,
+        [Display(Name = "على مرحلتين")]
+        A2 = 3,
+        [Display(Name = "مناضرة")]
+        AC = 4,
+        [Display(Name = "صفقة إطارية مع طلب تمويل")]
+        AOF = 5
+    }
+
+    public enum MailType 
 	{
 		[Display(Name = "الوارد")]
 		Out = 2,
@@ -113,12 +286,14 @@ namespace HAICOP.Models
         [Display(Name = "إعادة إعلان")]
         ReAnnonce = 16,
         [Display(Name = "إمضاء عقد")]
-        Signature = 17
+        Signature = 17,
+        [Display(Name = "العدول عن النتائج")]
+        Desacord = 18,
+        [Display(Name = "إعادة دعوة إلى المنافسه")]
+        Re = 19,
+        [Display(Name = "عدم التعهد")]
+        Not = 20
     }
-
-
-
-
 
     public enum DossierType 
 	{
@@ -131,8 +306,6 @@ namespace HAICOP.Models
 		[Display(Name = "تزود بخدمات")]
 		Service = 4
 	}
-
-
 
 	public enum DossierNature 
 	{
@@ -220,8 +393,12 @@ namespace HAICOP.Models
 		
 		[Display(Name = "التمويل")]
 		public Financement Financement { get ; set;}
-		
-		[Required(ErrorMessage = "اجباري")]
+
+        [Display(Name = "طريقة الإبرام")]
+        public ModePassation Mode { get; set; }
+        
+
+        [Required(ErrorMessage = "اجباري")]
 		[Display(Name = "تاريخ الملف")]
 		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime DocDate {get ; set;}
@@ -258,8 +435,9 @@ namespace HAICOP.Models
 		public virtual ICollection<Mail> Mails { get; set; }
 		public virtual ICollection<Metting> Mettings { get; set; }		
 		public virtual Commission Commission { get; set; }
-
-		public Dossier()
+        public virtual ICollection<Desc> Descriptions { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
+        public Dossier()
 		{
 			State = DossierState.Creation;
 		}
@@ -351,7 +529,6 @@ namespace HAICOP.Models
 		public string LblLong {get ; set;}
 	}
 	
-	
 	public class Metting
 	{
 		public int ID { get ; set;}
@@ -394,8 +571,10 @@ namespace HAICOP.Models
 		public virtual ICollection<Agent> Agents { get; set; }
 
         public virtual NextNum NextNum { get; set; }
-		
-		[Required(ErrorMessage = "اجباري")]
+
+        public virtual ICollection<Encour> Encours { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
         [Display(Name = "إسم اللجنة")]
         [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
 		public string Lbl {get ; set;}
@@ -521,7 +700,19 @@ namespace HAICOP.Models
         [Display(Name = "تمويل أجنبي")]
 		public bool Foreign {get ; set;}
 
-	}
+        [Display(Name = "تاريخ الإجتماع")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public DateTime MettingDate { get; set; }
+
+        [Display(Name = "منجزة")]
+        public bool Done { get; set; }
+
+        public FourInDossier()
+        {
+            Done = false;
+        }
+
+    }
 
 	public class DessisionInMetting
 	{
@@ -562,7 +753,6 @@ namespace HAICOP.Models
         public virtual ApplicationUser User { get; set; }
 	}
 
-
     public class NextNum
     {
         [Key]
@@ -573,5 +763,19 @@ namespace HAICOP.Models
         [Display(Name = "العدد")]
         public int Next { get; set; }
 
+    }
+
+    public class Desc
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Dossier")]
+        public int DossierID { get; set; }
+
+        public virtual Dossier Dossier { get; set; }
+
+        [Display(Name = "المرجع")]
+        [StringLength(1000, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 1)]
+        public string Description{ get; set; }
     }
 }

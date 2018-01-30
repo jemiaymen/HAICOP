@@ -4102,7 +4102,7 @@ html.js:after {
 .m12-bar__breadcrumbs-wrapper,
 .m12-subsection__wrapper,
 .service-message__wrapper {
-    max-width: 1000px;
+
     margin: 0 auto;
     *zoom: 1;
 }

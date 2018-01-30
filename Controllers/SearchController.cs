@@ -22,6 +22,7 @@ namespace HAICOP.Controllers
     {
 
         private ILogger _logger;
+        private string role;
 
         public SearchController (UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager,ApplicationDbContext db, 
                                 ILoggerFactory loggerFactory):
@@ -33,6 +34,12 @@ namespace HAICOP.Controllers
 
         public IActionResult Index(string q,int? ID,int? Date,int? Subject,int? Rapporteur,int? Fournisseur,int? Acheteur,Financement? Financement,int? DateRen,int? Dessision)
         {
+            role = (string)ViewBag.role.ToString();
+
+            if(role.Contains("Chef") || role.Contains("Rapporteur"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             ViewBag.Menu = "نتيجة بحث";
 
@@ -186,6 +193,87 @@ namespace HAICOP.Controllers
                 re.Add(tmp);
             }
                                         
+            return View(re);
+        }
+
+        public IActionResult Get()
+        {
+            SearchAcheteur re = new SearchAcheteur();
+            re.To = DateTime.Now;
+
+            return View(re);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(DateTime To)
+        {
+            role = (string)ViewBag.role.ToString();
+
+            string id = ViewBag.user.Id;
+            var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where(a => a.UserID == id)
+                                        .Select(a => a.Commission.ID).ToList();
+
+            ViewBag.Menu = ViewBag.user.FirstLastName;
+
+            ViewBag.Menu1 = To.ToString("yyyy/MM/dd");
+
+            List<Dossier> doc = new List<Dossier>();
+
+            if (To != null)
+            {
+                doc = db.Dossier.Include(c => c.Commission).Where(c => c.ProDate == To && comm.Contains(c.CommissionID)).ToList();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+            List<DocDetail> re = new List<DocDetail>();
+            foreach (var item in doc)
+            {
+
+                var four = db.FourInDossier.Include(f => f.Fournisseur)
+                                                 .Where(f => f.DossierID == item.ID)
+                                                 .Select(f => f.Fournisseur)
+                                                 .ToList();
+
+                var tmp = new DocDetail { Dossier = item, Commission = item.Commission };
+
+                try
+                {
+                    var achteur = db.AchInDossier.Include(a => a.Acheteur)
+                                                    .Single(a => a.DossierID == item.ID).Acheteur;
+                    tmp.Acheteur = achteur;
+                }
+                catch (Exception)
+                {
+
+                }
+
+
+                try
+                {
+                    var rapporteur = db.Rapporteur.Include(r => r.Agent)
+                                                    .SingleOrDefault(a => a.DossierID == item.ID).Agent;
+                    tmp.Rapporteur = rapporteur;
+                }
+                catch (Exception)
+                {
+
+                }
+
+                if (four != null)
+                {
+                    tmp.Fournisseurs = four;
+                }
+
+
+                re.Add(tmp);
+            }
+
             return View(re);
         }
 

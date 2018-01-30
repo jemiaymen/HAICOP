@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <form class="form" asp-controller="Doc" asp-action="AddMail" method="post" novalidate="" data-form="true" data-parsley-focus="none">
+    <form class="form" asp-controller="Doc" asp-action="AddMail" method="post" enctype="multipart/form-data">
 
         <input type="hidden" asp-for="DossierID" />
 
@@ -92,6 +92,15 @@
             <div class="grid__column grid__column--4">
                 <textarea asp-for="Desc" class="form-field__input form-field__input--text"> </textarea>
                 <span asp-validation-for="Desc" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Url" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <input asp-for="Location" class="form-field__input form-field--upload" accept=".pdf" />
+                <span asp-validation-for="Location" class="text-danger"></span>
             </div>
         </div>
 

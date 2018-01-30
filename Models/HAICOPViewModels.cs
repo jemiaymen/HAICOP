@@ -277,7 +277,7 @@ namespace HAICOP.Models
 				} 
 		}
 
-		[Required(ErrorMessage = "اجباري")]
+		
 		[DataType(DataType.Upload)]
 		public IFormFile Location { get ; set;}
 
@@ -356,15 +356,22 @@ namespace HAICOP.Models
 	}
 
 	public class EditAvis : AddAvis
-	{
+    {
 		[Required(ErrorMessage="إجباري")]
 		public int MailID { get ; set;}
 
-		[Required(ErrorMessage="إجباري")]
-		public int MettingID { get ; set;}
 
-	}
-	public class AddFour
+        [Required(ErrorMessage = "اجباري")]
+        public int MettingID { get; set; }
+
+
+        [Display(Name = "الوثيقة")]
+        new public string Url { get; set; }
+
+    }
+
+
+    public class AddFour
 	{
 		[Required(ErrorMessage = "اجباري")]
 		public int DossierID {get ; set;}
@@ -425,7 +432,50 @@ namespace HAICOP.Models
         public DessisionInMetting Metting { get; set; }
     }
 
-	public class BulletinView
+    public class DocumentView
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Dossier")]
+        [Display(Name = "الملف")]
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
+
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الصفة")]
+        public NatureDocument Nature { get; set; }
+
+        [Display(Name = "الوثيقة")]
+        [FileExtensions(Extensions = "pdf,docx", ErrorMessage = "يقبل ملفات  (pdf,docx)")]
+        public string Url
+        {
+            get
+            {
+                if (Location != null)
+                    return Location.FileName;
+                else
+                    return "";
+            }
+        }
+
+
+        [DataType(DataType.Upload)]
+        public IFormFile Location { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المكان الأصلي")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
+        public string RealPath { get; set; }
+
+        [Display(Name = "تاريخ الملف")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+    }
+
+    public class BulletinView
 	{
 		[Required(ErrorMessage = "اجباري")]
 		public int DossierID {get ; set;}

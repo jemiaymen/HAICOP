@@ -165,7 +165,7 @@ namespace HAICOP.Controllers
                         db.Update(doc);
                         await db.SaveChangesAsync();
                         _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Deny DossierID : {ID} .");
-                        return RedirectToAction("Rep","Doc");
+                        return RedirectToAction("Select", "Doc", new { id = ID });
                     }
                     catch (System.Exception ex)
                     {
@@ -230,14 +230,14 @@ namespace HAICOP.Controllers
                     }
 
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Edit Fournisseur DossierID : {DossierID} FournisseurID : {tmpFournisseurID} .");
-                    return RedirectToAction("ListEditFour",new{ id = DossierID });
                 }
                 catch (System.Exception ex)
                 {
                     _logger.LogError(3,ex.Message);
                     throw;
                 }
-                
+
+                return RedirectToAction("Select","Doc", new { id = DossierID });
             }
 
             ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");  
@@ -363,6 +363,17 @@ namespace HAICOP.Controllers
                     db.Update(doc);
                     await db.SaveChangesAsync();
 
+                    var four = db.FourInDossier.Where(d => d.DossierID == DossierID && d.Done == false);
+
+                    foreach(var f in four)
+                    {
+                        f.Done = true;
+                        f.MettingDate = metting.MettDate;
+                    }
+
+                    db.UpdateRange(four);
+                    await db.SaveChangesAsync();
+
                     _logger.LogDebug(1,$"User : {ViewBag.user.UserName} Add Response DossierID : {DossierID} MettingID : {metting.ID} .");
 
                     return RedirectToAction("Select","Doc", new {id = DossierID});
@@ -373,7 +384,7 @@ namespace HAICOP.Controllers
                     throw;
                 }
             }
-
+            ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");
             AddAvis m = new AddAvis();
             m.InitFromMail(mail);
             m.InitFromMetting(metting);
@@ -410,6 +421,7 @@ namespace HAICOP.Controllers
             model.MailID = mail.ID;
             model.MettingID = metting.MettingID;
             model.DessisionID = metting.DessisionID;
+            model.Url = mail.Url;
 
             ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
             return View(model);
@@ -418,24 +430,31 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID, IFormFile Location,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail )
+        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID, IFormFile Location,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc,MettingID,Url")] Mail mail )
         {
             ViewBag.Menu = "تحيين قرار";
+            ModelState.Remove("Url");
             if (ModelState.IsValid)
             {
 
                 mail.ID = MailID;
                 metting.ID = MettingID;
+                //mail.Url = Url;
 
 
+                if(Location != null)
+                {
+                    if(mail.Url != null)
+                    {
+                        Del(mail.Url);
+                    }
+                    mail.Url = await Upload(Location);
+                }
+
+                db.Update(mail);
+                await db.SaveChangesAsync();
                 try
                 {
-                    if (Location != null)
-                    {
-                        mail.Url = Upload(Location).Result;
-                    }
-
-                    db.Update(mail);
                     db.Update(metting);
                     db.Remove( await db.DessisionInMetting.AsNoTracking().SingleOrDefaultAsync(s => s.MettingID == MettingID));
                     await db.SaveChangesAsync();
@@ -498,6 +517,27 @@ namespace HAICOP.Controllers
             }    
         }
 
+
+        private bool Del(string url)
+        {
+            try
+            {
+                var filePath = Path.Combine(Path.Combine(_environment.WebRootPath, "uploads"), url);
+                _logger.LogInformation(3, filePath);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    _logger.LogInformation(3, "del file");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(1, ex.Message);
+            }
+            return false;
+        }
 
         #endregion
     }

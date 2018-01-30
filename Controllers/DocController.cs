@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HAICOP.Controllers
 {
-    [Authorize(Roles = "root,Admin,BOC,Chef,President,assistant")]
+    [Authorize(Roles = "root,Admin,BOC,Chef,President,assistant,Rapporteur")]
     public class DocController : BaseCtrl
     {
 
@@ -33,6 +33,37 @@ namespace HAICOP.Controllers
         }
 
         #region update style
+
+        [Authorize(Roles = "root")]
+        public IActionResult Delete()
+        {
+            ViewBag.Menu = "حذف ملف";
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "root")]
+        public IActionResult Delete(int? ID)
+        {
+            ViewBag.Menu = "حذف ملف";
+            if (ID == null)
+            {
+                return NotFound();
+            }
+
+            var doc = db.Dossier.Find( ID = ID.GetValueOrDefault());
+
+            if(doc == null)
+            {
+                return NotFound();
+            }
+
+            db.Remove(doc);
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
 
         private bool DossierExists(int id)
         {
@@ -100,6 +131,17 @@ namespace HAICOP.Controllers
             }
         }
 
+
+        public IActionResult AddDescription(Desc model)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Add(model);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Select","Doc",new { id = model.DossierID });
+        }
+
         public async Task<IActionResult> CommDetail(int? id)
         {
             ViewBag.Menu = "الهيكل";
@@ -123,6 +165,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() )
                                             .ToListAsync();
 
@@ -149,6 +192,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() )
                                             .ToListAsync();
 
@@ -175,6 +219,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault())
                                             .ToListAsync();
 
@@ -201,6 +246,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault())
                                             .ToListAsync();
 
@@ -218,6 +264,7 @@ namespace HAICOP.Controllers
                             re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
+                        ViewBag.Auth = true;
                         return View("_ListComm",re);
                     }
 
@@ -238,6 +285,7 @@ namespace HAICOP.Controllers
                     {
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Include(d => d.Acheteur)
                                             .ToListAsync();
 
@@ -262,6 +310,7 @@ namespace HAICOP.Controllers
                     {
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Include(d => d.Acheteur)
                                             .ToListAsync();
 
@@ -286,6 +335,7 @@ namespace HAICOP.Controllers
                     {
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Include(d => d.Acheteur)
                                             .ToListAsync();
 
@@ -310,11 +360,13 @@ namespace HAICOP.Controllers
                     {
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Include(d => d.Acheteur)
                                             .ToListAsync();
 
                         var rapp = await db.Rapporteur.Include(r => r.Agent)
                                                       .Include(r => r.Dossier)
+                                                      .Include(d => d.Dossier.Descriptions)
                                                       .ToListAsync();
 
 
@@ -347,6 +399,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
                                                 .ToListAsync();
 
@@ -371,6 +424,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
                                                 .ToListAsync();
 
@@ -395,6 +449,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
                                                 .ToListAsync();
 
@@ -419,6 +474,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus)
                                                 .ToListAsync();
 
@@ -452,6 +508,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus ))
                                             .ToListAsync();
 
@@ -477,6 +534,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
                                             .ToListAsync();
 
@@ -502,6 +560,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
                                             .ToListAsync();
 
@@ -527,6 +586,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && (d.Dossier.State == DossierState.Accept || d.Dossier.State == DossierState.Refus))
                                             .ToListAsync();
 
@@ -564,6 +624,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                                 .ToListAsync();
 
@@ -588,6 +649,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                                 .ToListAsync();
 
@@ -612,6 +674,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                                 .ToListAsync();
 
@@ -636,6 +699,7 @@ namespace HAICOP.Controllers
                             var docs = await db.AchInDossier.Include(d => d.Dossier)
                                                 .Include(d => d.Dossier.Commission)
                                                 .Include(d => d.Acheteur)
+                                                .Include(d => d.Dossier.Descriptions)
                                                 .Where(d => d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                                 .ToListAsync();
 
@@ -671,6 +735,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                             .ToListAsync();
 
@@ -696,6 +761,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                             .ToListAsync();
 
@@ -721,6 +787,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                             .ToListAsync();
 
@@ -746,6 +813,7 @@ namespace HAICOP.Controllers
                         var docs = await db.AchInDossier.Include(d => d.Dossier)
                                             .Include(d => d.Dossier.Commission)
                                             .Include(d => d.Acheteur)
+                                            .Include(d => d.Dossier.Descriptions)
                                             .Where(d => d.Dossier.CommissionID == id.GetValueOrDefault() && d.Dossier.State != DossierState.Accept && d.Dossier.State != DossierState.Refus)
                                             .ToListAsync();
 
@@ -900,6 +968,137 @@ namespace HAICOP.Controllers
             return View(dossier);
         }
 
+        [Authorize(Roles = "BOC,Admin,root,assistant")]
+        public IActionResult NewWithNum()
+        {
+            ViewBag.Menu = "تسجيل ملف حالات خاصة";
+
+            string id = ViewBag.user.Id;
+            var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where(a => a.UserID == id)
+                                        .Select(a => a.Commission).ToList();
+            if (comm.Count() < 1)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
+            }
+            else
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl");
+            }
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+
+            NewDossier model = new NewDossier();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewWithNum(int? FournisseurID, [Bind("ID,Num,CommissionID,Subject,Type,Nature,DocDate,EnterDate,ProDate,AcheteurID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] NewDossier dossier)
+        {
+            ViewBag.Menu = "تسجيل ملف حالات خاصة";
+
+            if ((dossier.DocDate > dossier.ProDate) || (dossier.DocDate > dossier.EnterDate))
+            {
+                ModelState.AddModelError("DocDate", "يجب أن يكون تاريخ الملف أقل من تاريخ التعهد");
+            }
+
+            if (dossier.DocDate.DayOfWeek == DayOfWeek.Sunday || dossier.DocDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("DocDate", "يجب أن يكون تاريخ الملف داخل أوقات العمل ");
+            }
+
+            if (dossier.ProDate.DayOfWeek == DayOfWeek.Sunday || dossier.ProDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("ProDate", "يجب أن يكون تاريخ التعهد داخل أوقات العمل ");
+            }
+
+            if (dossier.EnterDate.DayOfWeek == DayOfWeek.Sunday || dossier.EnterDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ModelState.AddModelError("EnterDate", "يجب أن يكون تاريخ قبول الملف داخل أوقات العمل ");
+            }
+
+
+
+            ModelState.Remove("Url");
+
+            printError();
+
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+
+                    Dossier doc = new Dossier
+                    {
+                        CommissionID = dossier.CommissionID,
+                        Subject = dossier.Subject,
+                        Num = dossier.Num,
+                        Type = dossier.Type,
+                        Nature = dossier.Nature,
+                        DocDate = dossier.DocDate,
+                        EnterDate = dossier.EnterDate,
+                        ProDate = dossier.ProDate
+                    };
+                    db.Add(doc);
+                    Mail mail = new Mail
+                    {
+                        Dossier = doc,
+                        Ref = dossier.Ref,
+                        OriginRef = dossier.OriginRef,
+                        From = dossier.From,
+                        MailType = dossier.MailType,
+                        MailNature = dossier.MailNature,
+                        MailDate = dossier.MailDate,
+                        Desc = dossier.Desc
+                    };
+
+                    await db.SaveChangesAsync();
+                    AchInDossier ach = new AchInDossier { Dossier = doc, AcheteurID = dossier.AcheteurID };
+                    db.Add(ach);
+                    db.Add(mail);
+                    if (FournisseurID != null)
+                    {
+                        var rap = new FourInDossier { Dossier = doc, FournisseurID = FournisseurID.GetValueOrDefault() };
+                        await db.AddAsync(rap);
+                    }
+
+                    await db.SaveChangesAsync();
+                    _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Add Dossier : { doc.ID} .");
+                    return RedirectToAction("Select", new { id = doc.ID });
+                }
+                catch (System.Exception ex)
+                {
+                    _logger.LogError(3, ex.Message);
+                    throw;
+                }
+
+
+            }
+
+            string id = ViewBag.user.Id;
+            var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where(a => a.UserID == id)
+                                        .Select(a => a.Commission).ToList();
+            if (comm == null)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);
+            }
+            else
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", dossier.AcheteurID);
+            ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+
+            return View(dossier);
+        }
+
+
+
         public IActionResult Select(int? id)
         {
 
@@ -907,7 +1106,7 @@ namespace HAICOP.Controllers
             {
                 return NotFound();
             }
-            var dossier = db.Dossier.Include(c => c.Commission).Include( c => c.Mails).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
+            var dossier = db.Dossier.Include(c => c.Commission).Include( c => c.Mails).Include(d => d.Descriptions).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
             if (dossier == null)
             {
                 return NotFound();
@@ -942,10 +1141,21 @@ namespace HAICOP.Controllers
             switch (role)
             {
 
+                case "Rapporteur":
+                    {
+                        if(HaveRightWrite(dossier.CommissionID))
+                        {
+                            return View(dossier);
+                        }
+                        return NotFound();
+                    }
                 case "Chef":
                     {
-                        ViewBag.ischef = true;
-                        return View(dossier);
+                        if (HaveRightWrite(dossier.CommissionID))
+                        {
+                            return View(dossier);
+                        }
+                        return NotFound();
                     }
                 case "BOC":
                     {
@@ -1010,13 +1220,20 @@ namespace HAICOP.Controllers
             ViewBag.Menu = "تكليف مقرر";
             if (ModelState.IsValid)
             {
-                var rap = await db.Rapporteur.FirstOrDefaultAsync(r => r.DossierID == rapporteur.DossierID);
+                try
+                {
+                    var rap = await db.Rapporteur.FirstOrDefaultAsync(r => r.DossierID == rapporteur.DossierID);
 
-                if (rap != null)
-                db.Remove(rap);
+                    if (rap != null)
+                        db.Remove(rap);
 
-                await db.AddAsync(rapporteur);
-                await db.SaveChangesAsync();
+                    await db.AddAsync(rapporteur);
+                    await db.SaveChangesAsync();
+
+                }
+                catch(Exception )
+                { }
+                
                 return RedirectToAction("Select", new { id = rapporteur.DossierID });
             }
 
@@ -1162,6 +1379,148 @@ namespace HAICOP.Controllers
             return View(doc);
         }
 
+
+        public async Task<IActionResult> EditWithNum(int? id)
+        {
+            ViewBag.Menu = "تحيين ملف";
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var dossier = await db.AchInDossier.Include(d => d.Dossier)
+                                                        .Include(d => d.Acheteur)
+                                                        .Include(c => c.Dossier.Commission)
+                                                        .AsNoTracking()
+                                                        .SingleOrDefaultAsync(m => m.DossierID == id);
+            if (dossier == null)
+            {
+                return NotFound();
+            }
+
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", dossier.AcheteurID);
+            ViewData["OldAcheteurID"] = dossier.AcheteurID;
+
+
+            string userid = ViewBag.user.Id;
+
+            role = (string)ViewBag.role.ToString();
+
+            switch (role)
+            {
+                case "BOC":
+                    {
+                        var comm = db.UserCommission.Include(a => a.Commission)
+                                            .Where(a => a.UserID == userid)
+                        .AsNoTracking()
+                                            .Select(a => a.Commission).ToList();
+                        ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.Dossier.CommissionID);
+                    }
+                    break;
+                default:
+                    {
+                        ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.Dossier.CommissionID);
+                    }
+                    break;
+            }
+
+
+            NewDossier doc = new NewDossier();
+            doc.InitFromAchaInDossier(dossier);
+            return View(doc);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditWithNum(int id, int AcheteurID, int OldAcheteurID, [Bind("ID,CommissionID,Num,Subject,Type,Nature,DocDate,EnterDate,ProDate")] Dossier dossier)
+        {
+            ViewBag.Menu = "تحيين ملف";
+            if (id != dossier.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var d = await db.Dossier.SingleOrDefaultAsync(a => a.ID == id);
+
+                    d.CommissionID = dossier.CommissionID;
+                    d.Subject = dossier.Subject;
+                    d.Type = dossier.Type;
+                    d.Nature = dossier.Nature;
+                    d.DocDate = dossier.DocDate;
+                    d.EnterDate = dossier.EnterDate;
+                    d.ProDate = dossier.ProDate;
+                    d.Num = dossier.Num;
+
+                    db.Update(d);
+
+                    if (AcheteurID != OldAcheteurID)
+                    {
+                        var ach = await db.AchInDossier.SingleAsync(m => m.DossierID == dossier.ID && m.AcheteurID == OldAcheteurID);
+                        db.Remove(ach);
+                        db.Add(new AchInDossier { AcheteurID = AcheteurID, DossierID = dossier.ID });
+
+                        _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Edit DossierID : { id} .");
+                    }
+
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DossierExists(dossier.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Select", new { id = id });
+            }
+
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", AcheteurID);
+
+            string userid = ViewBag.user.Id;
+
+            bool ischef = await _userManager.IsInRoleAsync(ViewBag.user, "Chef");
+            bool isboc = await _userManager.IsInRoleAsync(ViewBag.user, "BOC");
+            bool isadmin = await _userManager.IsInRoleAsync(ViewBag.user, "Admin");
+            bool ispresident = await _userManager.IsInRoleAsync(ViewBag.user, "President");
+            bool isroot = await _userManager.IsInRoleAsync(ViewBag.user, "root");
+
+            if (isboc)
+            {
+                var comm = db.UserCommission.Include(a => a.Commission)
+                                        .Where(a => a.UserID == userid)
+                                        .Select(a => a.Commission).ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
+            else if (ischef)
+            {
+                var comm = db.UserAgent.Include(a => a.Agent)
+                                    .Include(a => a.Agent.Commission)
+                                    .Where(a => a.UserID == userid && a.Agent.IsPresident == true)
+                                    .Select(a => a.Agent.Commission)
+                                    .ToList();
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl", dossier.CommissionID);
+            }
+            else if (isadmin || isroot || ispresident)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl", dossier.CommissionID);
+            }
+
+            NewDossier doc = new NewDossier();
+            doc.InitFromDossier(dossier, AcheteurID);
+            return View(doc);
+        }
+
+
         public async Task<IActionResult> Mail(int? id)
         {
             ViewBag.Menu = "تحيين بريد";
@@ -1278,17 +1637,22 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddMail(int id, int AgentID, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail)
+        public async Task<IActionResult> AddMail(int id, IFormFile Location, int AgentID, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail)
         {
             ViewBag.Menu = "إضافة بريد";
+            ModelState.Remove("Url");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (Location != null)
+                    {
+                        mail.Url = await Upload(Location);
+                    }
                     db.Add(mail);
                     await db.SaveChangesAsync();
                     _logger.LogDebug(1, $"User : {ViewBag.user.UserName} Add Mail : { mail.ID}  DossierID : {mail.DossierID}.");
-                    await Rapporteur(new Rapporteur { DossierID = id, AgentID = AgentID });
+                    await Rapporteur(new Rapporteur { DossierID = mail.DossierID, AgentID = AgentID });
                 }
                 catch (Exception ex)
                 {
@@ -1415,6 +1779,14 @@ namespace HAICOP.Controllers
             return View(new AddFina { Foreign = Foreign, Financement = Financement, DossierID = indoc.DossierID, ForeignInvestisseurID = indoc.ForeignInvestisseurID });
         }
 
+
+
+        private bool HaveRightWrite(int CommissionID)
+        {
+            string Id = ViewBag.user.Id;
+            var cid = db.UserAgent.Include(a => a.Agent).Where(a => a.UserID == Id).Select(a => a.Agent.CommissionID).FirstOrDefault();
+            return cid == CommissionID;
+        }
 
         #endregion
 

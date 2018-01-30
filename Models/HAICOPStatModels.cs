@@ -38,6 +38,14 @@ namespace HAICOP.Models
 		public decimal Montant { get ; set;}
 		[DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
 		public decimal Poucentage { get ; set;}
+
+        public TestMonth()
+        {
+            Count = 0;
+            Lbl = null;
+            Nbr = 0;
+            Montant = 0;
+        }
 	}
 
 	public class DashboardComm : TestMonth

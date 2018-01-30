@@ -23,8 +23,8 @@ C:\Users\ajimi\Desktop\DEV\HAICOP-master\bin\Debug\netcoreapp1.1\HAICOP.dll
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\bin\Debug\netcoreapp1.1\HAICOP.pdb
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.csprojResolveAssemblyReference.cache
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.csproj.CoreCompileInputs.cache
-C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.AssemblyInfoInputs.cache
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.AssemblyInfo.cs
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.dll
 C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\HAICOP.pdb
+C:\Users\ajimi\Desktop\DEV\HAICOP-master\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs

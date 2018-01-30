@@ -255,11 +255,17 @@ namespace HAICOP.Controllers
 
 
 
+        public IActionResult ChangePassword()
+        {
+            ViewBag.Menu = "تحيين كلمة السر";
+            return View(new ChangePassword { UserId = ViewBag.user.Id });
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<bool> ChangePassword(ChangePassword model)
+        public async Task<IActionResult> ChangePassword(ChangePassword model)
         {
+            ViewBag.Menu = "تحيين كلمة السر";
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByIdAsync(model.UserId);
@@ -267,10 +273,10 @@ namespace HAICOP.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogDebug(1,$"User :  {user.Email} Change Password.");
-                    return true;
+                    return RedirectToAction("Index","Home");
                 }
             }
-            return false;
+            return View(model);
         }
 
         [HttpPost]
