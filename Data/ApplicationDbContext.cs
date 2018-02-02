@@ -120,10 +120,11 @@ namespace HAICOP.Data
                     .IsUnique();
 
             builder.Entity<Member>()
-                    .HasKey(c => new { c.CommissionID, c.GuestID });
+                    .HasKey(c => c.ID);
 
             builder.Entity<GuestInAcheteur>()
-                    .HasKey(c => new { c.AcheteurID, c.GuestID });
+                    .HasKey(c => c.ID);
+
 
 
         }
@@ -150,10 +151,19 @@ namespace HAICOP.Data
         public DbSet<NextNum> NextNum { get; set; }
         public DbSet<Desc> Desc { get; set; }
 
+
+
+
         public DbSet<Guest> Guest { get; set; }
         public DbSet<Member> Member { get; set; }
         public DbSet<GuestInAcheteur> GuestInAcheteur { get; set; }
         public DbSet<Document> Document { get; set; }
         public DbSet<Encour> Encour { get; set; }
+        public DbSet<OJ> OJ { get; set; }
+        public DbSet<Invite> Invite { get; set; }
+        public DbSet<DocInOJ> DocInOJ { get; set; }
+        
+            
+            
     }
 }

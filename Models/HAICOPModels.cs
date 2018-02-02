@@ -127,12 +127,15 @@ namespace HAICOP.Models
     public class Member
     {
         [Key]
-        [Column(Order = 0)]
+        public int ID { get; set; }
+
+        [ForeignKey("Commission")]
         public int CommissionID { get; set; }
         public virtual Commission Commission { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+        [ForeignKey("Guest")]
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الأعضاء")]
         public int GuestID { get; set; }
         public virtual Guest Guest { get; set; }
     }
@@ -140,12 +143,13 @@ namespace HAICOP.Models
     public class GuestInAcheteur
     {
         [Key]
-        [Column(Order = 0)]
+        public int ID { get; set; }
+
+        [ForeignKey("Acheteur")]
         public int AcheteurID { get; set; }
         public virtual Acheteur Acheteur { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+        [ForeignKey("Guest")]
         public int GuestID { get; set; }
         public virtual Guest Guest { get; set; }
     }
@@ -215,6 +219,63 @@ namespace HAICOP.Models
         public int Final { get; set; }
 
     }
+
+    public class OJ
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Commission")]
+        [Display(Name = "اللجنة")]
+        public int CommissionID { get; set; }
+        public virtual Commission Commission { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "عدد جدول الأعمال")]
+        public int Num { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "السنة")]
+        public int Year { get; set; }
+
+        public virtual ICollection<DocInOJ> Dossier { get; set; }
+        public virtual ICollection<Invite> Invite { get; set; }
+
+    }
+
+    public class Invite
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("OJ")]
+        [Display(Name = "جدول الأعمال")]
+        public int OJID { get; set; }
+        public virtual OJ OJ { get; set; }
+
+        [ForeignKey("GuestInAcheteur")]
+        [Display(Name = "الأعضاء")]
+        public int GueInAchID { get; set; }
+        public virtual GuestInAcheteur GuestInAcheteur { get; set; }
+
+
+    }
+
+    public class DocInOJ
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("OJ")]
+        [Display(Name = "جدول الأعمال")]
+        public int OJID { get; set; }
+        public virtual OJ OJ { get; set; }
+
+
+        [ForeignKey("Dossier")]
+        [Display(Name = "الملف")]
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
+
+    }
+
 
     #endregion
 

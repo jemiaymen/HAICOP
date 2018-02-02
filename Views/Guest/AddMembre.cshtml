@@ -1,0 +1,51 @@
+@model HAICOP.Models.Member
+
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <form class="form" asp-controller="Guest" asp-action="AddMembre" method="post">
+
+        <input asp-for="CommissionID" type="hidden" />
+        
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label for="GuestID" class="form-field__label">الأعضاء</label>
+            </div>
+            <div class="grid__column grid__column--6">
+                <select asp-for="GuestID" asp-items="ViewBag.GuestID">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="GuestID" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">إضافة</button>
+        </div>
+
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
+        <script>
+            $("#GuestID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}

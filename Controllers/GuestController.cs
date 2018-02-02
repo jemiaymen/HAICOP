@@ -147,5 +147,70 @@ namespace HAICOP.Controllers
         {
             return db.Acheteur.Any(e => e.ID == id);
         }
+
+
+        public IActionResult AddMembre()
+        {
+            ViewBag.Menu = "إضافة عضو قار";
+            string Id = ViewBag.user.Id;
+            var cid = db.UserAgent.Include(a => a.Agent).Where(a => a.UserID == Id).Select(a => a.Agent.CommissionID).FirstOrDefault();
+            ViewData["GuestID"] = new SelectList(db.Guest, "ID", "FirstLastName");
+            return View(new Member { CommissionID = cid });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMembre([Bind("GuestID,CommissionID")] Member membre)
+        {
+            ViewBag.Menu = "إضافة عضو قار";
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    db.Member.Add(membre);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Membre");
+                }
+                ViewData["GuestID"] = new SelectList(db.Guest, "ID", "FirstLastName");
+                return View(membre);
+            }
+            catch(Exception)
+            {
+                ViewData["GuestID"] = new SelectList(db.Guest, "ID", "FirstLastName");
+                ModelState.AddModelError("GuestID", " موجود");
+                return View(membre);
+            }
+            
+        }
+
+        public IActionResult Membre()
+        {
+            ViewBag.Menu = "قائمة الأعضاء";
+            string Id = ViewBag.user.Id;
+            var cid = db.UserAgent.Include(a => a.Agent).Where(a => a.UserID == Id).Select(a => a.Agent.CommissionID).FirstOrDefault();
+            var membres = db.Member.Include(m => m.Guest).Where(m => m.CommissionID == cid);
+            return View(membres);
+        }
+
+
+        public async Task<IActionResult> Del(int? cid ,int? gid)
+        {
+            if(cid != null && gid != null)
+            {
+                var del = await db.Member.FirstOrDefaultAsync(a => a.CommissionID == cid.GetValueOrDefault() && a.GuestID == gid.GetValueOrDefault() );
+                if(del != null)
+                {
+                    try
+                    {
+                        db.Remove(del);
+                        await db.SaveChangesAsync();
+                    }
+                    catch (Exception) { }
+                }
+            }
+
+            return RedirectToAction("Membre");
+        }
     }
 }

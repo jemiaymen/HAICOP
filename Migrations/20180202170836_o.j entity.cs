@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HAICOP.Migrations
 {
-    public partial class ojnewentity : Migration
+    public partial class ojentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,15 +77,38 @@ namespace HAICOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OJ",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    CommissionID = table.Column<int>(nullable: false),
+                    Num = table.Column<int>(nullable: false),
+                    Year = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OJ", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_OJ_Commission_CommissionID",
+                        column: x => x.CommissionID,
+                        principalTable: "Commission",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GuestInAcheteur",
                 columns: table => new
                 {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     AcheteurID = table.Column<int>(nullable: false),
                     GuestID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GuestInAcheteur", x => new { x.AcheteurID, x.GuestID });
+                    table.PrimaryKey("PK_GuestInAcheteur", x => x.ID);
                     table.ForeignKey(
                         name: "FK_GuestInAcheteur_Acheteur_AcheteurID",
                         column: x => x.AcheteurID,
@@ -104,12 +127,14 @@ namespace HAICOP.Migrations
                 name: "Member",
                 columns: table => new
                 {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     CommissionID = table.Column<int>(nullable: false),
                     GuestID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Member", x => new { x.CommissionID, x.GuestID });
+                    table.PrimaryKey("PK_Member", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Member_Commission_CommissionID",
                         column: x => x.CommissionID,
@@ -124,11 +149,73 @@ namespace HAICOP.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DocInOJ",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    DossierID = table.Column<int>(nullable: false),
+                    OJID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocInOJ", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_DocInOJ_Dossier_DossierID",
+                        column: x => x.DossierID,
+                        principalTable: "Dossier",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocInOJ_OJ_OJID",
+                        column: x => x.OJID,
+                        principalTable: "OJ",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invite",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    GueInAchID = table.Column<int>(nullable: false),
+                    OJID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invite", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Invite_GuestInAcheteur_GueInAchID",
+                        column: x => x.GueInAchID,
+                        principalTable: "GuestInAcheteur",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invite_OJ_OJID",
+                        column: x => x.OJID,
+                        principalTable: "OJ",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.AddColumn<int>(
                 name: "Mode",
                 table: "Dossier",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocInOJ_DossierID",
+                table: "DocInOJ",
+                column: "DossierID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocInOJ_OJID",
+                table: "DocInOJ",
+                column: "OJID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Document_DossierID",
@@ -141,14 +228,39 @@ namespace HAICOP.Migrations
                 column: "CommissionID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GuestInAcheteur_AcheteurID",
+                table: "GuestInAcheteur",
+                column: "AcheteurID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GuestInAcheteur_GuestID",
                 table: "GuestInAcheteur",
                 column: "GuestID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Invite_GueInAchID",
+                table: "Invite",
+                column: "GueInAchID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invite_OJID",
+                table: "Invite",
+                column: "OJID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Member_CommissionID",
+                table: "Member",
+                column: "CommissionID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Member_GuestID",
                 table: "Member",
                 column: "GuestID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OJ_CommissionID",
+                table: "OJ",
+                column: "CommissionID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -158,16 +270,25 @@ namespace HAICOP.Migrations
                 table: "Dossier");
 
             migrationBuilder.DropTable(
+                name: "DocInOJ");
+
+            migrationBuilder.DropTable(
                 name: "Document");
 
             migrationBuilder.DropTable(
                 name: "Encour");
 
             migrationBuilder.DropTable(
-                name: "GuestInAcheteur");
+                name: "Invite");
 
             migrationBuilder.DropTable(
                 name: "Member");
+
+            migrationBuilder.DropTable(
+                name: "GuestInAcheteur");
+
+            migrationBuilder.DropTable(
+                name: "OJ");
 
             migrationBuilder.DropTable(
                 name: "Guest");
