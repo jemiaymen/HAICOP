@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HAICOP.Models.OJ>
+﻿@model IEnumerable<HAICOP.Models.DocInOJ>
 
 <div class="grid">
 
@@ -11,43 +11,23 @@
     </div>
 
     <div class="grid__row">
-        <form class="form" asp-controller="OJ" asp-action="Add" method="post">
-            <div class="grid__row">
-                <div class="grid__column grid__column--2">
-                    <div class="form-field__button">
-                        <button class="button button--primary" type="submit">إضافة جدول أعمال</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="grid__row">
         <table class="m23-table__content-table ls-table">
             <thead class="m23-table__content-table-header">
                 <tr class="m23-table__content-table-row">
                     <th class="m23-table__content-table-cell--header ">
-                        @Html.DisplayNameFor(model => model.Num)
+                        @Html.DisplayNameFor(model => model.Dossier.Num)
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        @Html.DisplayNameFor(model => model.Year)
-                    </th>
-
-                    <th class="m23-table__content-table-cell--header ">
-                        عدد الملفات
+                        @Html.DisplayNameFor(model => model.Dossier.Subject)
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        عدد الزوار
+                        @Html.DisplayNameFor(model => model.Date)
                     </th>
-
                     <th class="m23-table__content-table-cell--header ">
                         تحيين
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        الملف
-                    </th>
-                    <th class="m23-table__content-table-cell--header ">
-                        الزائر
+                        حذف
                     </th>
                 </tr>
             </thead>
@@ -57,30 +37,21 @@
                 {
                     <tr class="m23-table__content-table-row ">
                         <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Num)
+                            @Html.DisplayFor(modelItem => item.Dossier.Num)
                         </td>
                         <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Year)
-                        </td>
-
-                        <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Dossier.Count)
+                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
                         </td>
 
                         <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Invite.Count)
+                            @Html.DisplayFor(modelItem => item.Date)
                         </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="AddDoc" asp-route-id="@item.ID"><i class="fa fa-plus-square"></i></a> |
-                            <a asp-action="Doc" asp-route-id="@item.ID"><i class="fa fa-eye"></i></a>
 
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="EditDoc" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
                         </td>
                         <td class="m23-table__content-table-cell">
-                            <a asp-action="AddMembre" asp-route-id="@item.ID"><i class="fa fa-user-plus"></i></a> | 
-                            <a asp-action="Membre" asp-route-id="@item.ID"><i class="fa fa-eye"></i></a>
+                            <a asp-action="DelDoc" asp-route-id="@item.ID"><i class="fa fa-ban"></i></a>
                         </td>
                     </tr>
                 }

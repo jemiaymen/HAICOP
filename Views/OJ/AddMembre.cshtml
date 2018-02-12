@@ -1,0 +1,53 @@
+@model HAICOP.Models.Invite
+
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <form class="form" asp-controller="OJ" asp-action="AddMembre" method="post">
+        <input type="hidden" asp-for="OJID" />
+
+
+        <div class="grid__row new-four">
+            <div class="grid__column grid__column--2">
+                <label asp-for="GueInAchID" class="form-field__label">الزائر</label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <select asp-for="GueInAchID" asp-items="@ViewBag.GueInAchID">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="GueInAchID" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">اظافة</button>
+        </div>
+
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
+        <script>
+            $("#GueInAchID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+
+

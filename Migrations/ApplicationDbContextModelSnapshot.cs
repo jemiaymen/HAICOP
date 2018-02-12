@@ -207,6 +207,8 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("Date");
+
                     b.Property<int>("DossierID");
 
                     b.Property<int>("OJID");

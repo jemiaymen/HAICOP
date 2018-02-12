@@ -274,6 +274,11 @@ namespace HAICOP.Models
         public int DossierID { get; set; }
         public virtual Dossier Dossier { get; set; }
 
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ الملف ")]
+        //[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public DateTime Date { get; set; }
+
     }
 
 

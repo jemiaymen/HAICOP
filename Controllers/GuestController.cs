@@ -138,16 +138,7 @@ namespace HAICOP.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool GuestExists(int id)
-        {
-            return db.Guest.Any(e => e.ID == id);
-        }
-
-        private bool AcheteurExists(int id)
-        {
-            return db.Acheteur.Any(e => e.ID == id);
-        }
-
+        
 
         public IActionResult AddMembre()
         {
@@ -194,11 +185,11 @@ namespace HAICOP.Controllers
         }
 
 
-        public async Task<IActionResult> Del(int? cid ,int? gid)
+        public async Task<IActionResult> Del(int? id)
         {
-            if(cid != null && gid != null)
+            if(id != null)
             {
-                var del = await db.Member.FirstOrDefaultAsync(a => a.CommissionID == cid.GetValueOrDefault() && a.GuestID == gid.GetValueOrDefault() );
+                var del = await db.Member.FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault() );
                 if(del != null)
                 {
                     try
@@ -212,5 +203,20 @@ namespace HAICOP.Controllers
 
             return RedirectToAction("Membre");
         }
+
+
+        #region helper
+        private bool GuestExists(int id)
+        {
+            return db.Guest.Any(e => e.ID == id);
+        }
+
+        private bool AcheteurExists(int id)
+        {
+            return db.Acheteur.Any(e => e.ID == id);
+        }
+
+        #endregion
+
     }
 }
