@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
-    [Authorize(Roles ="root,Admin,Tech")]
+    [Authorize(Roles = "root,Admin,Tech,President")]
     public class DessController : BaseCtrl
     {
 

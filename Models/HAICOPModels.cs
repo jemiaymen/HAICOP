@@ -231,7 +231,8 @@ namespace HAICOP.Models
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "عدد جدول الأعمال")]
-        public int Num { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public decimal Num { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "السنة")]
@@ -284,6 +285,18 @@ namespace HAICOP.Models
 
     #endregion
 
+
+    public enum NatureAcheteur
+    {
+        [Display(Name = "الدولة")]
+        Etat = 1,
+        [Display(Name = "الجماعات المحلية")]
+        CL = 2,
+        [Display(Name = "المؤسسات العمومية + المؤسسات العمومية التي لا تكتسي صبغة إدارية")]
+        EPEPNA = 3,
+        [Display(Name = "المنشأت العمومية")]
+        EPUB = 4
+    }
 
     public enum Financement
     {
@@ -446,7 +459,8 @@ namespace HAICOP.Models
 		
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "عدد الملف")]
-		public int Num {get ; set;}
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public decimal Num {get ; set;}
 		
 
 		[Required(ErrorMessage = "اجباري")]
@@ -583,17 +597,16 @@ namespace HAICOP.Models
 	public class Acheteur
 	{
 		public int ID {get ; set;}
-		
-		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = " (إختصار) المشتري العمومي")]
-        [StringLength(100, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
-		public string Lbl {get ; set;}
 
 		[Required(ErrorMessage = "اجباري")]
         [Display(Name = "المشتري العمومي")]
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
-		public string LblLong {get ; set;}
-	}
+		public string Lbl {get ; set;}
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "طبيعة المشتري العمومي")]
+        public NatureAcheteur Nature { get; set; }
+    }
 	
 	public class Metting
 	{

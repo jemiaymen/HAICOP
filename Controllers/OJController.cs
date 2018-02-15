@@ -280,6 +280,22 @@ namespace HAICOP.Controllers
         }
 
 
+        public async Task<IActionResult> Generate(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tmp = await db.OJ.Include(a => a.Commission).FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault());
+
+            if (tmp == null)
+            {
+                return NotFound();
+            }
+
+            return View(tmp);
+        }
 
 
         #region helper

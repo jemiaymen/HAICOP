@@ -44,12 +44,12 @@ namespace HAICOP.Controllers
             ViewBag.Menu = "نتيجة بحث";
 
             List<Dossier> doc = new List<Dossier>();
-            int num = 0;
+            decimal num = 0;
             DateTime d = new DateTime();
 
             if (ID != null)
             {
-                Int32.TryParse(q, out num);
+                Decimal.TryParse(q, out num);
                 doc = db.Dossier.Include(c => c.Commission).Where(c => c.Num == num).ToList();
             }
 
@@ -414,7 +414,7 @@ namespace HAICOP.Controllers
         public IActionResult Acheteur()
         {
             ViewBag.Menu = "بحث مشتري عمومي";
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
             return View();
         }
 
@@ -431,7 +431,7 @@ namespace HAICOP.Controllers
                     {
                         ModelState.AddModelError("From","يجب أن يكون أصغر ");
                         ModelState.AddModelError("To","يجب أن يكون أكبر");
-                        ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+                        ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
 
                         return View(search);
                     }
@@ -484,7 +484,7 @@ namespace HAICOP.Controllers
 
                     return View("ResultAch",doc3);
             }
-            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "LblLong");
+            ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
             return View();
         }
 

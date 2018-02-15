@@ -899,12 +899,13 @@ namespace HAICOP.Controllers
                 try
                 {
                     var num = await db.NextNum.FirstOrDefaultAsync(a => a.CommissionID == dossier.CommissionID);
-
+                    decimal n = 0;
+                    Decimal.TryParse(num.Next+ "", out n);
                     Dossier doc = new Dossier
                     {
                         CommissionID = dossier.CommissionID,
                         Subject = dossier.Subject,
-                        Num = num.Next,
+                        Num = n,
                         Type = dossier.Type,
                         Nature = dossier.Nature,
                         DocDate = dossier.DocDate,
@@ -964,6 +965,15 @@ namespace HAICOP.Controllers
 
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", dossier.AcheteurID);
             ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
+
+            if (comm.Count() < 1)
+            {
+                ViewData["CommissionID"] = new SelectList(db.Commission, "ID", "Lbl");
+            }
+            else
+            {
+                ViewData["CommissionID"] = new SelectList(comm, "ID", "Lbl");
+            }
 
             return View(dossier);
         }

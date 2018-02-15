@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
-    [Authorize(Roles ="root,Admin")]
+    [Authorize(Roles = "root,Admin,President")]
     public class AgentController : BaseCtrl
     {
 

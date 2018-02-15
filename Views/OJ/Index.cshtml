@@ -49,6 +49,9 @@
                     <th class="m23-table__content-table-cell--header ">
                         الزائر
                     </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الزائر
+                    </th>
                 </tr>
             </thead>
             <tbody class="m23-table__content-table-body">
@@ -81,6 +84,9 @@
                         <td class="m23-table__content-table-cell">
                             <a asp-action="AddMembre" asp-route-id="@item.ID"><i class="fa fa-user-plus"></i></a> | 
                             <a asp-action="Membre" asp-route-id="@item.ID"><i class="fa fa-eye"></i></a>
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Generate" asp-route-id="@item.ID"><i class="fa fa-user-plus"></i></a>
                         </td>
                     </tr>
                 }

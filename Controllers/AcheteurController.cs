@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HAICOP.Controllers
 {
-    [Authorize(Roles ="root,Admin,Tech,assistant")]
+    [Authorize(Roles = "root,Admin,Tech,assistant,BOC,President")]
     public class AcheteurController : BaseCtrl
     {
 
@@ -44,10 +44,10 @@ namespace HAICOP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Lbl,LblLong")] Acheteur acheteur)
+        public async Task<IActionResult> Create([Bind("ID,Lbl,Nature")] Acheteur acheteur)
         {
             ViewBag.Menu = "إضافة مشتري عمومي";
-            if (AcheteurExists(acheteur.Lbl,acheteur.LblLong))
+            if (AcheteurExists(acheteur.Lbl))
             {
                 ModelState.AddModelError("Lbl", "المشتري العمومي موجود");
                 return View(acheteur);
@@ -86,7 +86,7 @@ namespace HAICOP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,LblLong")] Acheteur acheteur)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Lbl,Nature")] Acheteur acheteur)
         {
             ViewBag.Menu = "تحيين مشتري عمومي";
             if (id != acheteur.ID)
@@ -94,11 +94,6 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            if (AcheteurExists(acheteur.Lbl,acheteur.LblLong))
-            {
-                ModelState.AddModelError("Lbl", "المشتري العمومي موجود");
-                return View(acheteur);
-            }
 
             if (ModelState.IsValid)
             {
@@ -106,7 +101,7 @@ namespace HAICOP.Controllers
                 {
                     var ach = await db.Acheteur.FindAsync(id);
                     ach.Lbl = acheteur.Lbl;
-                    ach.LblLong = acheteur.LblLong;
+                    ach.Nature = acheteur.Nature;
 
                     db.Update(ach);
                     await db.SaveChangesAsync();
@@ -134,9 +129,9 @@ namespace HAICOP.Controllers
             return db.Acheteur.Any(e => e.ID == id);
         }
 
-        private bool AcheteurExists(string Lbl , string LblLong)
+        private bool AcheteurExists(string Lbl)
         {
-            return db.Acheteur.Any(e => e.Lbl == Lbl && e.LblLong == LblLong);
+            return db.Acheteur.Any(e => e.Lbl == Lbl );
         }
     }
 }

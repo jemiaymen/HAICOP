@@ -25,9 +25,7 @@ namespace HAICOP.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("LblLong")
-                        .IsRequired()
-                        .HasMaxLength(500);
+                    b.Property<int>("Nature");
 
                     b.HasKey("ID");
 
@@ -266,7 +264,7 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("Nature");
 
-                    b.Property<int>("Num");
+                    b.Property<decimal>("Num");
 
                     b.Property<DateTime>("ProDate");
 
@@ -554,7 +552,7 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("CommissionID");
 
-                    b.Property<int>("Num");
+                    b.Property<decimal>("Num");
 
                     b.Property<int>("Year");
 

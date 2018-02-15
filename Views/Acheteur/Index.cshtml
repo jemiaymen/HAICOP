@@ -17,10 +17,11 @@
             <thead class="m23-table__content-table-header">
                 <tr class="m23-table__content-table-row">
                     <th class="m23-table__content-table-cell--header ">
-                        (إختصار) المشتري العمومي
-                    </th>
-                    <th class="m23-table__content-table-cell--header ">
                         المشتري العمومي
+                    </th>
+
+                    <th class="m23-table__content-table-cell--header ">
+                        طبيعة المشتري العمومي 
                     </th>
 
                     <th class="m23-table__content-table-cell--header ">
@@ -37,7 +38,7 @@
                             @Html.DisplayFor(modelItem => item.Lbl)
                         </td>
                         <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.LblLong)
+                            @Html.DisplayFor(modelItem => item.Nature)
                         </td>
                         <td class="m23-table__content-table-cell">
                             <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>

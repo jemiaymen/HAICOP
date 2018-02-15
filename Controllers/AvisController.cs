@@ -96,7 +96,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President")]
-        public async Task<IActionResult> Accept(int ID,int Num)
+        public async Task<IActionResult> Accept(int ID,decimal Num)
         {
             ViewBag.Menu = "قبول الملف";
             if (ModelState.IsValid)
@@ -150,7 +150,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President")]
-        public async Task<IActionResult> Ref(int ID,int Num)
+        public async Task<IActionResult> Ref(int ID,decimal Num)
         {
             ViewBag.Menu = "رفض الملف";
             if (ModelState.IsValid)
@@ -209,7 +209,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public async Task<IActionResult> EditFour(int DossierID,int tmpFournisseurID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign")] FourInDossier four )
+        public async Task<IActionResult> EditFour(int DossierID,int tmpFournisseurID,[Bind("DossierID,FournisseurID,Lbl,Montant,Foreign,Done,MettingDate")] FourInDossier four )
         {
             ViewBag.Menu = "تحيين صاحب الصفقة";
             if (ModelState.IsValid)

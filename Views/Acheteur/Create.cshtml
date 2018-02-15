@@ -23,11 +23,15 @@
 
         <div class="grid__row">
             <div class="grid__column grid__column--3">
-                <label asp-for="LblLong" class="form-field__label"></label>
+                <label asp-for="Nature" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--9">
-                <input asp-for="LblLong" class="form-field__input form-field__input--text" />
-                <span asp-validation-for="LblLong" class="text-danger"></span>
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="Nature" asp-items="Html.GetEnumSelectList<NatureAcheteur>()" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+                <span asp-validation-for="Nature" class="text-danger"></span>
             </div>
         </div>
 

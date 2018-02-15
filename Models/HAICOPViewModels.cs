@@ -24,7 +24,7 @@ namespace HAICOP.Models
 		
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "عدد الملف")]
-		public int Num {get ; set;}
+		public decimal Num {get ; set;}
 
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "طبيعة الملف")]
@@ -392,7 +392,14 @@ namespace HAICOP.Models
 		[Display(Name = "تمويل أجنبي")]
 		public bool Foreign {get ; set;}
 
-		public AddFour()
+        [Display(Name = "تاريخ الإجتماع")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public DateTime MettingDate { get; set; }
+
+        [Display(Name = "منجزة")]
+        public bool Done { get; set; }
+
+        public AddFour()
 		{
 			Foreign = false;
 		}
@@ -404,6 +411,8 @@ namespace HAICOP.Models
 			Lbl = doc.Lbl;
 			Montant = doc.Montant;
 			Foreign = doc.Foreign;
+            MettingDate = doc.MettingDate;
+            Done = doc.Done;
 		}
 	}
 
@@ -757,4 +766,12 @@ namespace HAICOP.Models
 		}
 
 	}
+
+    public class OJViewGenerate : OJ
+    {
+        public List<Dossier> Doc { get; set; }
+        public List<GuestInAcheteur> Inv { get; set; }
+        public List<Member> Membre { get; set; }
+    }
+
 }

@@ -97,11 +97,11 @@
                                 <br />
                                 @foreach(var des in item.Dossier.Dossier.Descriptions)
                                 {
-                                    <span class="">@Html.DisplayFor(modelItem => des.Description)</span>
+                                    <p class="text-green">- @Html.DisplayFor(modelItem => des.Description)</p>
                                 }
                             </td>
                             <td class="text-danger m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.LblLong)
+                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.Lbl)
                             </td>
                             <td class="text-danger m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
@@ -149,7 +149,7 @@
                                 }
                             </td>
                             <td class="m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.LblLong)
+                                @Html.DisplayFor(modelItem => item.Dossier.Acheteur.Lbl)
                             </td>
                             <td class="m23-table__content-table-cell">
                                 @Html.DisplayFor(modelItem => item.Rapporteur.Agent.Name)
