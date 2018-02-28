@@ -645,23 +645,6 @@ namespace HAICOP.Models
         public int NbrOffreFinance { get ; set;}
 
 
-
-		#region hidden input
-
-		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = " ")]
-        public int un { get ; set;}
-
-		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = " ")]
-        public int deux { get ; set;}
-
-		[Required(ErrorMessage = "اجباري")]
-        [Display(Name = " ")]
-        public int troi { get ; set;}
-
-		#endregion
-
 		#region normal
 
 		[Display(Name = "معايير المطابقة")]
@@ -767,10 +750,10 @@ namespace HAICOP.Models
 
 	}
 
-    public class OJViewGenerate : OJ
+    public class OJViewGenerate
     {
-        public List<Dossier> Doc { get; set; }
-        public List<GuestInAcheteur> Inv { get; set; }
+        public OJ OJ { get; set; }
+        public List<DocInOJ> Doc { get; set; }
         public List<Member> Membre { get; set; }
     }
 

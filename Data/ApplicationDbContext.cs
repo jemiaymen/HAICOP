@@ -122,8 +122,7 @@ namespace HAICOP.Data
             builder.Entity<Member>()
                     .HasKey(c => c.ID);
 
-            builder.Entity<GuestInAcheteur>()
-                    .HasKey(c => c.ID);
+
 
 
 
@@ -159,7 +158,6 @@ namespace HAICOP.Data
 
         public DbSet<Guest> Guest { get; set; }
         public DbSet<Member> Member { get; set; }
-        public DbSet<GuestInAcheteur> GuestInAcheteur { get; set; }
         public DbSet<Document> Document { get; set; }
         public DbSet<Encour> Encour { get; set; }
         public DbSet<OJ> OJ { get; set; }

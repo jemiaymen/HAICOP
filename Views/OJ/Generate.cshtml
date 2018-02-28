@@ -1,0 +1,91 @@
+﻿@model OJViewGenerate
+
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <form class="form" asp-controller="OJ" asp-action="Generate" method="post">
+
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">اظافة</button>
+        </div>
+
+
+    </form>
+
+    <pre>
+        @ViewBag.Invite
+    </pre>
+</div>
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_DocxScript");
+    }
+    <script>
+
+
+        var data = {
+            "items": [{
+                "ach": "الصيدلية المركزية التونسية",
+                "item": "1",
+                "subject": "تقرير تقييم العروض الدولي المتعلق بشراء أدوية للمستشفيات بعنوان سنة 2018 ",
+                "hour": "10:00"
+            },
+            {
+                "ach": "الصيدلية المركزية التونسية",
+                "item": "2",
+                "subject": "تقرير تقييم العروض الدولي المتعلق بشراء أدوية للمستشفيات بعنوان سنة 2018 ",
+                "hour": "10:30"
+            },
+            {
+                "ach": "الصيدلية المركزية التونسية",
+                "item": "3",
+                "subject": "تقرير تقييم العروض الدولي المتعلق بشراء أدوية للمستشفيات بعنوان سنة 2018 ",
+                "hour": "11:00"
+            }],
+            "comm": "اللجنة المختصة لمراقبة وتدقيق صفقات المواد الأولية والمواد التي يعاد بيعها على حالها",
+            "num": "01/2018",
+            "date": "الإثنين 23 جانفي 2018",
+            "rapp": "لطيفة الطرشي"
+        };
+
+        var data1 = {
+
+            "pdg0": "السيد الرئيس المدير العام",
+            "pdg1": "للصيدلية المركزية التونسية",
+            "day": "2018/01/23",
+            "date": "الإثنين 23 جانفي 2018",
+            "hour": "10:00",
+            "subject": "تقرير تقييم العروض الدولي المتعلق بشراء أدوية للمستشفيات بعنوان سنة 2018 (117/2017)"
+        };
+
+        var data2 = {
+
+            "name": "السيد حسّان شقير",
+            "fct": "وزارة الطاقة والمناجم والطاقات المتجددة",
+            "day": "2018/01/23",
+            "date": "الإثنين 23 جانفي 2018",
+            "hour": "10:00",
+            "subject": "اجتماع اللجنة المختصة لمراقبة وتدقيق صفقات المواد الأولية والمواد التي يعاد بيعها على حالها"
+        };
+
+        
+        //Generate("/template/invmp1.docx", "invmp1.docx", data2);
+
+    </script>
+}
+
+
+
+

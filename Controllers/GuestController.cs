@@ -31,7 +31,7 @@ namespace HAICOP.Controllers
         public IActionResult Index()
         {
             ViewBag.Menu = "قائمة الزوار";
-            ViewBag.Acheteur = db.GuestInAcheteur.Include(a => a.Acheteur).ToList<GuestInAcheteur>();
+            //ViewBag.Acheteur = db.GuestInAcheteur.Include(a => a.Acheteur).ToList<GuestInAcheteur>();
             return View(db.Guest);
         }
 
@@ -49,15 +49,15 @@ namespace HAICOP.Controllers
             }
 
             var guest = await db.Guest.SingleOrDefaultAsync(m => m.ID == id);
-            var ach = await db.GuestInAcheteur.SingleOrDefaultAsync(a => a.GuestID == guest.ID);
-            if(ach != null)
-            {
-                ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", ach.AcheteurID);
-            }
-            else
-            {
-                ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
-            }
+            //var ach = await db.GuestInAcheteur.SingleOrDefaultAsync(a => a.GuestID == guest.ID);
+            //if(ach != null)
+            //{
+            //    ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl", ach.AcheteurID);
+            //}
+            //else
+            //{
+            //    ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
+            //}
             
             return View(guest);
         }
@@ -82,13 +82,13 @@ namespace HAICOP.Controllers
 
             try
             {
-                var ach = await db.GuestInAcheteur.SingleOrDefaultAsync(a => a.GuestID == guest.ID);
-                if(ach != null)
-                {
-                    db.Remove(ach);
-                }
+                //var ach = await db.GuestInAcheteur.SingleOrDefaultAsync(a => a.GuestID == guest.ID);
+                //if(ach != null)
+                //{
+                //    db.Remove(ach);
+                //}
                 
-                db.Add(new GuestInAcheteur { GuestID = id.GetValueOrDefault(), AcheteurID = AcheteurID.GetValueOrDefault() });
+                //db.Add(new GuestInAcheteur { GuestID = id.GetValueOrDefault(), AcheteurID = AcheteurID.GetValueOrDefault() });
 
                 await db.SaveChangesAsync();
             }
@@ -131,8 +131,8 @@ namespace HAICOP.Controllers
 
             if(AcheteurID != null && AcheteurExists(AcheteurID.GetValueOrDefault()))
             {
-                db.GuestInAcheteur.Add(new GuestInAcheteur { AcheteurID = AcheteurID.GetValueOrDefault(), Guest = guest });
-                await db.SaveChangesAsync();
+                //db.GuestInAcheteur.Add(new GuestInAcheteur { AcheteurID = AcheteurID.GetValueOrDefault(), Guest = guest });
+                //await db.SaveChangesAsync();
             }
 
             return RedirectToAction("Index");

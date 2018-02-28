@@ -14,6 +14,7 @@ using HAICOP.Data;
 using HAICOP.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace HAICOP.Controllers
 {
@@ -33,7 +34,7 @@ namespace HAICOP.Controllers
 
         public IActionResult Index()
         {
-            var oj = db.OJ.Include(a => a.Commission).Include(a => a.Dossier).Include(a => a.Invite).Where(a => a.CommissionID == Commission());
+            var oj = db.OJ.Include(a => a.Dossier).Include(a => a.Invite).Where(a => a.CommissionID == Commission());
             return View(oj);
         }
 
@@ -141,7 +142,7 @@ namespace HAICOP.Controllers
             }
 
 
-            ViewData["GueInAchID"] = new SelectList(db.GuestInAcheteur.Include(a => a.Guest), "ID", "Guest.FirstLastName");
+            //ViewData["GueInAchID"] = new SelectList(db.GuestInAcheteur.Include(a => a.Guest), "ID", "Guest.FirstLastName");
 
             return View(new Invite { OJID = tmp.ID, OJ = tmp });
         }
@@ -172,7 +173,7 @@ namespace HAICOP.Controllers
 
             }
 
-            ViewData["GueInAchID"] = new SelectList(db.GuestInAcheteur.Include(a => a.Guest), "ID", "Guest.FirstLastName");
+            //ViewData["GueInAchID"] = new SelectList(db.GuestInAcheteur.Include(a => a.Guest), "ID", "Guest.FirstLastName");
 
             return View(invite);
         }
@@ -247,9 +248,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var tmp = db.Invite.Include(a => a.GuestInAcheteur).Include(a => a.GuestInAcheteur.Acheteur)
-                                                               .Include(a => a.GuestInAcheteur.Guest)
-                                                               .Where(a => a.OJID == id.GetValueOrDefault());
+            var tmp = db.Invite.Where(a => a.OJID == id.GetValueOrDefault());
             if (tmp == null)
             {
                 return NotFound();
@@ -282,19 +281,31 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> Generate(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
-            var tmp = await db.OJ.Include(a => a.Commission).FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault());
+            ////var tmp = await db.OJ.Include(a => a.Commission).FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault());
 
-            if (tmp == null)
-            {
-                return NotFound();
-            }
+            //if (tmp == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return View(tmp);
+            //OJViewGenerate re = new OJViewGenerate { OJ = tmp };
+            //re.Doc = db.DocInOJ.Include(d => d.Dossier).Where(a => a.OJID == tmp.ID).ToList();
+            //re.Inv = db.Invite.Include(d => d.GuestInAcheteur).Include(a => a.GuestInAcheteur.Acheteur)
+            //                                                .Include(a => a.GuestInAcheteur.Guest)
+            //                                                .Where(a => a.OJID == tmp.ID)
+            //                                                .Select(a => a.GuestInAcheteur)
+            //                                                .ToList<GuestInAcheteur>();
+            //re.Membre = db.Member.Include(a => a.Guest).Where(a => a.CommissionID == tmp.CommissionID).ToList();
+
+            ////ViewBag.Membre = JsonConvert.SerializeObject(re.Membre);
+            ////ViewBag.OJ = JsonConvert.SerializeObject(re.OJ);
+            //ViewBag.Invite = JsonConvert.SerializeObject(re.Inv);
+            return View();
         }
 
 

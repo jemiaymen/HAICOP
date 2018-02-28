@@ -385,6 +385,8 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AcheteurID");
+
                     b.Property<string>("Desc")
                         .HasMaxLength(500);
 
@@ -403,25 +405,9 @@ namespace HAICOP.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Guest");
-                });
-
-            modelBuilder.Entity("HAICOP.Models.GuestInAcheteur", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AcheteurID");
-
-                    b.Property<int>("GuestID");
-
-                    b.HasKey("ID");
-
                     b.HasIndex("AcheteurID");
 
-                    b.HasIndex("GuestID");
-
-                    b.ToTable("GuestInAcheteur");
+                    b.ToTable("Guest");
                 });
 
             modelBuilder.Entity("HAICOP.Models.InvInDossier", b =>
@@ -442,13 +428,13 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("GueInAchID");
+                    b.Property<int>("GuestID");
 
                     b.Property<int>("OJID");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("GueInAchID");
+                    b.HasIndex("GuestID");
 
                     b.HasIndex("OJID");
 
@@ -504,8 +490,6 @@ namespace HAICOP.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CommissionID");
-
                     b.HasIndex("GuestID");
 
                     b.ToTable("Member");
@@ -557,8 +541,6 @@ namespace HAICOP.Migrations
                     b.Property<int>("Year");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("CommissionID");
 
                     b.ToTable("OJ");
                 });
@@ -831,16 +813,11 @@ namespace HAICOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HAICOP.Models.GuestInAcheteur", b =>
+            modelBuilder.Entity("HAICOP.Models.Guest", b =>
                 {
                     b.HasOne("HAICOP.Models.Acheteur", "Acheteur")
                         .WithMany()
                         .HasForeignKey("AcheteurID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HAICOP.Models.Guest", "Guest")
-                        .WithMany()
-                        .HasForeignKey("GuestID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -859,9 +836,9 @@ namespace HAICOP.Migrations
 
             modelBuilder.Entity("HAICOP.Models.Invite", b =>
                 {
-                    b.HasOne("HAICOP.Models.GuestInAcheteur", "GuestInAcheteur")
+                    b.HasOne("HAICOP.Models.Guest", "Guest")
                         .WithMany()
-                        .HasForeignKey("GueInAchID")
+                        .HasForeignKey("GuestID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HAICOP.Models.OJ", "OJ")
@@ -880,11 +857,6 @@ namespace HAICOP.Migrations
 
             modelBuilder.Entity("HAICOP.Models.Member", b =>
                 {
-                    b.HasOne("HAICOP.Models.Commission", "Commission")
-                        .WithMany()
-                        .HasForeignKey("CommissionID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HAICOP.Models.Guest", "Guest")
                         .WithMany()
                         .HasForeignKey("GuestID")
@@ -904,14 +876,6 @@ namespace HAICOP.Migrations
                     b.HasOne("HAICOP.Models.Commission", "Commission")
                         .WithOne("NextNum")
                         .HasForeignKey("HAICOP.Models.NextNum", "CommissionID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HAICOP.Models.OJ", b =>
-                {
-                    b.HasOne("HAICOP.Models.Commission", "Commission")
-                        .WithMany()
-                        .HasForeignKey("CommissionID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

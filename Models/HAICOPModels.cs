@@ -96,6 +96,10 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
+        [ForeignKey("Acheteur")]
+        public int AcheteurID { get; set; }
+        public virtual Acheteur Acheteur { get; set; }
+
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "الإسم واللقب")]
         [StringLength(20, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
@@ -129,27 +133,11 @@ namespace HAICOP.Models
         [Key]
         public int ID { get; set; }
 
-        [ForeignKey("Commission")]
         public int CommissionID { get; set; }
-        public virtual Commission Commission { get; set; }
 
         [ForeignKey("Guest")]
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "الأعضاء")]
-        public int GuestID { get; set; }
-        public virtual Guest Guest { get; set; }
-    }
-
-    public class GuestInAcheteur
-    {
-        [Key]
-        public int ID { get; set; }
-
-        [ForeignKey("Acheteur")]
-        public int AcheteurID { get; set; }
-        public virtual Acheteur Acheteur { get; set; }
-
-        [ForeignKey("Guest")]
         public int GuestID { get; set; }
         public virtual Guest Guest { get; set; }
     }
@@ -224,10 +212,8 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Commission")]
         [Display(Name = "اللجنة")]
         public int CommissionID { get; set; }
-        public virtual Commission Commission { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "عدد جدول الأعمال")]
@@ -252,10 +238,10 @@ namespace HAICOP.Models
         public int OJID { get; set; }
         public virtual OJ OJ { get; set; }
 
-        [ForeignKey("GuestInAcheteur")]
+        [ForeignKey("Guest")]
         [Display(Name = "الأعضاء")]
-        public int GueInAchID { get; set; }
-        public virtual GuestInAcheteur GuestInAcheteur { get; set; }
+        public int GuestID { get; set; }
+        public virtual Guest Guest { get; set; }
 
 
     }
@@ -281,7 +267,6 @@ namespace HAICOP.Models
         public DateTime Date { get; set; }
 
     }
-
 
     #endregion
 
@@ -857,4 +842,7 @@ namespace HAICOP.Models
         [StringLength(1000, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 1)]
         public string Description{ get; set; }
     }
+
+
+
 }

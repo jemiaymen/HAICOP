@@ -11323,9 +11323,6 @@
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
       "projectUniqueName": "C:\\Users\\ajimi\\Desktop\\DEV\\HAICOP-master\\HAICOP.csproj",
       "projectName": "HAICOP",
@@ -11359,13 +11356,14 @@
     "frameworks": {
       "netcoreapp1.1": {
         "dependencies": {
-          "Pomelo.EntityFrameworkCore.MySql": {
+          "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "1.1.2"
+            "version": "1.1.2",
+            "autoReferenced": true
           },
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+          "DocumentFormat.OpenXml": {
             "target": "Package",
-            "version": "1.1.2"
+            "version": "2.7.2"
           },
           "Microsoft.AspNetCore": {
             "target": "Package",
@@ -11375,7 +11373,24 @@
             "target": "Package",
             "version": "1.1.2"
           },
-          "Microsoft.Extensions.Logging.Debug": {
+          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "1.1.2"
+          },
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "1.1.2"
+          },
+          "Microsoft.AspNetCore.Mvc": {
+            "target": "Package",
+            "version": "1.1.3"
+          },
+          "Microsoft.AspNetCore.StaticFiles": {
+            "target": "Package",
+            "version": "1.1.2"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "1.1.2"
           },
@@ -11384,58 +11399,40 @@
             "target": "Package",
             "version": "1.1.1"
           },
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-            "target": "Package",
-            "version": "1.1.1"
-          },
-          "Microsoft.EntityFrameworkCore.Design": {
-            "suppressParent": "All",
+          "Microsoft.Extensions.Configuration.UserSecrets": {
             "target": "Package",
             "version": "1.1.2"
           },
-          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+          "Microsoft.Extensions.Logging.Debug": {
             "target": "Package",
             "version": "1.1.2"
-          },
-          "Microsoft.NETCore.App": {
-            "target": "Package",
-            "version": "1.1.2",
-            "autoReferenced": true
-          },
-          "System.Composition": {
-            "target": "Package",
-            "version": "1.0.31"
           },
           "Microsoft.VisualStudio.Web.BrowserLink": {
             "target": "Package",
             "version": "1.1.2"
           },
-          "Microsoft.Extensions.Configuration.UserSecrets": {
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+            "target": "Package",
+            "version": "1.1.1"
+          },
+          "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
             "version": "1.1.2"
           },
-          "Microsoft.AspNetCore.Authentication.JwtBearer": {
+          "Pomelo.EntityFrameworkCore.MySql.Design": {
             "target": "Package",
             "version": "1.1.2"
-          },
-          "Microsoft.AspNetCore.Mvc": {
-            "target": "Package",
-            "version": "1.1.3"
           },
           "Microsoft.Composition": {
             "include": "None",
             "target": "Package",
             "version": "1.0.27"
           },
-          "DocumentFormat.OpenXml": {
+          "System.Composition": {
             "target": "Package",
-            "version": "2.7.2"
+            "version": "1.0.31"
           },
-          "Pomelo.EntityFrameworkCore.MySql.Design": {
-            "target": "Package",
-            "version": "1.1.2"
-          },
-          "Microsoft.AspNetCore.StaticFiles": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
             "version": "1.1.2"
           },
