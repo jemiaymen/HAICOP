@@ -61,7 +61,7 @@
                             صاحب الصفقة
                         </th>
                         <th class="m23-table__content-table-cell--header ">
-                            القرار
+                            الرأي
                         </th>
                         <th class="m23-table__content-table-cell--header ">
                             اظافة بريد
@@ -76,6 +76,27 @@
                             تحيين البريد
                         </th>
                     }
+                    else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Contains("Rapporteur"))
+                    {
+                        <th class="m23-table__content-table-cell--header ">
+                            تكليف مقرر
+                        </th>
+                        <th class="m23-table__content-table-cell--header ">
+                            تحيين البريد
+                        </th>
+
+                        @if (Model.Commission.Lbl.Contains("مرصد"))
+                        {
+                            <th class="m23-table__content-table-cell--header ">
+                                 بطاقة بيانات
+                            </th>
+                            <th class="m23-table__content-table-cell--header ">
+                                بطاقة متابعة
+                            </th>
+
+                        }
+
+                    }
                 </tr>
             </thead>
             <tbody class="m23-table__content-table-body">
@@ -89,7 +110,7 @@
                         <br />
                         @foreach (var des in Model.Descriptions)
                         {
-                            <p class="text-green">- @Html.DisplayFor(modelItem => des.Description)</p>
+                            <p class="text-green">- <a class="text-green" asp-action="EditDescription" asp-route-id="@des.ID">@Html.DisplayFor(modelItem => des.Description) </a></p>
                         }
                     </td>
                     <td class="m23-table__content-table-cell">
@@ -136,6 +157,26 @@
                         <td class="m23-table__content-table-cell">
                             <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
                         </td>
+                    }
+                    else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Contains("Rapporteur"))
+                    {
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
+                        </td>
+
+                        @if (Model.Commission.Lbl.Contains("مرصد"))
+                        {
+                            <td class="m23-table__content-table-cell">
+                                <a asp-action="Info" asp-controller="Bulletin" asp-route-id="@Model.ID"><i class="fa fa-plus-circle"></i></a>
+                            </td>
+                            <td class="m23-table__content-table-cell">
+                                <a asp-action="Suivie" asp-controller="Bulletin" asp-route-id="@Model.ID"><i class="fa fa-plus-square"></i></a>
+                            </td>
+                        }
+
                     }
                 </tr>
 
@@ -258,7 +299,7 @@
         <div class="grid__row">
             <div class="grid__column grid__column--12">
                 <div class="m17-sectiontitle" data-component="m17-sectiontitle">
-                    <h3 class="m17-sectiontitle__title  text__section-title">رأي</h3>
+                    <h3 class="m17-sectiontitle__title  text__section-title">المراسلات</h3>
                 </div>
             </div>
         </div>
@@ -267,13 +308,13 @@
         {
             <div class="grid__row">
                 <div class="grid__column grid__column--4">
-                    تاريخ الجلسة : @d.Metting.MettDate.ToString("yyyy/MM/dd")
+                    المرجع : @d.Metting.MettDate.ToString("yyyy/MM/dd")
                 </div>
                 <div class="grid__column grid__column--4">
                     تاريخ التبليغ : @d.Metting.NotifDate.ToString("yyyy/MM/dd")
                 </div>
                 <div class="grid__column grid__column--3">
-                    رأي اللجنة : @d.Dessision.Lbl
+                    @d.Dessision.Lbl
                 </div>
                 <div class="grid__column grid__column--1">
                 @if (ViewBag.role.ToString().Contains("root") || ViewBag.role.ToString().Contains("assistant"))

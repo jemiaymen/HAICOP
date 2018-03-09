@@ -65,7 +65,7 @@
                         تاريخ الجلسة
                     </th>
                     <th class="m23-table__content-table-cell--header ">
-                        رأي اللجنة
+                        وضعية الملف
                     </th>
                     <th class="m23-table__content-table-cell--header ">
                         تاريخ الإجابة
@@ -109,18 +109,40 @@
                             <td class="text-danger m23-table__content-table-cell">
                                 @foreach (var i in item.Fournisseur)
                                 {
-                                    @Html.DisplayFor(modelItem => i.Lbl)
+                                    <p>
+                                        @Html.DisplayFor(modelItem => i.Lbl)
+                                    </p>
+                                    
                                 }
 
                             </td>
-                            <td class="text-danger m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Metting.MettDate)
+                            <td class="text-danger m23-table__content-table-cell" style="min-width:90px">
+                                @foreach( var v in item.Metting)
+                                {
+                                    <p>
+                                           @Html.DisplayFor(modelItem => v.Metting.MettDate)
+                                    </p>
+                                    
+                                }
                             </td>
-                            <td class="text-danger m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Dessision.Lbl)
+
+                            <td class="text-danger m23-table__content-table-cell" style="min-width:70px">
+
+                                @foreach (var v in item.Metting)
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => v.Dessision.Lbl)
+                                    </p>
+                                }
+
                             </td>
-                            <td class="text-danger m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Metting.NotifDate)
+                            <td class="text-danger m23-table__content-table-cell" style="min-width:90px">
+                                @foreach (var v in item.Metting)
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => v.Metting.NotifDate)
+                                    </p>
+                                }
                             </td>
                             @if (ViewBag.Auth != null && ViewBag.Auth)
                             {
@@ -157,18 +179,39 @@
                             <td class="m23-table__content-table-cell">
                                 @foreach (var i in item.Fournisseur)
                                 {
-                                    @Html.DisplayFor(modelItem => i.Lbl)
+                                    <p>
+                                        @Html.DisplayFor(modelItem => i.Lbl)
+                                    </p>
                                 }
 
                             </td>
-                            <td class="m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Metting.MettDate)
+                            <td class="m23-table__content-table-cell" style="min-width:90px">
+                                @foreach (var v in item.Metting)
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => v.Metting.MettDate)
+                                    </p>
+
+                                }
                             </td>
-                            <td class="m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Dessision.Lbl)
+
+                            <td class="m23-table__content-table-cell" style="min-width:70px">
+
+                                @foreach (var v in item.Metting)
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => v.Dessision.Lbl)
+                                    </p>
+                                }
+
                             </td>
-                            <td class="m23-table__content-table-cell">
-                                @Html.DisplayFor(modelItem => item.Metting.Metting.NotifDate)
+                            <td class="m23-table__content-table-cell" style="min-width:90px">
+                                @foreach (var v in item.Metting)
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => v.Metting.NotifDate)
+                                    </p>
+                                }
                             </td>
                             @if (ViewBag.Auth != null && ViewBag.Auth)
                             {

@@ -1,0 +1,38 @@
+@model HAICOP.Models.Desc
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title"> @Model.Dossier.Subject</h1>
+            </div>
+        </div>
+    </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--12">
+                <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                    <h3 class="m17-sectiontitle__title  text__section-title">@ViewBag.Menu</h3>
+                </div>
+            </div>
+        </div>
+        <form class="form" asp-controller="Doc" asp-action="EditDescription" method="post">
+
+            <input asp-for="DossierID" type="hidden"/>
+            <input asp-for="ID" type="hidden" />
+
+            <div class="grid__row">
+                <div class="grid__column grid__column--12">
+                    <textarea asp-for="Description" class="form-field__input form-field__input--text" ></textarea>
+                </div>
+            </div>
+
+            <div class="form-field__button">
+                <button class="button button--secondary" type="submit">تحيين</button>
+            </div>
+        </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

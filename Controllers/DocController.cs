@@ -142,6 +142,40 @@ namespace HAICOP.Controllers
             return RedirectToAction("Select","Doc",new { id = model.DossierID });
         }
 
+        public IActionResult EditDescription(int? id)
+        {
+            ViewBag.Menu = "تحيين معطيات";
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tmp = db.Desc.Include(d => d.Dossier).FirstOrDefault(a => a.ID == id.GetValueOrDefault());
+
+            if (tmp == null)
+            {
+                return NotFound();
+            }
+
+            return View("EditDesc", tmp);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditDescription([Bind("ID,DossierID,Description")] Desc desc)
+        {
+            ViewBag.Menu = "تحيين معطيات";
+            if (ModelState.IsValid)
+            {
+                db.Desc.Update(desc);
+                db.SaveChanges();
+                return RedirectToAction("Select", "Doc", new { id = desc.DossierID });
+            }
+
+            return View("EditDesc",desc);
+        }
+
+
         public async Task<IActionResult> CommDetail(int? id)
         {
             ViewBag.Menu = "الهيكل";
@@ -181,7 +215,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -208,7 +242,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -235,7 +269,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -261,7 +295,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         ViewBag.Auth = true;
@@ -300,7 +334,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -325,7 +359,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -350,7 +384,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -375,7 +409,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -413,7 +447,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -438,7 +472,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -463,7 +497,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -487,7 +521,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -523,7 +557,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -549,7 +583,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -575,7 +609,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -600,7 +634,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm", re);
@@ -638,7 +672,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -663,7 +697,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -688,7 +722,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -712,7 +746,7 @@ namespace HAICOP.Controllers
 
                             foreach (var d in docs)
                             {
-                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                                re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                             }
 
                             return View("_ListComm", re);
@@ -750,7 +784,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -776,7 +810,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -802,7 +836,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -827,7 +861,7 @@ namespace HAICOP.Controllers
 
                         foreach (var d in docs)
                         {
-                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).FirstOrDefaultAsync(a => a.Metting.DossierID == d.DossierID), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
+                            re.Add(new DetailCommView { Dossier = d, Metting = await db.DessisionInMetting.Include(a => a.Dessision).Include(m => m.Metting).Where(a => a.Metting.DossierID == d.DossierID).ToListAsync(), Rapporteur = rapp.FirstOrDefault(r => r.DossierID == d.DossierID), Fournisseur = db.FourInDossier.Where(f => f.DossierID == d.DossierID).Select(f => f.Fournisseur).ToList() });
                         }
 
                         return View("_ListComm",re);
@@ -1200,7 +1234,7 @@ namespace HAICOP.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,root,assistant")]
+        [Authorize(Roles = "Admin,root,assistant,Chef,Rapporteur")]
         public async Task<IActionResult> Rapporteur(int? id)
         {
             ViewBag.Menu = "تكليف مقرر";
@@ -1225,6 +1259,7 @@ namespace HAICOP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,root,assistant,Chef,Rapporteur")]
         public async Task<IActionResult> Rapporteur( [Bind("DossierID,AgentID")] Rapporteur rapporteur)
         {
             ViewBag.Menu = "تكليف مقرر";
