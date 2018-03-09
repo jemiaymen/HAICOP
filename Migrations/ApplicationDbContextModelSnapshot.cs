@@ -35,6 +35,30 @@ namespace HAICOP.Migrations
                     b.ToTable("Acheteur");
                 });
 
+            modelBuilder.Entity("HAICOP.Models.AcheteurDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AcheteurID");
+
+                    b.Property<string>("Fax")
+                        .IsRequired();
+
+                    b.Property<string>("FirstLastName")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<string>("Tel")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AcheteurID");
+
+                    b.ToTable("AcheteurDetail");
+                });
+
             modelBuilder.Entity("HAICOP.Models.AchInDossier", b =>
                 {
                     b.Property<int>("AcheteurID");
@@ -134,6 +158,26 @@ namespace HAICOP.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("HAICOP.Models.Balance", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CritereComplex")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("CritereImportance")
+                        .HasMaxLength(250);
+
+                    b.Property<int>("DossierID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Balance");
+                });
+
             modelBuilder.Entity("HAICOP.Models.Commission", b =>
                 {
                     b.Property<int>("ID")
@@ -154,6 +198,28 @@ namespace HAICOP.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Commission");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Concurrence", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<int>("NbrChaier");
+
+                    b.Property<int>("NbrOffre");
+
+                    b.Property<int>("NbrOffreFinance");
+
+                    b.Property<int>("NbrSuppBeforeFinance");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Concurrence");
                 });
 
             modelBuilder.Entity("HAICOP.Models.Desc", b =>
@@ -292,6 +358,64 @@ namespace HAICOP.Migrations
                     b.ToTable("Dossier");
                 });
 
+            modelBuilder.Entity("HAICOP.Models.DossierDelais", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateAnConc");
+
+                    b.Property<DateTime>("DateAvisFinance");
+
+                    b.Property<DateTime>("DateAvisTech");
+
+                    b.Property<DateTime>("DateDebu");
+
+                    b.Property<DateTime>("DateLastChanceAcceptTechnique");
+
+                    b.Property<DateTime>("DateOpenAnFinance");
+
+                    b.Property<DateTime>("DateOpenAnTechnique");
+
+                    b.Property<DateTime>("DateProFinance");
+
+                    b.Property<DateTime>("DateProTech");
+
+                    b.Property<DateTime>("DateTraveau");
+
+                    b.Property<string>("DelaiTraveau")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<int>("DossierID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("DossierDelais");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.DossierDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<bool>("IsSmall");
+
+                    b.Property<int>("Nature");
+
+                    b.Property<int>("NbrLot");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("DossierDetail");
+                });
+
             modelBuilder.Entity("HAICOP.Models.Encour", b =>
                 {
                     b.Property<int>("ID")
@@ -320,6 +444,25 @@ namespace HAICOP.Migrations
                     b.HasIndex("CommissionID");
 
                     b.ToTable("Encour");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Estimation", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<decimal>("Lbl")
+                        .HasMaxLength(250);
+
+                    b.Property<decimal>("Montant");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Estimation");
                 });
 
             modelBuilder.Entity("HAICOP.Models.ForeignInvestisseur", b =>
@@ -380,6 +523,30 @@ namespace HAICOP.Migrations
                     b.ToTable("Fournisseur");
                 });
 
+            modelBuilder.Entity("HAICOP.Models.FournisseurDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Activity")
+                        .IsRequired();
+
+                    b.Property<string>("Category");
+
+                    b.Property<int>("FournisseurID");
+
+                    b.Property<string>("Nationalite")
+                        .IsRequired();
+
+                    b.Property<string>("Speciality");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FournisseurID");
+
+                    b.ToTable("FournisseurDetail");
+                });
+
             modelBuilder.Entity("HAICOP.Models.Guest", b =>
                 {
                     b.Property<int>("ID")
@@ -408,6 +575,35 @@ namespace HAICOP.Migrations
                     b.HasIndex("AcheteurID");
 
                     b.ToTable("Guest");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.InfoValeur", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<int>("MethodPrice");
+
+                    b.Property<int>("NaturePrice");
+
+                    b.Property<int>("NbrFinance");
+
+                    b.Property<int>("NbrTech");
+
+                    b.Property<decimal>("TotalEstimation");
+
+                    b.Property<int>("Valeur");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("InfoValeur");
                 });
 
             modelBuilder.Entity("HAICOP.Models.InvInDossier", b =>
@@ -516,6 +712,25 @@ namespace HAICOP.Migrations
                     b.HasIndex("DossierID");
 
                     b.ToTable("Metting");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Moinsdis", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Critere")
+                        .HasMaxLength(250);
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<int>("NbrConform");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Moinsdis");
                 });
 
             modelBuilder.Entity("HAICOP.Models.NextNum", b =>
@@ -721,6 +936,14 @@ namespace HAICOP.Migrations
                     b.HasDiscriminator().HasValue("ApplicationRole");
                 });
 
+            modelBuilder.Entity("HAICOP.Models.AcheteurDetail", b =>
+                {
+                    b.HasOne("HAICOP.Models.Acheteur", "Acheteur")
+                        .WithMany()
+                        .HasForeignKey("AcheteurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HAICOP.Models.AchInDossier", b =>
                 {
                     b.HasOne("HAICOP.Models.Acheteur", "Acheteur")
@@ -739,6 +962,22 @@ namespace HAICOP.Migrations
                     b.HasOne("HAICOP.Models.Commission", "Commission")
                         .WithMany("Agents")
                         .HasForeignKey("CommissionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Balance", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Concurrence", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -792,11 +1031,35 @@ namespace HAICOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HAICOP.Models.DossierDelais", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.DossierDetail", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HAICOP.Models.Encour", b =>
                 {
                     b.HasOne("HAICOP.Models.Commission", "Commission")
                         .WithMany("Encours")
                         .HasForeignKey("CommissionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Estimation", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -813,11 +1076,27 @@ namespace HAICOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HAICOP.Models.FournisseurDetail", b =>
+                {
+                    b.HasOne("HAICOP.Models.Fournisseur", "Fournisseur")
+                        .WithMany()
+                        .HasForeignKey("FournisseurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HAICOP.Models.Guest", b =>
                 {
                     b.HasOne("HAICOP.Models.Acheteur", "Acheteur")
                         .WithMany()
                         .HasForeignKey("AcheteurID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.InfoValeur", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -867,6 +1146,14 @@ namespace HAICOP.Migrations
                 {
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
                         .WithMany("Mettings")
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Moinsdis", b =>
+                {
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
                         .HasForeignKey("DossierID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

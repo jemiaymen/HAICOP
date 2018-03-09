@@ -1,9 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\chaima\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\chaima\\.nuget\\packages",
-      "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback"
+      "C:\\Users\\ajimi\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\ajimi\\.nuget\\packages"
     ]
   }
 }
