@@ -163,8 +163,17 @@ namespace HAICOP.Data
         public DbSet<OJ> OJ { get; set; }
         public DbSet<Invite> Invite { get; set; }
         public DbSet<DocInOJ> DocInOJ { get; set; }
-        
-            
-            
+
+
+        public DbSet<AcheteurDetail> AcheteurDetail { get; set; }
+        public DbSet<FournisseurDetail> FournisseurDetail { get; set; }
+        public DbSet<DossierDetail> DossierDetail { get; set; }
+        public DbSet<DossierDelais> DossierDelais { get; set; }
+        public DbSet<Concurrence> Concurrence { get; set; }
+        public DbSet<InfoValeur> InfoValeur { get; set; }
+        public DbSet<Estimation> Estimation { get; set; }
+        public DbSet<Moinsdis> Moinsdis { get; set; }
+        public DbSet<Balance> Balance { get; set; }
+
     }
 }

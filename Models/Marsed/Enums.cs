@@ -59,4 +59,25 @@ namespace HAICOP.Models
         Complex = 2
     }
 
+    public enum Valeur
+    {
+
+        [Display(Name = "تقييم على اساس العرض الاقل ثمنا")]
+        MoinsCher = 1,
+        [Display(Name = " تقييم على اساس الموازنة بين الكلفة و الجودة")]
+        CoutQualite = 2,
+        [Display(Name = " تقييم على اساس الجودة")]
+        Qualite = 3
+
+    }
+    public enum Nature
+    {
+        [Display(Name = "البرمجيات و الخدمات الاعلامية")]
+        Logiciel1 = 1,
+        [Display(Name = " تزود بمعدات اعلامية")]
+        Logiciel2 = 2,
+        [Display(Name = " دراسة في مجال الاعلامية و تكنولوجات الاتصال")]
+        Logiciel3 = 3
+    }
+
 }

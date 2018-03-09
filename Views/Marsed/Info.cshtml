@@ -1,0 +1,410 @@
+﻿@model HAICOP.Models.InfoView
+
+<div class="grid">
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+    <form class="form" asp-controller="Bulletin" asp-action="CreateBulletin" method="post">
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--1">
+                <label asp-for="FirstLastName" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="FirstLastName" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="FirstLastName" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Tel" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="Tel" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Tel" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Fax" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="Fax" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Fax" class="text-danger"></span>
+            </div>
+
+            <div class="grid__column grid__column--1">
+                <label asp-for="Email" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="Email" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Type" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Subject" class="form-field__label "></label>
+            </div>
+            <div class="grid__column grid__column--5">
+                <textarea asp-for="Subject" class="form-field__input form-field__input--text"></textarea>
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--3">
+                <label asp-for="IsSmall" class="col-md-3 control-label"></label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <input asp-for="IsSmall" class="form-control" />
+                <span asp-validation-for="IsSmall" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="TotalLocal" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="TotalLocal" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="TotalLocal" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="NbrLot" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="NbrLot" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrLot" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--1">
+                <label asp-for="Financement" class="col-md-3 control-label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="Financement" asp-items="Html.GetEnumSelectList<Financement>()">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Financement" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Method" class="col-md-3 control-label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="Method" asp-items="Html.GetEnumSelectList<Method>()">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Method" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="FournisseurID" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="FournisseurID" asp-items="ViewBag.FournisseurID">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="FournisseurID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label class="form-field__label">
+                    تصنيف صاحب الصفقة :
+                </label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Nationalite" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="Nationalite" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Nationalite" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Speciality" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="Speciality" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Speciality" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="Category" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="Category" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h2>معلومات حول الآجال</h2>
+        <br />
+        <br />
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label asp-for="DateAnConc"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateAnConc" class="form-control" />
+                    </td>
+                    <td>
+                        <label asp-for="DateDebu"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateDebu" class="form-control" />
+                    </td>
+                    <td>
+                        <label asp-for="DateProFinance"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateProFinance" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label asp-for="DateLastChanceAcceptTechnique"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateLastChanceAcceptTechnique" class="form-control" />
+                    </td>
+                    <td>
+                        <label asp-for="DateTraveau"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateTraveau" class="form-control" />
+                    </td>
+                    <td>
+                        <label asp-for="DateAvisFinance"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateAvisFinance" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label asp-for="DateOpenAnTechnique"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DateOpenAnTechnique" class="form-control" />
+                    </td>
+                    <td>
+                        <label asp-for="DelaiTraveau"></label>
+                    </td>
+                    <td>
+                        <input asp-for="DelaiTraveau" class="form-control" />
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <h2>معلومات حول المنافسة </h2>
+        <br />
+        <br />
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrChaier" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <input asp-for="NbrChaier" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrChaier" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--1">
+                <label asp-for="NbrOffre" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <input asp-for="NbrOffre" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrOffre" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrSuppBeforeFinance" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <input asp-for="NbrSuppBeforeFinance" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrSuppBeforeFinance" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrOffreFinance" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--1">
+                <input asp-for="NbrOffreFinance" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrSuppBeforeFinance" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--4">
+                <label asp-for="Valeur" class="form-field__label">معلومات حول تقييم العروض </label>
+            </div>
+            <div class="grid__column grid__column--6">
+                <select asp-for="Valeur" asp-items="Html.GetEnumSelectList<Valeur>()" class="form-field__input form-field__input--select">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Valeur" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label class="form-field__label">
+                    تقييم على اساس العرض الاقل ثمنا :
+                </label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Critere" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="Critere" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Critere" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrConform" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="NbrConform" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrConform" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label class="form-field__label">
+                    تقييم على اساس الموزانة بين الكلفة و الجودة :
+                </label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="CritereComplex" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="CritereComplex" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="CritereComplex" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="CritereImportance" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="CritereImportance" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="CritereImportance" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label class="form-field__label">
+                    الموزانة بين العدد الفني و العدد المالي :
+                </label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrTech" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="NbrTech" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrTech" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NbrFinance" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <input asp-for="NbrFinance" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NbrFinance" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label class="form-field__label">  الاسعار :</label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NaturePrice" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="NaturePrice" asp-items="Html.GetEnumSelectList<NaturePrice>()" class="form-field__input form-field__input--select">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="NaturePrice" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="MethodPrice" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--3">
+                <select asp-for="MethodPrice" asp-items="Html.GetEnumSelectList<MethodPrice>()" class="form-field__input form-field__input--select">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="MethodPrice" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--3">
+                <label asp-for="TotalEstimation" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--9">
+                <input asp-for="TotalEstimation" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="TotalEstimation" class="text-danger"></span>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th><label asp-for="Lbl"></label></th>
+                    <th><label asp-for="Montant"></label></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input asp-for="Lbl" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="Montant" class="form-control" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Description" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <textarea asp-for="Description" class="form-field__input form-field__input--text"> </textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">إضافة</button>
+        </div>
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
+        <script>
+            $("#AcheteurID").selectize();
+            $("#Type").selectize();
+            $("#Financement").selectize();
+            $("#Method").selectize();
+            $("#FournisseurID").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+
+

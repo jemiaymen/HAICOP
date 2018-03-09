@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Marsed\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
