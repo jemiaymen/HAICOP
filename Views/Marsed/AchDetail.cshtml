@@ -1,0 +1,74 @@
+@model IEnumerable<HAICOP.Models.AcheteurDetail>
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid__row">
+        <table class="m23-table__content-table ls-table" style="font-weight: lighter;">
+            <thead class="m23-table__content-table-header">
+                <tr class="m23-table__content-table-row">
+                    <th class="m23-table__content-table-cell--header ">
+                       مقرر  
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        اسم و لقب
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الهاتف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        الفاكس
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
+                        تحيين
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="m23-table__content-table-body">
+
+                @foreach (var item in Model)
+                {
+                <tr class="m23-table__content-table-row ">
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => item.Acheteur.Lbl)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => item.FirstLastName)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => item.Tel)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @Html.DisplayFor(modelItem => item.Fax)
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        <a asp-action="EditDetail" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_TableStyle");
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_TableScript"); }
+}
+

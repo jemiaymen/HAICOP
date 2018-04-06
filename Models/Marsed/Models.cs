@@ -62,13 +62,11 @@ namespace HAICOP.Models
         public int DossierID { get; set; }
         public virtual Dossier Dossier { get; set; }
 
+        public int AcheteurDetailID { get; set; }
+
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "صفقة مخصصة لفائدة المؤسسات الصغرى")]
         public bool IsSmall { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "طبيعة الصفقة")]
-        public Nature Nature { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "عدد الأقساط")]
@@ -89,52 +87,16 @@ namespace HAICOP.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateAnConc { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "آخر أجل لقبول العروض الفنية")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateLastChanceAcceptTechnique { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ فتح العروض الفنية")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateOpenAnTechnique { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ فتح العروض المالية")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateOpenAnFinance { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ تعهد لجنة الصفقات بالملف المالي")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateProFinance { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ تعهد لجنة الصفقات بالملف الفني")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateProTech { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ رأي لجنة الصفقات المالي")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateAvisFinance { get; set; }
-
-        [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "تاريخ رأي لجنة الصفقات الفني")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateAvisTech { get; set; }
-
         [Display(Name = "تاريخ إبرام الصفقة")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateDebu { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "آخر أجل لقبول العروض ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateLastChanceAccept { get; set; }
 
         [Display(Name = "تاريخ بداية الإنجاز")]
         [DataType(DataType.Date)]
@@ -142,9 +104,26 @@ namespace HAICOP.Models
         public DateTime DateTraveau { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ و ساعة فتح العروض ")]
+        [DataType(DataType.Date)]
+        public DateTime DateOpen { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
         [Display(Name = "آجال الإنجاز")]
-        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 3)]
         public string DelaiTraveau { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ تعهد لجنة  مراقية الصفقات بالملف ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DatePro { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ ابداء رأي لجنة الصفقات ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateAvis { get; set; }
     }
 
     public class Concurrence
@@ -218,13 +197,12 @@ namespace HAICOP.Models
         public virtual Dossier Dossier { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
-        [Display(Name = " Lbl")]
-        [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
-        public decimal Lbl { get; set; }
+        [Display(Name = "العروض")]
+        public int Lbl { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "Montant ")]
-        [DisplayFormat(DataFormatString = "{0:F0}", ApplyFormatInEditMode = true)]
+        [Display(Name = "المبلغ")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
         public decimal Montant { get; set; }
 
     }
@@ -264,4 +242,99 @@ namespace HAICOP.Models
 
     }
 
+    public class Suivie
+    {
+        public int ID { get; set; }
+
+        [ForeignKey("Dossier")]
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "طبيعة الأسعار")]
+        public NaturePrice NaturePrice { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الاجل التعاقدي")]
+        public int ContractualTerm { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "نسبة الضمان النهائي  ")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal FinalGuaranteeP { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = " قيمة الضمان النهائي  ")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal FinalGuaranteeM { get; set; }
+
+
+        [Display(Name = "نسبة الحجر بعنوان الضمان ")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal TitleGuaranteeP { get; set; }
+
+
+        [Display(Name = "  قيمةالحجر بعنوان الضمان ")]
+        [DisplayFormat(DataFormatString = "{0:F0}", ApplyFormatInEditMode = true)]
+        public decimal TitleGuaranteeM { get; set; }
+
+
+        [Display(Name = "تاريخ إبرام ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateDebu { get; set; }
+
+        [Display(Name = "تاريخ بداية الإنجاز")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateTraveau { get; set; }
+
+        [Display(Name = "  بيان اسباب و تواريخ اذون تعليق و استئناف الانجاز")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        public string StatementReasonsDates { get; set; }
+
+
+        [Display(Name = "عدد ايام التاخير")]
+        public int NombreJoursRetard { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ القبول الوقتي ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateAdmissionProvisoire { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ القبول النهائي ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateAcceptationFinale { get; set; }
+
+
+        [Display(Name = "مبلغ غرامات التأخير")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal MontantPenalitesRetard { get; set; }
+
+
+        [Display(Name = "مبلغ العقوبات المالية الموظفة على صاحب الصفقة")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal MontantPenalitesFournisseur { get; set; }
+
+        [Display(Name = "  تقييم المشتري العمومي لطريقةالانجاز من قبل صاحب الصفقة و مدى وفائه بالتزاماته التعاقدية")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
+        public string EvaluationAcheteur { get; set; }
+
+
+        [Display(Name = "ذكر تاريخ و اسباب الفسخ")]
+        public string DateMotifsAnnulation { get; set; }
+
+        
+        [Display(Name = "بيان الطرق الرضائية او القضائية من  قبل صاحب الصفقة لفض الخلافات الناشتة مع المشتري العمومي")]
+        public string DeclarationMethodes { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "تاريخ المصادقة على ملف الختم النهائي ")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateFichierJointFinal { get; set; }
+    }
 }

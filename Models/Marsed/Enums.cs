@@ -23,34 +23,6 @@ namespace HAICOP.Models
         Excessif = 2
     }
 
-    public enum Method
-    {
-        [Display(Name = "مسبوق بانتقاء")]
-        First = 1,
-        [Display(Name = "طلب عروض مفتوح")]
-        Open = 2,
-        [Display(Name = "طلب عروض مضيق")]
-        Close = 3,
-        [Display(Name = "طلب عروض دولي")]
-        International = 4,
-        [Display(Name = "طلب عروض بتمويل")]
-        WithFinancement = 5,
-        [Display(Name = "إستشارة")]
-        Consultation = 6,
-        [Display(Name = "مناظرة")]
-        Concour = 7,
-        [Display(Name = "إتفاق مباشر")]
-        AgreeDirect = 8,
-        [Display(Name = "استشارة دولية")]
-        ConsultationInternational = 9,
-        [Display(Name = "طلب ترشحات")]
-        DemandeSelection = 10,
-        [Display(Name = "عقد")]
-        Contra = 11,
-        [Display(Name = "مناقصة")]
-        Tender = 12
-    }
-
     public enum MethodTri
     {
         [Display(Name = "طلبات عادية")]
@@ -69,15 +41,6 @@ namespace HAICOP.Models
         [Display(Name = " تقييم على اساس الجودة")]
         Qualite = 3
 
-    }
-    public enum Nature
-    {
-        [Display(Name = "البرمجيات و الخدمات الاعلامية")]
-        Logiciel1 = 1,
-        [Display(Name = " تزود بمعدات اعلامية")]
-        Logiciel2 = 2,
-        [Display(Name = " دراسة في مجال الاعلامية و تكنولوجات الاتصال")]
-        Logiciel3 = 3
     }
 
 }

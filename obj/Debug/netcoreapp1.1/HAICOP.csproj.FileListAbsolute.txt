@@ -39,3 +39,4 @@ C:\Users\chaima\Documents\GitHub\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.AssemblyI
 C:\Users\chaima\Documents\GitHub\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.AssemblyInfo.cs
 C:\Users\chaima\Documents\GitHub\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.dll
 C:\Users\chaima\Documents\GitHub\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.pdb
+C:\Users\chaima\Documents\GitHub\HAICOP\obj\Debug\netcoreapp1.1\HAICOP.csprojResolveAssemblyReference.cache

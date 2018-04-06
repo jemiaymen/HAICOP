@@ -41,7 +41,13 @@ namespace HAICOP.Models
         [Display(Name = "مناضرة")]
         AC = 4,
         [Display(Name = "صفقة إطارية مع طلب تمويل")]
-        AOF = 5
+        AOF = 5,
+        [Display(Name = "طلب عروض مفتوح")]
+        Open = 6,
+        [Display(Name = "طلب عروض مضيق")]
+        Close = 7,
+        [Display(Name = "إستشارة")]
+        Consultation = 8
     }
 
     public enum MailType 

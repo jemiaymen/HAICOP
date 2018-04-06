@@ -70,7 +70,7 @@
                             تكليف مقرر
                         </th>
                         <th class="m23-table__content-table-cell--header ">
-                           تحيين الملف
+                            تحيين الملف
                         </th>
                         <th class="m23-table__content-table-cell--header ">
                             تحيين البريد
@@ -87,10 +87,10 @@
 
                         @if (Model.Commission.Lbl.Contains("مرصد"))
                         {
-                            <th class="m23-table__content-table-cell--header ">
-                                 بطاقة بيانات
+                            <th class="m23-table__content-table-cell--header " colspan="4">
+                                بطاقة بيانات
                             </th>
-                            <th class="m23-table__content-table-cell--header ">
+                            <th class="m23-table__content-table-cell--header " colspan="2">
                                 بطاقة متابعة
                             </th>
 
@@ -109,75 +109,89 @@
                         @Model.Subject
                         <br />
                         @foreach (var des in Model.Descriptions)
-                        {
-                            <p class="text-green">- <a class="text-green" asp-action="EditDescription" asp-route-id="@des.ID">@Html.DisplayFor(modelItem => des.Description) </a></p>
-                        }
+        {
+                <p class="text-green">- <a class="text-green" asp-action="EditDescription" asp-route-id="@des.ID">@Html.DisplayFor(modelItem => des.Description) </a></p>
+}
                     </td>
                     <td class="m23-table__content-table-cell">
                         @Model.Commission.Lbl
                     </td>
                     @if (ViewBag.isboc != null)
-                    {
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Boc" asp-controller="Print" asp-route-id="@Model.ID"><i class="fa fa-print"></i></a>
-                        </td>
-                        
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
-                        </td>
+    {
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Boc" asp-controller="Print" asp-route-id="@Model.ID"><i class="fa fa-print"></i></a>
+                </td>
 
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Edit" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
-                        </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
+                </td>
 
-                    }
-                    else if (ViewBag.isadmin != null)
-                    {
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="AddFina" asp-route-id="@Model.ID"><i class="fa fa-money"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@Model.ID"><i class="fa fa-dollar"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Rep" asp-controller="Avis" asp-route-id="@Model.ID"><i class="fa fa-check-square"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="EditWithNum" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a> 
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
-                        </td>
-                    }
-                    else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Contains("Rapporteur"))
-                    {
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
-                        </td>
-                        <td class="m23-table__content-table-cell">
-                            <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
-                        </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Edit" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
+                </td>
 
-                        @if (Model.Commission.Lbl.Contains("مرصد"))
-                        {
-                            <td class="m23-table__content-table-cell">
-                                <a asp-action="Info" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-plus-circle"></i></a>
-                            </td>
-                            <td class="m23-table__content-table-cell">
-                                <a asp-action="Suivie" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-plus-square"></i></a>
-                            </td>
-                        }
+}
+else if (ViewBag.isadmin != null)
+{
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="AddFina" asp-route-id="@Model.ID"><i class="fa fa-money"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="AddFour" asp-controller="Avis" asp-route-id="@Model.ID"><i class="fa fa-dollar"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Rep" asp-controller="Avis" asp-route-id="@Model.ID"><i class="fa fa-check-square"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="AddMail" asp-route-id="@Model.ID"><i class="fa fa-envelope"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="EditWithNum" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
+                </td>
+}
+else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Contains("Rapporteur"))
+{
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Rapporteur" asp-route-id="@Model.ID"><i class="fa fa-user"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Mail" asp-route-id="@Model.ID"><i class="fa fa-pencil-square"></i></a>
+                </td>
 
-                    }
+                @if (Model.Commission.Lbl.Contains("مرصد"))
+{
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Info" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-plus-circle"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="EditInfo" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-pencil-square-o"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="AddEstimation" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-dollar"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Estimation" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-list"></i></a>
+                </td>
+
+
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="Suivie" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-plus-square"></i></a>
+                </td>
+                <td class="m23-table__content-table-cell">
+                    <a asp-action="EditSuivie" asp-controller="Marsed" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a>
+                </td>
+}
+
+}
                 </tr>
 
             </tbody>
@@ -216,9 +230,9 @@
                 طبيعة التمويل
             </div>
             <div class="grid__column grid__column--2 text-danger">
-                @Html.DisplayFor(modelItem => Model.Financement) 
+                @Html.DisplayFor(modelItem => Model.Financement)
             </div>
-            
+
             @if (Model.Financement == Financement.Foreign)
             {
                 <div class="grid__column grid__column--2">
@@ -232,13 +246,13 @@
             <div class="grid__column grid__column--2">
                 <a asp-action="EditFina" asp-route-id="@Model.ID"><i class="fa fa-pencil"></i></a>
             </div>
-            
+
         </div>
     }
-    
-    
 
-    @if (ViewBag.Fournisseur != null)
+
+
+    @if (ViewBag.Fournisseur != null )
     {
         <div class="grid__row">
             <div class="grid__column grid__column--12">
@@ -249,7 +263,7 @@
         </div>
 
         <div class="grid__row">
-            <table class="m23-table__content-table" style="font-weight: lighter;">
+            <table class="m23-table__content-table">
                 <thead class="m23-table__content-table-header">
                     <tr class="m23-table__content-table-row">
                         <th class="m23-table__content-table-cell--header ">
@@ -281,7 +295,7 @@
                                 @Html.DisplayFor(modelItem => item.Lbl)
                             </td>
                             <td class="m23-table__content-table-cell">
-                                <a asp-action="EditFour" asp-controller="Avis" asp-route-did="@Model.ID" asp-route-fid="@item.FournisseurID" ><i class="fa fa-pencil"></i></a>
+                                <a asp-action="EditFour" asp-controller="Avis" asp-route-did="@Model.ID" asp-route-fid="@item.FournisseurID"><i class="fa fa-pencil"></i></a>
                             </td>
                         </tr>
                     }
@@ -291,8 +305,8 @@
         </div>
 
     }
-    
-    
+
+
 
     @if (ViewBag.Avis != null)
     {
@@ -317,18 +331,18 @@
                     @d.Dessision.Lbl
                 </div>
                 <div class="grid__column grid__column--1">
-                @if (ViewBag.role.ToString().Contains("root") || ViewBag.role.ToString().Contains("assistant"))
-                {
-                    <a asp-action="EditAvis" asp-controller="Avis" asp-route-id="@d.MettingID"><i class="fa fa-pencil-square"></i></a>
-                }
-                    
+                    @if (ViewBag.role.ToString().Contains("root") || ViewBag.role.ToString().Contains("assistant"))
+                    {
+                        <a asp-action="EditAvis" asp-controller="Avis" asp-route-id="@d.MettingID"><i class="fa fa-pencil-square"></i></a>
+                    }
+
 
                     @try
                     {
                         <a href="~/uploads/@Model.Mails.FirstOrDefault(a => a.MailType == MailType.In && a.MettingID == d.MettingID).Url" target="_blank"><i class="fa fa-eye"></i></a>
                     }
                     catch (Exception) { }
-                    
+
                 </div>
 
             </div>
@@ -337,7 +351,7 @@
 
 
     }
-    
+
     @if (ViewBag.Rapporteur != null)
     {
         <div class="grid__row">
@@ -350,13 +364,13 @@
 
         <div class="grid__row">
             <div class="grid__column grid__column--6 ">
-               <h3>@ViewBag.Rapporteur.Name</h3> 
+                <h3>@ViewBag.Rapporteur.Name</h3>
             </div>
         </div>
     }
 
     @if (ViewBag.role.ToString().Contains("root"))
-    { 
+    {
         <div class="grid__row">
             <div class="grid__column grid__column--3">
                 <a asp-action="Accept" asp-controller="Avis" asp-route-id="@Model.ID" class="button button--primary-2 ">قبول</a>
@@ -380,7 +394,7 @@
 
         <form class="form" asp-controller="Doc" asp-action="AddDescription" method="post">
 
-            <input type="hidden" id="DossierID" name="DossierID" value="@Model.ID"/>
+            <input type="hidden" id="DossierID" name="DossierID" value="@Model.ID" />
 
             <div class="grid__row">
                 <div class="grid__column grid__column--12">

@@ -1,0 +1,75 @@
+@model IEnumerable<HAICOP.Models.Estimation>
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m17-sectiontitle" data-component="m17-sectiontitle">
+                <a class="m17-sectiontitle__title  text__section-title" asp-action="Select" asp-controller="Doc" asp-route-id="@Model.FirstOrDefault().DossierID">رجوع</a>
+            </div>
+        </div>
+    </div>
+
+
+        <div class="grid__row">
+            <table class="m23-table__content-table">
+                <thead class="m23-table__content-table-header">
+                    <tr class="m23-table__content-table-row">
+                        <th class="m23-table__content-table-cell--header ">
+                            الموضوع
+                        </th>
+                        <th class="m23-table__content-table-cell--header ">
+                            القسط
+                        </th>
+                        <th class="m23-table__content-table-cell--header ">
+                            المبلغ
+                        </th>
+
+
+                        <th class="m23-table__content-table-cell--header ">
+                            تحيين
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="m23-table__content-table-body">
+
+                    @foreach (var item in Model)
+                {
+                    <tr class="m23-table__content-table-row ">
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Lbl)
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            @Html.DisplayFor(modelItem => item.Montant)
+                        </td>
+
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="EditEstimation" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
+                        </td>
+                    </tr>
+            }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_FontAwesome");
+    }
+}
+
+

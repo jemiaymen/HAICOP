@@ -365,21 +365,15 @@ namespace HAICOP.Migrations
 
                     b.Property<DateTime>("DateAnConc");
 
-                    b.Property<DateTime>("DateAvisFinance");
-
-                    b.Property<DateTime>("DateAvisTech");
+                    b.Property<DateTime>("DateAvis");
 
                     b.Property<DateTime>("DateDebu");
 
-                    b.Property<DateTime>("DateLastChanceAcceptTechnique");
+                    b.Property<DateTime>("DateLastChanceAccept");
 
-                    b.Property<DateTime>("DateOpenAnFinance");
+                    b.Property<DateTime>("DateOpen");
 
-                    b.Property<DateTime>("DateOpenAnTechnique");
-
-                    b.Property<DateTime>("DateProFinance");
-
-                    b.Property<DateTime>("DateProTech");
+                    b.Property<DateTime>("DatePro");
 
                     b.Property<DateTime>("DateTraveau");
 
@@ -401,11 +395,11 @@ namespace HAICOP.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AcheteurDetailID");
+
                     b.Property<int>("DossierID");
 
                     b.Property<bool>("IsSmall");
-
-                    b.Property<int>("Nature");
 
                     b.Property<int>("NbrLot");
 
@@ -453,8 +447,7 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("DossierID");
 
-                    b.Property<decimal>("Lbl")
-                        .HasMaxLength(250);
+                    b.Property<int>("Lbl");
 
                     b.Property<decimal>("Montant");
 
@@ -771,6 +764,59 @@ namespace HAICOP.Migrations
                     b.HasIndex("DossierID");
 
                     b.ToTable("Rapporteur");
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Suivie", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContractualTerm");
+
+                    b.Property<DateTime>("DateAcceptationFinale");
+
+                    b.Property<DateTime>("DateAdmissionProvisoire");
+
+                    b.Property<DateTime>("DateDebu");
+
+                    b.Property<DateTime>("DateFichierJointFinal");
+
+                    b.Property<string>("DateMotifsAnnulation");
+
+                    b.Property<DateTime>("DateTraveau");
+
+                    b.Property<string>("DeclarationMethodes")
+                        .IsRequired();
+
+                    b.Property<int>("DossierID");
+
+                    b.Property<string>("EvaluationAcheteur")
+                        .HasMaxLength(500);
+
+                    b.Property<decimal>("FinalGuaranteeM");
+
+                    b.Property<decimal>("FinalGuaranteeP");
+
+                    b.Property<decimal>("MontantPenalitesFournisseur");
+
+                    b.Property<decimal>("MontantPenalitesRetard");
+
+                    b.Property<int>("NaturePrice");
+
+                    b.Property<int>("NombreJoursRetard");
+
+                    b.Property<string>("StatementReasonsDates")
+                        .HasMaxLength(500);
+
+                    b.Property<decimal>("TitleGuaranteeM");
+
+                    b.Property<decimal>("TitleGuaranteeP");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DossierID");
+
+                    b.ToTable("Suivie");
                 });
 
             modelBuilder.Entity("HAICOP.Models.UserAgent", b =>
@@ -1173,6 +1219,14 @@ namespace HAICOP.Migrations
                         .HasForeignKey("AgentID")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("HAICOP.Models.Dossier", "Dossier")
+                        .WithMany()
+                        .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HAICOP.Models.Suivie", b =>
+                {
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
                         .WithMany()
                         .HasForeignKey("DossierID")
