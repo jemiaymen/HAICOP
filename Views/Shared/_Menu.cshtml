@@ -1,9 +1,11 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+
 @if (SignInManager.IsSignedIn(User))
 {
     var role = (string)ViewBag.role.ToString();
+
     switch (role)
     {
         case "assistant":
@@ -39,7 +41,9 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Fournisseur" class="m12-subsection-menu__link">صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddFourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Dess" class="m12-subsection-menu__link"> قرار</a></li>
@@ -51,10 +55,13 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AchDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Fournisseur" class="m12-subsection-menu__link"> صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="FourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Dess" class="m12-subsection-menu__link">قرار</a></li>
+                                                            
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -202,7 +209,9 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Fournisseur" class="m12-subsection-menu__link">صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddFourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Dess" class="m12-subsection-menu__link"> قرار</a></li>
@@ -214,10 +223,13 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AchDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Fournisseur" class="m12-subsection-menu__link"> صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="FourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Dess" class="m12-subsection-menu__link">قرار</a></li>
+
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -365,7 +377,9 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Fournisseur" class="m12-subsection-menu__link">صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AddFourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Create" asp-controller="Dess" class="m12-subsection-menu__link"> قرار</a></li>
@@ -377,10 +391,13 @@
                                                         <ul class="m12-subsection-menu">
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Invest" class="m12-subsection-menu__link">ممول أجنبي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Acheteur" class="m12-subsection-menu__link">المشتري العمومي</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="AchDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Fournisseur" class="m12-subsection-menu__link"> صاحب الصفقة</a></li>
+                                                            <li class="m12-subsection-menu__item"><a asp-action="FourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Comm" class="m12-subsection-menu__link">هيكل</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Agent" class="m12-subsection-menu__link">مقرر</a></li>
                                                             <li class="m12-subsection-menu__item"><a asp-action="Index" asp-controller="Dess" class="m12-subsection-menu__link">قرار</a></li>
+
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -509,6 +526,37 @@
                                     <li data-section="true" class="m12-section-nav__item">
                                         <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true" class="m12-section-nav__link ">لوحة القيادة</a>
                                     </li>
+                                    
+                                    @if (ViewBag.IsMarsed != null)
+                                    {
+                                        <li data-section="true" class="m12-section-nav__item">
+                                            <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الثوابت" class="m12-section-nav__link ">الثوابت</a>
+
+                                            <div class="m12-subsection" data-subsection="true">
+                                                <div class="m12-subsection__wrapper">
+                                                    <div class="m12-subsection__content">
+                                                        <div class="m12-subsection__column">
+                                                            <h2 class="m12-subsection__title">إضافة</h2>
+                                                            <ul class="m12-subsection-menu">
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AddDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AddFourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="m12-subsection__column">
+                                                            <h2 class="m12-subsection__title">تحيين</h2>
+
+                                                            <ul class="m12-subsection-menu">
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AchDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
+                                                                <li class="m12-subsection-menu__item"><a asp-action="FourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    }
+                                    
                                     <li data-section="true" class="m12-section-nav__item">
                                         <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
 
@@ -526,6 +574,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                    
                                 </ul>
 
                             </nav>
@@ -554,6 +603,36 @@
                                     <li data-section="true" class="m12-section-nav__item">
                                         <a href="/" aria-haspopup="true" aria-expanded="false" data-section-link="true"  class="m12-section-nav__link ">لوحة القيادة</a>
                                     </li>
+                                    
+                                    @if (ViewBag.IsMarsed != null)
+                                    {
+                                        <li data-section="true" class="m12-section-nav__item">
+                                            <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="الثوابت" class="m12-section-nav__link ">الثوابت</a>
+
+                                            <div class="m12-subsection" data-subsection="true">
+                                                <div class="m12-subsection__wrapper">
+                                                    <div class="m12-subsection__content">
+                                                        <div class="m12-subsection__column">
+                                                            <h2 class="m12-subsection__title">إضافة</h2>
+                                                            <ul class="m12-subsection-menu">
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AddDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AddFourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="m12-subsection__column">
+                                                            <h2 class="m12-subsection__title">تحيين</h2>
+
+                                                            <ul class="m12-subsection-menu">
+                                                                <li class="m12-subsection-menu__item"><a asp-action="AchDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات المشتري العمومي</a></li>
+                                                                <li class="m12-subsection-menu__item"><a asp-action="FourDetail" asp-controller="Marsed" class="m12-subsection-menu__link">معلومات صاحب الصفقة</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    }
                                     <li data-section="true" class="m12-section-nav__item">
                                         <a href="#" aria-haspopup="true" aria-expanded="false" data-section-link="true" data-label="المعطيات الشخصية" class="m12-section-nav__link ">المعطيات الشخصية</a>
 
@@ -571,6 +650,9 @@
                                             </div>
                                         </div>
                                     </li>
+                                    
+                                    
+                                
                                 </ul>
                             </nav>
                         </div>

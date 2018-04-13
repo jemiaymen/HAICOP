@@ -230,13 +230,13 @@ namespace HAICOP.Controllers
 
         public IActionResult AchDetail()
         {
-            ViewBag.Menu = "قائمة المقرر";
+            ViewBag.Menu = "معلومات حول المشتري العمومي";
             return View(db.AcheteurDetail.Include(a => a.Acheteur));
         }
 
         public IActionResult AddDetail()
         {
-            ViewBag.Menu = "إضافة معلومات المشتري العمومي";
+            ViewBag.Menu = "إضافة معلومات للمشتري العمومي";
             ViewData["AcheteurID"] = new SelectList(db.Acheteur, "ID", "Lbl");
             return View();
         }
@@ -245,7 +245,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddDetail([Bind("AcheteurID,FirstLastName,Tel,Fax")] AcheteurDetail detail)
         {
-            ViewBag.Menu = "إضافة معلومات المشتري العمومي";
+            ViewBag.Menu = "إضافة معلومات للمشتري العمومي";
             if (ModelState.IsValid)
             {
                 db.AcheteurDetail.Add(detail);
@@ -280,7 +280,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditDetail([Bind("ID,AcheteurID,FirstLastName,Tel,Fax")] AcheteurDetail detail)
         {
-            ViewBag.Menu = "تحيين مقرر";
+            ViewBag.Menu = "تحيين معلومات المشتري العمومي";
             if (ModelState.IsValid)
             {
                 db.AcheteurDetail.Update(detail);
@@ -294,7 +294,7 @@ namespace HAICOP.Controllers
 
         public IActionResult FourDetail()
         {
-            ViewBag.Menu = "قائمة ";
+            ViewBag.Menu = "معلومات حول صاحب الصفقة";
             return View(db.FournisseurDetail.Include(f => f.Fournisseur));
         }
 
@@ -358,7 +358,7 @@ namespace HAICOP.Controllers
 
         public async Task<IActionResult> AddEstimation(int? id)
         {
-            ViewBag.Menu = "";
+            ViewBag.Menu = "إضافة تقديرات المشتري العمومي";
 
             if (id == null)
             {
@@ -379,7 +379,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddEstimation([Bind("DossierID,Lbl,Montant")] Estimation es)
         {
-            ViewBag.Menu = "";
+            ViewBag.Menu = "إضافة تقديرات المشتري العمومي";
             if (ModelState.IsValid)
             {
                 await db.Estimation.AddAsync(es);
@@ -392,7 +392,7 @@ namespace HAICOP.Controllers
 
         public IActionResult EditEstimation(int? id)
         {
-            ViewBag.Menu = "تحيين ";
+            ViewBag.Menu = "تحيين تقديرات المشتري العمومي";
             if (id == null)
             {
                 return NotFound();
@@ -412,7 +412,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditEstimation([Bind("ID,DossierID,Lbl,Montant")] Estimation es)
         {
-            ViewBag.Menu = "تحيين ";
+            ViewBag.Menu = "تحيين تقديرات المشتري العمومي";
             if (ModelState.IsValid)
             {
                 db.Estimation.Update(es);

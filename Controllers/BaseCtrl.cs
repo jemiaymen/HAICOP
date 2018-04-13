@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -27,9 +27,10 @@ namespace HAICOP.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            ViewBag.user = _userManager.GetUserAsync(HttpContext.User).Result;
             try
             {
-                ViewBag.user = _userManager.GetUserAsync(HttpContext.User ).Result;
+                
 
 
                 if(_userManager.IsInRoleAsync(ViewBag.user, "Chef").Result)

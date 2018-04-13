@@ -49,8 +49,6 @@ namespace HAICOP.Controllers
             return View(tmp);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add()
@@ -279,7 +277,7 @@ namespace HAICOP.Controllers
         }
 
 
-        public async Task<IActionResult> Generate(int? id)
+        public IActionResult Generate(int? id)
         {
             //if (id == null)
             //{

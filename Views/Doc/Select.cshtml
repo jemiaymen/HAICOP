@@ -87,6 +87,7 @@
 
                         @if (Model.Commission.Lbl.Contains("مرصد"))
                         {
+                            ViewBag.IsMarsed = "yes";
                             <th class="m23-table__content-table-cell--header " colspan="4">
                                 بطاقة بيانات
                             </th>
@@ -252,7 +253,7 @@ else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Con
 
 
 
-    @if (ViewBag.Fournisseur != null )
+    @if (ViewBag.Fournisseur.Count > 0)
     {
         <div class="grid__row">
             <div class="grid__column grid__column--12">
@@ -308,7 +309,7 @@ else if (ViewBag.role.ToString().Contains("Chef") || ViewBag.role.ToString().Con
 
 
 
-    @if (ViewBag.Avis != null)
+    @if (ViewBag.Avis.Count > 0)
     {
         <div class="grid__row">
             <div class="grid__column grid__column--12">

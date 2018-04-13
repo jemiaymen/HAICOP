@@ -103,14 +103,14 @@
                 <label asp-for="Nationalite" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="Nationalite" class="form-field__input form-field__input--text" />
+                <input asp-for="Nationalite" class="form-field__input form-field__input--text"  readonly="readonly"/>
                 <span asp-validation-for="Nationalite" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">
                 <label asp-for="Speciality" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="Speciality" class="form-field__input form-field__input--text" />
+                <input asp-for="Speciality" class="form-field__input form-field__input--text" readonly="readonly"/>
                 <span asp-validation-for="Speciality" class="text-danger"></span>
             </div>
         </div>
@@ -119,14 +119,14 @@
                 <label asp-for="Category" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="Category" class="form-field__input form-field__input--text" />
+                <input asp-for="Category" class="form-field__input form-field__input--text" readonly="readonly"/>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">
                 <label asp-for="Activity" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="Activity" class="form-field__input form-field__input--text" />
+                <input asp-for="Activity" class="form-field__input form-field__input--text" readonly="readonly"/>
                 <span asp-validation-for="Activity" class="text-danger"></span>
             </div>
         </div>
@@ -186,7 +186,7 @@
                 <label asp-for="DateOpen" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="DateOpen" class="form-field__input form-field__input--text" />
+                <input asp-for="DateOpen" type="datetime-local" class="form-field__input form-field__input--text" />
                 <span asp-validation-for="DateOpen" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">

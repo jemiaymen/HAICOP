@@ -1160,11 +1160,11 @@ namespace HAICOP.Controllers
 
             ViewBag.Menu = "ملف عدد : " + dossier.Num;
 
-            ViewBag.Fournisseur = db.FourInDossier.Include(f => f.Fournisseur).Where(f => f.DossierID == id.GetValueOrDefault());
+            ViewBag.Fournisseur = db.FourInDossier.Include(f => f.Fournisseur).Where(f => f.DossierID == id.GetValueOrDefault()).ToList();
 
             ViewBag.Avis = db.DessisionInMetting.Include(m => m.Metting)
                                                 .Include(d => d.Dessision)
-                                                .Where(c => c.Metting.DossierID == id.GetValueOrDefault());
+                                                .Where(c => c.Metting.DossierID == id.GetValueOrDefault()).ToList();
 
             try
             {
@@ -1829,8 +1829,7 @@ namespace HAICOP.Controllers
         private bool HaveRightWrite(int CommissionID)
         {
             string Id = ViewBag.user.Id;
-            var cid = db.UserAgent.Include(a => a.Agent).Where(a => a.UserID == Id).Select(a => a.Agent.CommissionID).FirstOrDefault();
-            return cid == CommissionID;
+            return db.UserAgent.Include(a => a.Agent).Where(a => a.UserID == Id).Select(a => a.Agent.CommissionID).Contains(CommissionID);
         }
 
         #endregion
