@@ -405,7 +405,6 @@ namespace HAICOP.Controllers
 
                 var all = db.FourInDossier.Include(d => d.Dossier)
                                           .Include(d => d.Dossier.Commission)
-                                          .Include(d => d.Dossier.Mettings)
                                           .Include(d => d.Fournisseur)
                                           .Where(d => d.MettingDate >= model.From && d.MettingDate <= model.To
                                           && cms.Contains(d.Dossier.CommissionID));
@@ -524,10 +523,9 @@ namespace HAICOP.Controllers
                 int[] cms = { 1, 2, 5, 6 };
                 var all = db.FourInDossier.Include(d => d.Dossier)
                                            .Include(d => d.Dossier.Commission)
-                                           .Include(d => d.Dossier.Mettings)
                                            .Include(d => d.Fournisseur)
                                            .Where(d => d.MettingDate >= model.From && d.MettingDate <= model.To
-                                           && cms.Contains(d.Dossier.CommissionID));
+                                           && cms.Contains(d.Dossier.CommissionID) && d.Montant > 0);
 
                 var rapport = all.Where(d => d.Dossier.Nature == DossierNature.Rapport);
 
@@ -571,34 +569,12 @@ namespace HAICOP.Controllers
 
         private TestMonth GetResult(IQueryable<FourInDossier> all,int CommissionID)
         {
-            List<Metting> lst = new List<Metting>();
-            List<Dossier> doc = new List<Dossier>();
 
-            var comm = all.Where(d => d.Dossier.CommissionID == CommissionID).GroupBy(d => d.DossierID).Select(s => new TestMonth
-            {
-                Count = s.Count(),
-                Lbl = s.Select(d => d.Dossier.Commission.Lbl).First(),
-                Montant = s.Sum(d => d.Montant),
-                Lst = s.Select(d => d.Dossier).ToList()
-            });
             var com = all.Where(d => d.Dossier.CommissionID == CommissionID && d.Montant > 0);
-
-
-            foreach (var i in comm)
-            {
-                doc.AddRange(i.Lst);
-            }
-
-            foreach (var l in com)
-            {
-                lst.AddRange(l.Dossier.Mettings);
-            }
-
 
             try
             {
-                TestMonth t = new TestMonth { Lst = doc, Count = comm.Sum(a => a.Count), Lbl = comm.FirstOrDefault().Lbl, Nbr = lst.GroupBy(a => a.MettDate).Count(), Montant = comm.Sum(a => a.Montant) };
-                return t;
+                return new TestMonth { Lst = com.Select(d => d.Dossier).ToList(), Count = com.GroupBy(a => a.DossierID).Count(), Lbl = com.FirstOrDefault().Dossier.Commission.Lbl, Nbr = com.GroupBy(a => a.MettingDate).Count(), Montant = com.Sum(a => a.Montant) };
             }
             catch (Exception)
             {
