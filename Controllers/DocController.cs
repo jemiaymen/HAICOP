@@ -1586,6 +1586,29 @@ namespace HAICOP.Controllers
             return View(await mails.ToListAsync());
         }
 
+        [Authorize(Roles = "root,Admin")]
+        public IActionResult DelMail(int? id)
+        {
+            
+            ViewBag.Menu = "حذف بريد";
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mail = db.Mail.SingleOrDefault(m => m.ID == id);
+            int docid = mail.DossierID;
+            if (mail == null)
+            {
+                return NotFound();
+            }
+
+            db.Remove(mail);
+            db.SaveChanges();
+            return RedirectToAction("Mail", new { id = docid });
+        }
+
+        
         public IActionResult EditMail(int? id)
         {
             ViewBag.Menu = "تحيين بريد";

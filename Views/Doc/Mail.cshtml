@@ -42,6 +42,9 @@
                         تحيين
                     </th>
                     <th class="m23-table__content-table-cell--header ">
+                        حذف
+                    </th>
+                    <th class="m23-table__content-table-cell--header ">
                         طباعة
                     </th>
                     <th class="m23-table__content-table-cell--header "></th>
@@ -70,6 +73,9 @@
                         
                         <td class="m23-table__content-table-cell">
                             <a asp-action="EditMail" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="DelMail" asp-route-id="@item.ID"><i class="fa fa-ban"></i></a>
                         </td>
                         <td class="m23-table__content-table-cell">
                             <a asp-action="Bureau" asp-controller="Print" asp-route-id="@item.DossierID" asp-route-mid="@item.ID"><i class="fa fa-print"></i></a>
