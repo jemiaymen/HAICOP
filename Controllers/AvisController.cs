@@ -325,7 +325,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public async Task<IActionResult> Rep(int DessisionID ,int DossierID,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting , IFormFile Location, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail  )
+        public async Task<IActionResult> Rep(int DessisionID ,int DossierID,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting , IFormFile Location, [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc")] Mail mail ,Cause? cause )
         {
             ViewBag.Menu = "إضافة قرار";
             if (!DossierExists( DossierID))
@@ -360,6 +360,7 @@ namespace HAICOP.Controllers
                     var doc = await db.Dossier.FindAsync(DossierID);
                     doc.State = DossierState.Traitement;
                     doc.TraitDate = metting.MettDate;
+                    doc.Cause = cause;
                     db.Update(doc);
                     await db.SaveChangesAsync();
 
@@ -413,7 +414,7 @@ namespace HAICOP.Controllers
 
             EditAvis model = new EditAvis();
 
-            var mail = db.Mail.FirstOrDefault(a => a.MettingID == id.GetValueOrDefault());
+            var mail = db.Mail.Include(a => a.Dossier).FirstOrDefault(a => a.MettingID == id.GetValueOrDefault());
 
             model.InitFromMail(mail);
             model.InitFromMetting(metting.Metting);
@@ -422,6 +423,7 @@ namespace HAICOP.Controllers
             model.MettingID = metting.MettingID;
             model.DessisionID = metting.DessisionID;
             model.Url = mail.Url;
+            model.Cause = mail.Dossier.Cause.GetValueOrDefault();
 
             ViewData["DessisionID"] = new SelectList(db.Dessision, "ID", "Lbl");  
             return View(model);
@@ -430,7 +432,7 @@ namespace HAICOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="root,Admin,President,assistant")]
-        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID, IFormFile Location,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc,MettingID,Url")] Mail mail )
+        public async Task<IActionResult> EditAvis(int MailID,int MettingID,int DessisionID,int DossierID, IFormFile Location,[Bind("DossierID,MettDate,NotifDate,MettNbr,MettDesc")] Metting metting ,  [Bind("DossierID,Ref,OriginRef,From,MailType,MailNature,MailDate,Desc,MettingID,Url")] Mail mail, Cause? cause)
         {
             ViewBag.Menu = "تحيين قرار";
             ModelState.Remove("Url");
@@ -463,6 +465,7 @@ namespace HAICOP.Controllers
                     var doc = await db.Dossier.FindAsync(DossierID);
                     doc.State = DossierState.Traitement;
                     doc.TraitDate = metting.MettDate;
+                    doc.Cause = cause;
                     db.Update(doc);
                     await db.SaveChangesAsync();
 

@@ -1150,7 +1150,7 @@ namespace HAICOP.Controllers
             {
                 return NotFound();
             }
-            var dossier = db.Dossier.Include(c => c.Commission).Include( c => c.Mails).Include(d => d.Descriptions).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
+            var dossier = db.Dossier.Include(c => c.Commission).Include( c => c.Mails).Include(d => d.Descriptions).Include(a => a.AffectTrends).SingleOrDefault(d => d.ID == id.GetValueOrDefault());
             if (dossier == null)
             {
                 return NotFound();
@@ -1158,7 +1158,7 @@ namespace HAICOP.Controllers
 
             role = (string)ViewBag.role.ToString();
 
-            ViewBag.Menu = "ملف عدد : " + dossier.Num;
+            ViewBag.Menu = "ملف عدد : " + dossier.Num.ToString("0.0");
 
             ViewBag.Fournisseur = db.FourInDossier.Include(f => f.Fournisseur).Where(f => f.DossierID == id.GetValueOrDefault()).ToList();
 
@@ -1586,7 +1586,7 @@ namespace HAICOP.Controllers
             return View(await mails.ToListAsync());
         }
 
-        [Authorize(Roles = "root,Admin")]
+        [Authorize(Roles = "root,Admin,President")]
         public IActionResult DelMail(int? id)
         {
             
@@ -1603,7 +1603,23 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
+            var metting = db.Metting.SingleOrDefault(m => m.ID == mail.MettingID);
+            var des = db.DessisionInMetting.SingleOrDefault(m => m.MettingID == mail.MettingID);
+            Del(mail.Url);
+
+            
             db.Remove(mail);
+
+            if (des != null)
+            {
+                db.Remove(des);
+            }
+            if (metting != null)
+            {
+                db.Remove(metting);
+            }
+
+
             db.SaveChanges();
             return RedirectToAction("Mail", new { id = docid });
         }

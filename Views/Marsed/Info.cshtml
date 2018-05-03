@@ -1,4 +1,4 @@
-﻿@model HAICOP.Models.InfoView
+﻿@model HAICOP.Models.AffectView
 
 <div class="grid">
     <div class="grid__row">
@@ -9,7 +9,11 @@
         </div>
     </div>
     <form class="form" asp-controller="Marsed" asp-action="Info" method="post" data-form="true">
+
         <input type="hidden" asp-for="DossierID" />
+        <input type="hidden" asp-for="AcheteurID" />
+        <input type="hidden" asp-for="FournisseurID" />
+
         <div class="grid__row">
             <div class="grid__column grid__column--2">
                 <label asp-for="AcheteurID" class="form-field__label">المشتري العمومي</label>

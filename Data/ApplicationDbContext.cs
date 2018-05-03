@@ -175,6 +175,8 @@ namespace HAICOP.Data
         public DbSet<Moinsdis> Moinsdis { get; set; }
         public DbSet<Balance> Balance { get; set; }
         public DbSet<Suivie> Suivie { get; set; }
+        public DbSet<AffectTrend> AffectTrend { get; set; }
+        
 
     }
 }

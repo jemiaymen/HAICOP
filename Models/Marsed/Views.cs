@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace HAICOP.Models
 {
-    public class InfoView
+    public class AffectView
     {
         [Required(ErrorMessage = "اجباري")]
         public int DossierID { get; set; }
@@ -255,7 +255,6 @@ namespace HAICOP.Models
 
         public void InitDocDetail(DossierDetail doc)
         {
-            AcheteurID = doc.AcheteurDetailID;
             IsSmall = doc.IsSmall;
             NbrLot = doc.NbrLot;
 
@@ -293,6 +292,8 @@ namespace HAICOP.Models
         }
 
     }
+
+
     public class SuivieView
     {
         public int ID { get; set; }

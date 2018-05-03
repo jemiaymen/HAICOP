@@ -72,7 +72,7 @@
                     <th class="m23-table__content-table-cell--header " colspan="2">
                         <center>  عدم الموافقة </center>
                     </th>
-                    <th class="m23-table__content-table-cell--header " colspan="2">
+                    <th class="m23-table__content-table-cell--header " colspan="3">
                         <center> غير مثمر </center>
                     </th>
                 </tr>
@@ -95,7 +95,14 @@
                          @ViewBag.nnot.ToString("F2") % 
                     </td>
                     <td class="m23-table__content-table-cell">
-                        @ViewBag.not.ToString("N0") 
+                        @ViewBag.not.ToString("F0")
+                    </td>
+                    <td class="m23-table__content-table-cell">
+                        @foreach(var v in ViewBag.docnotc)
+                        {
+                            Cause value = v.Lbl;
+                            <p>@Html.DisplayFor(e => value)  : @v.Count</p>
+                        }
                     </td>
                </tr>
             </tbody>

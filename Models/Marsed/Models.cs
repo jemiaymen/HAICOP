@@ -7,6 +7,52 @@ using Microsoft.AspNetCore.Http;
 
 namespace HAICOP.Models
 {
+    public class AffectTrend
+    {
+        public int ID { get; set; }
+
+        #region foreignkey
+
+        [ForeignKey("Dossier")]
+        public int DossierID { get; set; }
+        public virtual Dossier Dossier { get; set; }
+
+
+        [ForeignKey("FournisseurDetail")]
+        public int FournisseurDetailID { get; set; }
+        public virtual FournisseurDetail FournisseurDetail { get; set; }
+
+        [ForeignKey("AcheteurDetail")]
+        public int AcheteurDetailID { get; set; }
+        public virtual AcheteurDetail AcheteurDetail { get; set; }
+
+
+        public virtual DossierDetail DossierDetail { get; set; }
+        public virtual DossierDelais DossierDelais { get; set; }
+        public virtual Concurrence Concurrence { get; set; }
+        public virtual InfoValeur InfoValeur { get; set; }
+        public virtual Moinsdis Moinsdis { get; set; }
+        public virtual Balance Balance { get; set; }
+        public virtual ICollection<Estimation> Estimations { get; set; }
+        #endregion
+
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الموضوع")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 12)]
+        public string Subject { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المبلغ")]
+        [DisplayFormat(DataFormatString = "{0:F0}", ApplyFormatInEditMode = true)]
+        public decimal TotalLocal { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "التمويل")]
+        public Financement Financement { get; set; }
+
+    }
+
     public class AcheteurDetail
     {
         public int ID { get; set; }
@@ -20,7 +66,6 @@ namespace HAICOP.Models
         [DataType(DataType.PhoneNumber)]
         public string Tel { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
         [Display(Name = "الفاكس")]
         [DataType(DataType.PhoneNumber)]
         public string Fax { get; set; }
@@ -29,6 +74,10 @@ namespace HAICOP.Models
         [Display(Name = "إسم المسؤول عن خلية الصفقات العمومية و لقبه")]
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 4)]
         public string FirstLastName { get; set; }
+
+        [Display(Name = "البريد الإلكتروني")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
     }
 
     public class FournisseurDetail
@@ -38,6 +87,7 @@ namespace HAICOP.Models
         [ForeignKey("Fournisseur")]
         public int FournisseurID { get; set; }
         public virtual Fournisseur Fournisseur { get; set; }
+
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "جنسيته")]
@@ -58,11 +108,10 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
 
-        public int AcheteurDetailID { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "صفقة مخصصة لفائدة المؤسسات الصغرى")]
@@ -77,9 +126,10 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "تاريخ الإعلان عن المنافسة")]
@@ -130,9 +180,9 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "عدد ساحبي كراسات الشروط")]
@@ -156,9 +206,9 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Display(Name = "معلومات حول تقييم العروض")]
         public Valeur Valeur { get; set; }
@@ -192,9 +242,9 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "العروض")]
@@ -211,9 +261,9 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Display(Name = "معايير المطابقة")]
         [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
@@ -228,9 +278,9 @@ namespace HAICOP.Models
     {
         public int ID { get; set; }
 
-        [ForeignKey("Dossier")]
-        public int DossierID { get; set; }
-        public virtual Dossier Dossier { get; set; }
+        [ForeignKey("AffectTrend")]
+        public int AffectTrendID { get; set; }
+        public virtual AffectTrend AffectTrend { get; set; }
 
         [Display(Name = "المعايير المعتمدة للفرز الفني")]
         [StringLength(250, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 2)]
@@ -245,6 +295,7 @@ namespace HAICOP.Models
     public class Suivie
     {
         public int ID { get; set; }
+
 
         [ForeignKey("Dossier")]
         public int DossierID { get; set; }

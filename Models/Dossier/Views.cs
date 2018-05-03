@@ -344,8 +344,11 @@ namespace HAICOP.Models
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 5)]
 		public string MettDesc {get ; set;}
 
+        [Display(Name = "الأسباب")]
+        public Cause Cause { get; set; }
 
-		public void InitFromMetting(Metting metting)
+
+        public void InitFromMetting(Metting metting)
 		{
 			MettDate = metting.MettDate ;
 			NotifDate = metting.NotifDate;
@@ -367,6 +370,8 @@ namespace HAICOP.Models
 
         [Display(Name = "الوثيقة")]
         new public string Url { get; set; }
+
+        
 
     }
 

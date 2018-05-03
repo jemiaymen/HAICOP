@@ -165,6 +165,18 @@
                 <span asp-validation-for="DessisionID" class="text-danger"></span>
             </div>
         </div>
+        <div class="grid__row hide">
+            <div class="grid__column grid__column--2">
+                <label for="Cause" class="form-field__label">الأسباب</label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <span class="form-field__input-wrapper form-field__input-wrapper--select">
+                    <select asp-for="Cause" asp-items="Html.GetEnumSelectList<Cause>()" class="form-field__input form-field__input--select">
+                        <option value=""></option>
+                    </select>
+                </span>
+            </div>
+        </div>
 
         <div class="form-field__button">
             <button class="button button--primary" type="submit">إضافة</button>
@@ -179,5 +191,15 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script>
+            $("#DessisionID").change(function () {
+                if ($("#DessisionID").val() == 11) {
+                    $(".hide").show();
+                } else {
+                    $(".hide").hide();
+                }
+            });
+        </script>
     }
 }

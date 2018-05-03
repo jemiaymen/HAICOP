@@ -48,6 +48,12 @@ namespace HAICOP.Models
         }
 	}
 
+    public class CauseResult
+    {
+        public int Count { get; set; }
+        public Cause Lbl { get; set; }
+    }
+
 	public class DashboardComm : TestMonth
 	{
 		public int Trait { get ; set;}

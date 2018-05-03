@@ -8,6 +8,16 @@ using Microsoft.AspNetCore.Http;
 namespace HAICOP.Models
 {
 
+    public enum Cause
+    {
+        [Display(Name = "عدم المطابقة")]
+        NonConform = 1,
+        [Display(Name = "إرتفاع الأسعار")]
+        AugmentationPrix = 2,
+        [Display(Name = "عدم تمديد في صلوحية العروض")]
+        NonElongMarch = 3
+    }
+
     public enum NatureAcheteur
     {
         [Display(Name = "الدولة")]

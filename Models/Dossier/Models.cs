@@ -23,7 +23,7 @@ namespace HAICOP.Models
 		
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "عدد الملف")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
+        [DisplayFormat(DataFormatString = "{0:N1}",ApplyFormatInEditMode =true)]
         public decimal Num {get ; set;}
 		
 
@@ -74,13 +74,18 @@ namespace HAICOP.Models
 		[Required(ErrorMessage = "اجباري")]
 		[Display(Name = "حالت الملف")]
 		public DossierState State {get ; set;}
-		
-		
-		public virtual ICollection<Mail> Mails { get; set; }
+
+        [Display(Name = "الأسباب")]
+        public Cause? Cause { get; set; }
+
+
+        public virtual ICollection<Mail> Mails { get; set; }
 		public virtual ICollection<Metting> Mettings { get; set; }		
 		public virtual Commission Commission { get; set; }
         public virtual ICollection<Desc> Descriptions { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<AffectTrend> AffectTrends { get; set; }
+
         public Dossier()
 		{
 			State = DossierState.Creation;

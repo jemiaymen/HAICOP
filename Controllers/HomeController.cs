@@ -332,15 +332,14 @@ namespace HAICOP.Controllers
                 var all = db.FourInDossier.Include(d => d.Dossier)
                                           .Include(d => d.Dossier.Commission)
                                           .Include(d => d.Dossier.Mettings)
+                                          .Include(d => d.Dossier.Mails)
                                           .Include(d => d.Fournisseur)
                                           .Where(d => d.Dossier.TraitDate >= model.From && d.Dossier.TraitDate <= model.To
                                           && cms.Contains(d.Dossier.CommissionID));
 
-                
+                var alldoc = all.Select(d => d.Dossier);
 
-                var type = db.Dossier.Include(d => d.Commission)
-                                        .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To && cms.Contains(d.CommissionID))
-                                        .GroupBy(d => d.Type)
+                var type = alldoc.GroupBy(d => d.Type)
                                         .Select(s => new TestMonth
                                         {
                                             Count = s.Count(),
@@ -349,13 +348,9 @@ namespace HAICOP.Controllers
                                             Montant = db.FourInDossier.Where(d => s.Select(a => a.ID).Contains(d.DossierID)).Sum(m => m.Montant)
                                         });
 
-                var docnot = db.Dossier.Include(d => d.Mails)
-                                        .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To &&
-                                                d.Mails.Any(a => a.MailNature == MailNature.NonComform)).Count();
+                var docnot = alldoc.Where(d => d.Mails.Any(a => a.MailNature == MailNature.NonComform)).Count();
 
-                var notok = db.Dossier.Include(d => d.Mails)
-                                        .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To &&
-                                                d.Mails.Any(a => a.MailNature == MailNature.Refu)).Count();
+                var notok = alldoc.Where(d => d.Mails.Any(a => a.MailNature == MailNature.Refu)).Count();
 
                 foreach (int i in cms)
                 {
@@ -405,30 +400,42 @@ namespace HAICOP.Controllers
 
                 var all = db.FourInDossier.Include(d => d.Dossier)
                                           .Include(d => d.Dossier.Commission)
+                                          .Include(d => d.Dossier.Mails)
                                           .Include(d => d.Fournisseur)
                                           .Where(d => d.MettingDate >= model.From && d.MettingDate <= model.To
                                           && cms.Contains(d.Dossier.CommissionID));
 
 
 
-                var type =  db.FourInDossier.Include(d => d.Dossier)
-                                            .Include(d => d.Dossier.Commission)
-                                            .Where(d => d.MettingDate >= model.From && d.MettingDate <= model.To && cms.Contains(d.Dossier.CommissionID))
-                                            .GroupBy(d => d.Dossier.Type)
-                                            .Select(s => new TestMonth
-                                            {
-                                                Count = s.Count(),
-                                                Lbl = s.Key.ToString(),
-                                                Montant = db.FourInDossier.Where(d => s.Select(a => a.DossierID).Contains(d.DossierID)).Sum(m => m.Montant)
-                                            });
+                var alldoc = db.FourInDossier.Include(d => d.Dossier)
+                                          .Include(d => d.Dossier.Commission)
+                                          .Include(d => d.Dossier.Mails)
+                                          .Include(d => d.Fournisseur)
+                                          .Where(d => d.MettingDate >= model.From && d.MettingDate <= model.To
+                                          && cms.Contains(d.Dossier.CommissionID)).ToList().Select(b => b.Dossier);
+
+                var type = alldoc.GroupBy(d => d.Type)
+                                        .Select(s => new TestMonth
+                                        {
+                                            Count = s.Count(),
+                                            Lbl = s.Key.ToString(),
+                                            Lst = s.ToList(),
+                                            Montant = db.FourInDossier.Where(d => s.Select(a => a.ID).Contains(d.DossierID)).Sum(m => m.Montant)
+                                        });
 
                 var docnot = db.Dossier.Include(d => d.Mails)
-                                        .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To &&
-                                                d.Mails.Any(a => a.MailNature == MailNature.NonComform)).Count();
+                                       .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To
+                                              && d.Mails.Any(a => a.MailNature == MailNature.NonComform));
+
+                var docnotcause = docnot.GroupBy(b => b.Cause).Select(s => new CauseResult
+                {
+                    Count = s.Count(),
+                    Lbl = s.Key.GetValueOrDefault()
+                });
 
                 var notok = db.Dossier.Include(d => d.Mails)
-                                        .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To &&
-                                                d.Mails.Any(a => a.MailNature == MailNature.Refu)).Count();
+                                       .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To
+                                              && d.Mails.Any(a => a.MailNature == MailNature.Refu)).Count();
 
                 foreach (int i in cms)
                 {
@@ -458,8 +465,10 @@ namespace HAICOP.Controllers
                 ViewBag.foreign = ForeignMontant;
                 ViewBag.nok = ((float)notok / total.Count) * 100;
                 ViewBag.notok = notok;
-                ViewBag.not = docnot;
-                ViewBag.nnot = ((float)docnot / total.Count) * 100;
+                ViewBag.not = docnot.Count();
+                ViewBag.nnot = ((float)docnot.Count() / total.Count) * 100;
+
+                ViewBag.docnotc = docnotcause;
 
                 result.Add(total);
 
