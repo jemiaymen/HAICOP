@@ -247,7 +247,7 @@ namespace HAICOP.Models
         public virtual AffectTrend AffectTrend { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
-        [Display(Name = "العروض")]
+        [Display(Name = "العرض")]
         public int Lbl { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
@@ -300,6 +300,29 @@ namespace HAICOP.Models
         [ForeignKey("Dossier")]
         public int DossierID { get; set; }
         public virtual Dossier Dossier { get; set; }
+
+        [ForeignKey("Fournisseur")]
+        [Display(Name = "صاحب الصفقة")]
+        public int FournisseurID { get; set; }
+        public virtual Fournisseur Fournisseur {get ;set;}
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "الموضوع")]
+        [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 12)]
+        public string Subject { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "المبلغ")]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
+        public decimal TotalLocal { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "التمويل")]
+        public Financement Financement { get; set; }
+
+        [Required(ErrorMessage = "اجباري")]
+        [Display(Name = "طريقة الإبرام")]
+        public ModePassation Mode { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "طبيعة الأسعار")]

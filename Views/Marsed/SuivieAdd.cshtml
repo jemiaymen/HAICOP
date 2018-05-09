@@ -1,0 +1,232 @@
+@model HAICOP.Models.Suivie
+
+
+<div class="grid">
+
+    <div class="grid__row">
+        <div class="grid__column grid__column--12">
+            <div class="m26-page-title title_message">
+                <h1 class="text__page-title">@ViewBag.Menu</h1>
+            </div>
+        </div>
+    </div>
+    <form class="form" asp-controller="Marsed" asp-action="SuivieAdd" method="post" data-form="true">
+        <input type="hidden" asp-for="DossierID" />
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Subject" class="form-field__label "></label>
+            </div>
+            <div class="grid__column grid__column--10">
+                <textarea asp-for="Subject" class="form-field__input form-field__input--text"></textarea>
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="TotalLocal" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="TotalLocal" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="TotalLocal" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="Financement" class="col-md-3 control-label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <select asp-for="Financement" asp-items="Html.GetEnumSelectList<Financement>()">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Financement" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Mode" class="col-md-3 control-label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <select asp-for="Mode" asp-items="Html.GetEnumSelectList<ModePassation>()">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="Mode" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="FournisseurID" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <select asp-for="FournisseurID" asp-items="ViewBag.FournisseurID">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="FournisseurID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="NaturePrice" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <select asp-for="NaturePrice" asp-items="Html.GetEnumSelectList<NaturePrice>()" >
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="NaturePrice" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="ContractualTerm" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="ContractualTerm" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="ContractualTerm" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="FinalGuaranteeP" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="FinalGuaranteeP" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="FinalGuaranteeP" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="FinalGuaranteeM" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="FinalGuaranteeM" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="FinalGuaranteeM" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="TitleGuaranteeP" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="TitleGuaranteeP" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="TitleGuaranteeP" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="TitleGuaranteeM" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="TitleGuaranteeM" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="TitleGuaranteeM" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateDebu" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="DateDebu" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="DateDebu" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateTraveau" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="DateTraveau" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="DateTraveau" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="StatementReasonsDates" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <textarea asp-for="StatementReasonsDates" class="form-field__input form-field__input--text"> </textarea>
+                <span asp-validation-for="StatementReasonsDates" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="NombreJoursRetard" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="NombreJoursRetard" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="NombreJoursRetard" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateAdmissionProvisoire" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="DateAdmissionProvisoire" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="DateAdmissionProvisoire" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateAcceptationFinale" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="DateAcceptationFinale" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="DateAcceptationFinale" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="MontantPenalitesRetard" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="MontantPenalitesRetard" class="form-field__input form-field__input--text"/>
+                <span asp-validation-for="MontantPenalitesRetard" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="MontantPenalitesFournisseur" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <input asp-for="MontantPenalitesFournisseur" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="MontantPenalitesFournisseur" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="EvaluationAcheteur" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <textarea asp-for="EvaluationAcheteur" class="form-field__input form-field__input--text"> </textarea>
+                <span asp-validation-for="EvaluationAcheteur" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateMotifsAnnulation" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--4">
+                <textarea asp-for="DateMotifsAnnulation" class="form-field__input form-field__input--text"> </textarea>
+                <span asp-validation-for="DateMotifsAnnulation" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="DeclarationMethodes" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--6">
+                <textarea asp-for="DeclarationMethodes" class="form-field__input form-field__input--text"></textarea>
+                <span asp-validation-for="DeclarationMethodes" class="text-danger"></span>
+            </div>
+            <div class="grid__column grid__column--2">
+                <label asp-for="DateFichierJointFinal" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
+                <input asp-for="DateFichierJointFinal" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="DateFichierJointFinal" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-field__button">
+            <button class="button button--primary" type="submit">إضافة</button>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_SelectizeScript");
+        <script>
+            $("#Mode").selectize();
+            $("#Financement").selectize();
+            $("#FournisseurID").selectize();
+            $("#NaturePrice").selectize();
+        </script>
+    }
+}
+
+@section Styles {
+    @{ await Html.RenderPartialAsync("_SelectizeStyle");}
+}
+

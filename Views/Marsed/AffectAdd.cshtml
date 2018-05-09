@@ -1,4 +1,4 @@
-﻿@model HAICOP.Models.InfoView
+﻿@model HAICOP.Models.AffectView
 
 <div class="grid">
     <div class="grid__row">
@@ -8,8 +8,11 @@
             </div>
         </div>
     </div>
-    <form class="form" asp-controller="Marsed" asp-action="EditInfo" method="post" data-form="true">
+    <form class="form" asp-controller="Marsed" asp-action="AffectAdd" method="post" data-form="true">
+
         <input type="hidden" asp-for="DossierID" />
+
+
         <div class="grid__row">
             <div class="grid__column grid__column--2">
                 <label asp-for="AcheteurID" class="form-field__label">المشتري العمومي</label>
@@ -21,21 +24,55 @@
                 <span asp-validation-for="AcheteurID" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">
-                <label asp-for="Type" class="form-field__label"></label>
+                <label asp-for="FirstLastName" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
+                <input asp-for="FirstLastName" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="FirstLastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="grid__row">
+                <div class="grid__column grid__column--2">
+                    <label asp-for="Tel" class="form-field__label"></label>
+                </div>
+                <div class="grid__column grid__column--2">
+                    <input asp-for="Tel" class="form-field__input form-field__input--text" />
+                    <span asp-validation-for="Tel" class="text-danger"></span>
+                </div>
+
+                <div class="grid__column grid__column--1">
+                    <label asp-for="Fax" class="form-field__label"></label>
+                </div>
+                <div class="grid__column grid__column--2">
+                    <input asp-for="Fax" class="form-field__input form-field__input--text" />
+                    <span asp-validation-for="Fax" class="text-danger"></span>
+                </div>
+
+                <div class="grid__column grid__column--2">
+                    <label asp-for="Email" class="form-field__label"></label>
+                </div>
+                <div class="grid__column grid__column--3">
+                    <input asp-for="Email" class="form-field__input form-field__input--text" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        <div class="grid__row">
+            <div class="grid__column grid__column--2">
+                <label asp-for="Type" class="form-field__label"></label>
+            </div>
+            <div class="grid__column grid__column--2">
                 <select asp-for="Type" asp-items="Html.GetEnumSelectList<DossierType>()">
                     <option value=""></option>
                 </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-        </div>
 
-        <div class="grid__row">
             <div class="grid__column grid__column--2">
                 <label asp-for="Subject" class="form-field__label "></label>
             </div>
-            <div class="grid__column grid__column--10">
+            <div class="grid__column grid__column--6">
                 <textarea asp-for="Subject" class="form-field__input form-field__input--text"></textarea>
                 <span asp-validation-for="Subject" class="text-danger"></span>
             </div>
@@ -103,7 +140,7 @@
                 <label asp-for="Nationalite" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--4">
-                <input asp-for="Nationalite" class="form-field__input form-field__input--text" />
+                <input asp-for="Nationalite" class="form-field__input form-field__input--text"  />
                 <span asp-validation-for="Nationalite" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">
@@ -130,6 +167,7 @@
                 <span asp-validation-for="Activity" class="text-danger"></span>
             </div>
         </div>
+
 
         <div class="grid__row">
             <div class="grid__column grid__column--2">
@@ -196,6 +234,7 @@
                 <span asp-validation-for="DelaiTraveau" class="text-danger"></span>
             </div>
         </div>
+
         <div class="grid__row">
             <div class="grid__column grid__column--2">
                 <label asp-for="NbrChaier" class="form-field__label"></label>
@@ -332,7 +371,7 @@
 
 
         <div class="form-field__button">
-            <button class="button button--secondary" type="submit">تحيين</button>
+            <button class="button button--primary" type="submit">إضافة</button>
         </div>
     </form>
 
@@ -349,23 +388,9 @@
             $("#Financement").selectize();
             $("#Method").selectize();
             $("#FournisseurID").selectize();
-            $("#Mode").selectize();
+            $('#Mode').selectize();
 
-            $("#FournisseurID").change(function () {
-                $.post("/Marsed/Ach/" + $("#FournisseurID").val(), function (data) {
-                    if (data) {
-                        $("#Nationalite").val(data.nationalite);
-                        $("#Category").val(data.category);
-                        $("#Speciality").val(data.speciality);
-                        $("#Activity").val(data.activity);
-                    } else {
-                        $("#Nationalite").val("");
-                        $("#Category").val("");
-                        $("#Speciality").val("");
-                        $("#Activity").val("");
-                    }
-                });
-            });
+
         </script>
     }
 }

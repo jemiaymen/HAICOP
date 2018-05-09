@@ -833,6 +833,12 @@ namespace HAICOP.Migrations
 
                     b.Property<decimal>("FinalGuaranteeP");
 
+                    b.Property<int>("Financement");
+
+                    b.Property<int>("FournisseurID");
+
+                    b.Property<int>("Mode");
+
                     b.Property<decimal>("MontantPenalitesFournisseur");
 
                     b.Property<decimal>("MontantPenalitesRetard");
@@ -844,13 +850,21 @@ namespace HAICOP.Migrations
                     b.Property<string>("StatementReasonsDates")
                         .HasMaxLength(500);
 
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.Property<decimal>("TitleGuaranteeM");
 
                     b.Property<decimal>("TitleGuaranteeP");
 
+                    b.Property<decimal>("TotalLocal");
+
                     b.HasKey("ID");
 
                     b.HasIndex("DossierID");
+
+                    b.HasIndex("FournisseurID");
 
                     b.ToTable("Suivie");
                 });
@@ -1282,8 +1296,13 @@ namespace HAICOP.Migrations
             modelBuilder.Entity("HAICOP.Models.Suivie", b =>
                 {
                     b.HasOne("HAICOP.Models.Dossier", "Dossier")
-                        .WithMany()
+                        .WithMany("Suivies")
                         .HasForeignKey("DossierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HAICOP.Models.Fournisseur", "Fournisseur")
+                        .WithMany()
+                        .HasForeignKey("FournisseurID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

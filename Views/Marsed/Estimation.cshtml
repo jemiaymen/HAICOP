@@ -14,7 +14,7 @@
     <div class="grid__row">
         <div class="grid__column grid__column--12">
             <div class="m17-sectiontitle" data-component="m17-sectiontitle">
-                <a class="m17-sectiontitle__title  text__section-title" asp-action="Select" asp-controller="Doc" asp-route-id="@Model.FirstOrDefault().DossierID">رجوع</a>
+                <a class="m17-sectiontitle__title  text__section-title" asp-action="Select" asp-controller="Doc" asp-route-id="@Model.FirstOrDefault().AffectTrend.DossierID">رجوع</a>
             </div>
         </div>
     </div>
@@ -28,13 +28,11 @@
                             الموضوع
                         </th>
                         <th class="m23-table__content-table-cell--header ">
-                            القسط
+                            العرض
                         </th>
                         <th class="m23-table__content-table-cell--header ">
                             المبلغ
                         </th>
-
-
                         <th class="m23-table__content-table-cell--header ">
                             تحيين
                         </th>
@@ -46,7 +44,7 @@
                 {
                     <tr class="m23-table__content-table-row ">
                         <td class="m23-table__content-table-cell">
-                            @Html.DisplayFor(modelItem => item.Dossier.Subject)
+                            @Html.DisplayFor(modelItem => item.AffectTrend.Subject)
                         </td>
                         <td class="m23-table__content-table-cell">
                             @Html.DisplayFor(modelItem => item.Lbl)
@@ -56,7 +54,7 @@
                         </td>
 
                         <td class="m23-table__content-table-cell">
-                            <a asp-action="EditEstimation" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
+                            <a asp-action="EditEstimation" asp-controller="Marsed" asp-route-id="@item.ID"><i class="fa fa-pencil"></i></a>
                         </td>
                     </tr>
             }

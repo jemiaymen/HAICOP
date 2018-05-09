@@ -85,6 +85,7 @@ namespace HAICOP.Models
         public virtual ICollection<Desc> Descriptions { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<AffectTrend> AffectTrends { get; set; }
+        public virtual ICollection<Suivie> Suivies { get; set; }
 
         public Dossier()
 		{
