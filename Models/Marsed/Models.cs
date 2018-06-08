@@ -51,6 +51,10 @@ namespace HAICOP.Models
         [Display(Name = "التمويل")]
         public Financement Financement { get; set; }
 
+
+        [Display(Name = "الممول الأجنبي")]
+        public string Foreing { get; set; }
+
     }
 
     public class AcheteurDetail
@@ -319,6 +323,9 @@ namespace HAICOP.Models
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "التمويل")]
         public Financement Financement { get; set; }
+
+        [Display(Name = "الممول الأجنبي")]
+        public string Foreing { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "طريقة الإبرام")]

@@ -423,9 +423,11 @@ namespace HAICOP.Controllers
                                             Montant = db.FourInDossier.Where(d => s.Select(a => a.ID).Contains(d.DossierID)).Sum(m => m.Montant)
                                         });
 
-                var docnot = db.Dossier.Include(d => d.Mails)
-                                       .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To
-                                              && d.Mails.Any(a => a.MailNature == MailNature.NonComform));
+
+                var docnot = db.DessisionInMetting.Include(d => d.Dessision)
+                                                .Include(d => d.Metting)
+                                                .Include(d => d.Metting.Dossier)
+                                                .Where(d => (d.Metting.MettDate >= model.From && d.Metting.MettDate <= model.To) && d.Dessision.Lbl.Contains("غير مثمر") && cms.Contains(d.Metting.Dossier.CommissionID)).Select(a => a.Metting.Dossier);
 
                 var docnotcause = docnot.GroupBy(b => b.Cause).Select(s => new CauseResult
                 {
@@ -433,9 +435,11 @@ namespace HAICOP.Controllers
                     Lbl = s.Key.GetValueOrDefault()
                 });
 
-                var notok = db.Dossier.Include(d => d.Mails)
-                                       .Where(d => d.TraitDate >= model.From && d.TraitDate <= model.To
-                                              && d.Mails.Any(a => a.MailNature == MailNature.Refu)).Count();
+                var notokt = db.DessisionInMetting.Include(d => d.Dessision)
+                                                .Include(d => d.Metting)
+                                                .Include(d => d.Metting.Dossier)
+                                                .Where(d => (d.Metting.MettDate >= model.From && d.Metting.MettDate <= model.To) && d.Dessision.Lbl.Contains("عدم الموافقة") && cms.Contains(d.Metting.Dossier.CommissionID)).Select(a => a.Metting.Dossier);
+                var notok = notokt.Count();
 
                 foreach (int i in cms)
                 {

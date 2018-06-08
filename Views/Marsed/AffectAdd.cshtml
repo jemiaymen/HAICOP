@@ -91,18 +91,26 @@
             <div class="grid__column grid__column--2">
                 <label asp-for="TotalLocal" class="form-field__label"></label>
             </div>
-            <div class="grid__column grid__column--4">
+            <div class="grid__column grid__column--2">
                 <input asp-for="TotalLocal" class="form-field__input form-field__input--text" />
                 <span asp-validation-for="TotalLocal" class="text-danger"></span>
             </div>
             <div class="grid__column grid__column--2">
-                <label asp-for="Financement" class="col-md-3 control-label"></label>
+                <label asp-for="Financement" class="control-label"></label>
             </div>
-            <div class="grid__column grid__column--4">
+            <div class="grid__column grid__column--2">
                 <select asp-for="Financement" asp-items="Html.GetEnumSelectList<Financement>()">
                     <option value=""></option>
                 </select>
                 <span asp-validation-for="Financement" class="text-danger"></span>
+            </div>
+
+            <div class="grid__column grid__column--2 Foreing">
+                <label asp-for="Foreing" class="control-label"></label>
+            </div>
+            <div class="grid__column grid__column--2 Foreing">
+                <input asp-for="Foreing" class="form-field__input form-field__input--text" />
+                <span asp-validation-for="Foreing" class="text-danger"></span>
             </div>
 
         </div>
@@ -199,11 +207,11 @@
             <div class="grid__column grid__column--2">
                 <label asp-for="DateLastChanceAccept" class="form-field__label"></label>
             </div>
-            <div class="grid__column grid__column--2">
-                <input asp-for="DateLastChanceAccept" class="form-field__input form-field__input--text" />
+            <div class="grid__column grid__column--3">
+                <input asp-for="DateLastChanceAccept" type="datetime-local" class="form-field__input form-field__input--text" />
                 <span asp-validation-for="DateLastChanceAccept" class="text-danger"></span>
             </div>
-            <div class="grid__column grid__column--2">
+            <div class="grid__column grid__column--1">
                 <label asp-for="DateTraveau" class="form-field__label"></label>
             </div>
             <div class="grid__column grid__column--2">
@@ -385,11 +393,23 @@
         <script>
             $("#AcheteurID").selectize();
             $("#Type").selectize();
-            $("#Financement").selectize();
             $("#Method").selectize();
             $("#FournisseurID").selectize();
             $('#Mode').selectize();
 
+            $(".Foreing").hide();
+
+            $("#Financement").selectize({
+                onChange: function (value) {
+                    if (!value.length) return;
+                    if (value != 2) {
+                        $(".Foreing").hide(); return;
+                    } else {
+                        $(".Foreing").show();
+                    };
+                    f.clearOptions();
+                }
+            });
 
         </script>
     }

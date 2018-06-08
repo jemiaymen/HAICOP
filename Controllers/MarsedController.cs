@@ -57,6 +57,9 @@ namespace HAICOP.Controllers
                                                    [Bind("FournisseurID,Nationalite,Activity,Speciality,Category")] FournisseurDetail four)
         {
 
+            ModelState.Remove("Tel");
+            ModelState.Remove("Nationalite");
+            ModelState.Remove("Activity");
 
             if (ModelState.IsValid)
             {
@@ -72,7 +75,7 @@ namespace HAICOP.Controllers
                 db.AcheteurDetail.Add(ach);
                 await db.SaveChangesAsync();
 
-                AffectTrend affect = new AffectTrend { DossierID = doc.ID , FournisseurDetailID = four.ID, AcheteurDetailID = ach.ID, Subject = model.Subject , TotalLocal = model.TotalLocal , Financement = model.Financement };
+                AffectTrend affect = new AffectTrend { DossierID = doc.ID , FournisseurDetailID = four.ID, AcheteurDetailID = ach.ID, Subject = model.Subject , TotalLocal = model.TotalLocal , Financement = model.Financement , Foreing = model.Foreing };
                 db.AffectTrend.Add(affect);
                 await db.SaveChangesAsync();
 
@@ -142,6 +145,9 @@ namespace HAICOP.Controllers
         public async Task<IActionResult> AffectEdit(AffectView model)
         {
 
+            ModelState.Remove("Tel");
+            ModelState.Remove("Nationalite");
+            ModelState.Remove("Activity");
 
             if (ModelState.IsValid)
             {
@@ -165,6 +171,7 @@ namespace HAICOP.Controllers
                 affect.Financement = model.Financement;
                 affect.Dossier.Mode = model.Mode;
                 affect.TotalLocal = model.TotalLocal;
+                affect.Foreing = model.Foreing;
 
                 if(affect.FournisseurDetail.FournisseurID != model.FournisseurID)
                 {
@@ -244,14 +251,14 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            var doc = await db.Dossier.FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault());
+            var trend = await db.AffectTrend.FirstOrDefaultAsync(a => a.ID == id.GetValueOrDefault());
 
-            if (doc == null)
+            if (trend == null)
             {
                 return NotFound();
             }
 
-            return View(new Estimation { AffectTrendID = id.GetValueOrDefault() });
+            return View(new Estimation { AffectTrendID = trend.ID });
         }
 
         [HttpPost]
@@ -339,7 +346,7 @@ namespace HAICOP.Controllers
                 return NotFound();
             }
 
-            Suivie s = new Suivie { DossierID = doc.ID };
+            Suivie s = new Suivie { DossierID = doc.ID};
             ViewData["FournisseurID"] = new SelectList(db.Fournisseur, "ID", "Lbl");
             return View(s);
         }
@@ -348,6 +355,7 @@ namespace HAICOP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SuivieAdd(Suivie model)
         {
+            model.ID = 0;
             if(ModelState.IsValid)
             {
                 db.Suivie.Add(model);

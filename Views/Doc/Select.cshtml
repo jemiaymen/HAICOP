@@ -221,7 +221,7 @@
         <div class="grid__row">
             <div class="grid__column grid__column--12">
                 <div class="m17-sectiontitle" data-component="m17-sectiontitle">
-                    <h3 class="m17-sectiontitle__title  text__section-title">بطاقات إسناد صفقة</h3>
+                    <h3 class="m17-sectiontitle__title  text__section-title">بطاقات بيانات إسناد صفقة</h3>
                 </div>
             </div>
         </div>
@@ -359,6 +359,9 @@
                         <th class="m23-table__content-table-cell--header ">
                             التحيين
                         </th>
+                        <th class="m23-table__content-table-cell--header ">
+                            حذف
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="m23-table__content-table-body">
@@ -376,6 +379,9 @@
                         </td>
                         <td class="m23-table__content-table-cell">
                             <a asp-action="EditFour" asp-controller="Avis" asp-route-did="@Model.ID" asp-route-fid="@item.FournisseurID"><i class="fa fa-pencil"></i></a>
+                        </td>
+                        <td class="m23-table__content-table-cell">
+                            <a asp-action="DeleteFour" asp-controller="Avis" asp-route-did="@Model.ID" asp-route-fid="@item.FournisseurID"><i class="fa fa-minus"></i></a>
                         </td>
                     </tr>
                     }

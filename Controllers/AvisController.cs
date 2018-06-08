@@ -92,6 +92,30 @@ namespace HAICOP.Controllers
 
         }
 
+        [Authorize(Roles = "root,Admin,President,assistant")]
+        public IActionResult DeleteFour(int? did , int? fid)
+        {
+
+
+            if (did == null || fid == null)
+            {
+                return NotFound();
+            }
+
+            var del = db.FourInDossier.FirstOrDefault(a => a.DossierID == did.GetValueOrDefault() && a.FournisseurID == fid.GetValueOrDefault());
+
+
+            if (del == null)
+            {
+                return NotFound();
+            }
+
+            db.FourInDossier.Remove(del);
+            db.SaveChanges();
+            return RedirectToAction("Select", "Doc", new { id = did.GetValueOrDefault() });
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -247,8 +271,6 @@ namespace HAICOP.Controllers
 
             return View(model);
         }
-
-
 
         [Authorize(Roles ="root,Admin,President,assistant")]
         public IActionResult AddFour(int? id)
@@ -519,7 +541,6 @@ namespace HAICOP.Controllers
                 return "";
             }    
         }
-
 
         private bool Del(string url)
         {

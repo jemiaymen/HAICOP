@@ -60,12 +60,15 @@ namespace HAICOP.Models
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "المبلغ")]
-        [DisplayFormat(DataFormatString = "{0:F0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:F3}", ApplyFormatInEditMode = true)]
         public decimal TotalLocal { get; set; }
 
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "التمويل")]
         public Financement Financement { get; set; }
+
+        [Display(Name = "الممول الأجنبي")]
+        public string Foreing { get; set; }
 
         [Display(Name = "عدد الأقساط")]
         public int NbrLot { get; set; }
@@ -81,19 +84,18 @@ namespace HAICOP.Models
         [Display(Name = "صاحب الصفقة")]
         public int FournisseurID { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
+
         [Display(Name = "جنسيته")]
         public string Nationalite { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
+
         [Display(Name = "النشاط")]
         public string Activity { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
         [Display(Name = "الإختصاص")]
         public string Speciality { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
+ 
         [Display(Name = "الصنف")]
         public string Category { get; set; }
 
@@ -115,7 +117,7 @@ namespace HAICOP.Models
         [Required(ErrorMessage = "اجباري")]
         [Display(Name = "آخر أجل لقبول العروض ")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat]
         public DateTime DateLastChanceAccept { get; set; }
 
         [Display(Name = "تاريخ بداية الإنجاز")]
@@ -128,7 +130,6 @@ namespace HAICOP.Models
         [DataType(DataType.Date)]
         public DateTime DateOpen { get; set; }
 
-        [Required(ErrorMessage = "اجباري")]
         [Display(Name = "آجال الإنجاز")]
         [StringLength(500, ErrorMessage = "يجب أن يكون على الأقل {2} أحرف .", MinimumLength = 3)]
         public string DelaiTraveau { get; set; }
@@ -242,6 +243,7 @@ namespace HAICOP.Models
             Subject = affect.Subject;
             Financement = affect.Financement;
             TotalLocal = affect.TotalLocal;
+            Foreing = affect.Foreing;
         }
 
         public void InitFromFour(FournisseurDetail four)

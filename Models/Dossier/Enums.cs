@@ -15,7 +15,9 @@ namespace HAICOP.Models
         [Display(Name = "إرتفاع الأسعار")]
         AugmentationPrix = 2,
         [Display(Name = "عدم تمديد في صلوحية العروض")]
-        NonElongMarch = 3
+        NonElongMarch = 3,
+        [Display(Name = "إنعدام المنافسة")]
+        NonConccurence = 4
     }
 
     public enum NatureAcheteur
@@ -109,7 +111,11 @@ namespace HAICOP.Models
         [Display(Name = "إعادة دعوة إلى المنافسه")]
         Re = 19,
         [Display(Name = "عدم التعهد")]
-        Not = 20
+        Not = 20,
+        [Display(Name = "التعهد")]
+        Engagement = 21,
+        [Display(Name = "إقصاء")]
+        Ecartement = 22
     }
 
     public enum DossierType 

@@ -84,6 +84,8 @@ namespace HAICOP.Migrations
 
                     b.Property<int>("Financement");
 
+                    b.Property<string>("Foreing");
+
                     b.Property<int>("FournisseurDetailID");
 
                     b.Property<string>("Subject")
@@ -834,6 +836,8 @@ namespace HAICOP.Migrations
                     b.Property<decimal>("FinalGuaranteeP");
 
                     b.Property<int>("Financement");
+
+                    b.Property<string>("Foreing");
 
                     b.Property<int>("FournisseurID");
 
